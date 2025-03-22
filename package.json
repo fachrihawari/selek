@@ -1,0 +1,29 @@
+{
+  "name": "selek",
+  "version": "0.0.1",
+  "description": "Selek is Slack clone app",
+  "main": "index.js",
+  "scripts": {},
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fachrihawari/selek.git"
+  },
+  "keywords": [
+    "slack-clone",
+    "typescript",
+    "nest",
+    "react",
+    "mongodb"
+  ],
+  "author": "Fachri Hawari <fachri.hawari@gmail.com>",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/fachrihawari/selek/issues"
+  },
+  "homepage": "https://github.com/fachrihawari/selek#readme",
+  "private": true
+}
