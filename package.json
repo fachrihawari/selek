@@ -3,7 +3,11 @@
   "version": "0.0.1",
   "description": "Selek is Slack clone app",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "dev": "bun run --filter \"*\" --bun start:dev",
+    "client": "bun run --filter client --bun start:dev",
+    "server": "bun run --filter server --bun start:dev"
+  },
   "workspaces": [
     "apps/*",
     "packages/*"
