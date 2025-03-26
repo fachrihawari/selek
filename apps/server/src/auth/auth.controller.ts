@@ -5,12 +5,10 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { ZodValidationPipe } from 'src/shared/zod-validation.pipe';
-import { RegisterDto, RegisterSchema } from './auth.schema';
+import { type RegisterDto, RegisterSchema } from './auth.schema';
 import { UserService } from 'src/user/user.service';
-import { compare } from 'bcrypt';
 
 @Controller('auth')
 export class AuthController {
@@ -22,7 +20,6 @@ export class AuthController {
     @Body(new ZodValidationPipe(RegisterSchema)) body: RegisterDto,
   ) {
     const user = await this.userService.findByEmail(body.email);
-
     if (user) {
       throw new BadRequestException('Email already exists');
     }

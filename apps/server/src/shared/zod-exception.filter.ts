@@ -6,9 +6,9 @@ export class ZodExceptionFilter<T extends ZodError> implements ExceptionFilter {
   catch(exception: T, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
-    
+  
     response.status(HttpStatus.BAD_REQUEST).json({
-      issues: exception.flatten(),
+      message: exception.errors[0].message,
       error: "Bad Request",
       statusCode: HttpStatus.BAD_REQUEST,
     });

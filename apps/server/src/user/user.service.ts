@@ -1,18 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { UserModel } from './user.model';
 import { hash } from 'bcrypt';
-import { TUserSchema } from './user.schema';
+import { TUserBody } from './user.schema';
+import { UserModel } from './user.model';
 
 @Injectable()
 export class UserService {
+  constructor(private readonly userModel: UserModel) { }
+
   async findByEmail(email: string) {
-    const user = await UserModel.where('email', email).first();
+    const user = await this.userModel.findByEmail(email);
     return user;
   }
 
-  async create(body: TUserSchema) {
+  async create(body: TUserBody) {
     body.password = await hash(body.password, 10)
-    const user = await UserModel.create(body);
+    const user = await this.userModel.create(body);
     return user
   }
 }
