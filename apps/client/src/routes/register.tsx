@@ -1,7 +1,9 @@
-import { Link } from "react-router";
+import toast from "react-hot-toast";
+import { Link, redirect, Form, useNavigation } from "react-router";
 import type { Route } from "./+types/register";
+import { http, type IHttpResponse } from "~/helpers/http";
 
-export function meta({}: Route.MetaArgs) {
+export function meta() {
   return [
     { title: "Register - Selek" },
     {
@@ -11,7 +13,25 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
+export async function clientAction({ request }: Route.ClientActionArgs) {
+  // NOTE: remove later
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  try {
+    const formData = await request.formData();
+    const body = Object.fromEntries(formData);
+    const response = await http("/auth/register", { body });
+
+    toast.success(response.message)
+    return redirect("/login");
+  } catch (error) {
+    toast.error((error as IHttpResponse).message);
+  }
+}
+
 export default function Register() {
+  const navigation = useNavigation()
+
   return (
     <div className="min-h-screen flex justify-center items-center bg-gradient-to-b from-orange-100 to-white">
       <div className="max-w-md w-full mx-auto px-4 sm:px-6 lg:px-8">
@@ -21,26 +41,35 @@ export default function Register() {
               Join Selek
             </span>
           </h1>
-          <p className="mt-2 text-gray-500">Create your account and start collaborating</p>
+          <p className="mt-2 text-gray-500">
+            Create your account and start collaborating
+          </p>
         </div>
 
         <div className="bg-white/80 backdrop-blur-sm shadow-sm rounded-lg px-8 py-6 border border-orange-200">
-          <form className="space-y-6" method="post">
+          <Form className="space-y-6" method="post">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="fullName"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Full Name
               </label>
               <input
                 type="text"
-                name="name"
-                id="name"
+                name="fullName"
+                id="fullName"
                 required
                 className="mt-1 block w-full px-3 py-2 border border-orange-200 rounded-md shadow-sm focus:ring-orange-800 focus:border-orange-800 sm:text-sm"
+                defaultValue={"Fachri"}
               />
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Email address
               </label>
               <input
@@ -49,11 +78,15 @@ export default function Register() {
                 id="email"
                 required
                 className="mt-1 block w-full px-3 py-2 border border-orange-200 rounded-md shadow-sm focus:ring-orange-800 focus:border-orange-800 sm:text-sm"
+                defaultValue={"fachri@mail.com"}
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <input
@@ -62,6 +95,7 @@ export default function Register() {
                 id="password"
                 required
                 className="mt-1 block w-full px-3 py-2 border border-orange-200 rounded-md shadow-sm focus:ring-orange-800 focus:border-orange-800 sm:text-sm"
+                defaultValue={"qweqwe"}
               />
             </div>
 
@@ -70,14 +104,17 @@ export default function Register() {
                 type="submit"
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-800 hover:bg-orange-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-800 transform transition duration-300 ease-in-out hover:scale-105"
               >
-                Create Account
+                {navigation.state === "submitting" ? "Registering..." : "Register"}
               </button>
             </div>
-          </form>
+          </Form>
 
           <div className="mt-6 text-center text-sm">
             <span className="text-gray-500">Already have an account?</span>{" "}
-            <Link to="/login" className="text-orange-800 hover:text-orange-900 font-medium">
+            <Link
+              to="/login"
+              className="text-orange-800 hover:text-orange-900 font-medium"
+            >
               Sign in
             </Link>
           </div>
