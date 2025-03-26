@@ -1,40 +1,23 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { ZodValidationPipe } from 'src/shared/zod-validation.pipe';
-import { type RegisterDto, RegisterSchema } from './auth.schema';
-import { UserService } from 'src/user/user.service';
+import { LoginSchema, RegisterSchema } from './auth.schema';
+import type { LoginDto, RegisterDto } from './auth.schema';
+import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
   async register(
     @Body(new ZodValidationPipe(RegisterSchema)) body: RegisterDto,
   ) {
-    const user = await this.userService.findByEmail(body.email);
-    if (user) {
-      throw new BadRequestException('Email already exists');
-    }
-
-    await this.userService.create(body);
-
-    return {
-      message: 'User has been registered',
-    };
+    return this.authService.register(body);
   }
 
   @Post('login')
-  login() {
-    return {
-      message: 'login',
-    };
+  async login(@Body(new ZodValidationPipe(LoginSchema)) body: LoginDto) {
+    return this.authService.login(body);
   }
 }

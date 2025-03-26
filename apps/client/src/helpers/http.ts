@@ -41,7 +41,7 @@ export async function http<T = IHttpResponse>(
     .fetch(import.meta.env.VITE_API_URL + endpoint, config)
     .then(async (response) => {
       // if token is expired, remove it from localstorage and redirect to login
-      if (response.status === 401) {
+      if (response.status === 401 && headers.Authorization) {
         window.localStorage.removeItem(localStorageKey);
         window.location.assign("/");
         return;

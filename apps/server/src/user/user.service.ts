@@ -5,7 +5,7 @@ import { UserModel } from './user.model';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userModel: UserModel) { }
+  constructor(private readonly userModel: UserModel) {}
 
   async findByEmail(email: string) {
     const user = await this.userModel.findByEmail(email);
@@ -13,8 +13,8 @@ export class UserService {
   }
 
   async create(body: TUserBody) {
-    body.password = await hash(body.password, 10)
+    body.password = await hash(body.password, 10);
     const user = await this.userModel.create(body);
-    return user
+    return user;
   }
 }

@@ -1,7 +1,9 @@
+import toast from "react-hot-toast";
+import { Form, Link, redirect, useNavigation } from "react-router";
 import type { Route } from "./+types/login";
-import { Link } from "react-router";
+import { http, type IHttpResponse } from "~/helpers/http";
 
-export function meta({}: Route.MetaArgs) {
+export function meta() {
   return [
     { title: "Sign In - Selek" },
     {
@@ -11,7 +13,29 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
+export async function clientAction({ request }: Route.ClientActionArgs) {
+  // NOTE: remove later
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  try {
+    const formData = await request.formData();
+    const body = Object.fromEntries(formData);
+    const response = await http<{ access_token: string }>("/auth/login", {
+      body,
+    });
+
+    localStorage.setItem("access_token", response.access_token);
+
+    toast.success("Welcome to Selek!");
+    return redirect("/app");
+  } catch (error) {
+    toast.error((error as IHttpResponse).message);
+  }
+}
+
 export default function Login() {
+  const navigation = useNavigation();
+
   return (
     <div className="min-h-screen flex justify-center items-center bg-gradient-to-b from-orange-100 to-white">
       <div className="max-w-md w-full mx-auto px-4 sm:px-6 lg:px-8">
@@ -25,9 +49,12 @@ export default function Login() {
         </div>
 
         <div className="bg-white/80 backdrop-blur-sm shadow-sm rounded-lg px-8 py-6 border border-orange-200">
-          <form className="space-y-6" method="post">
+          <Form className="space-y-6" method="post">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Email address
               </label>
               <input
@@ -40,7 +67,10 @@ export default function Login() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <div className="mt-1 relative">
@@ -52,7 +82,10 @@ export default function Login() {
                   className="block w-full px-3 py-2 border border-orange-200 rounded-md shadow-sm focus:ring-orange-800 focus:border-orange-800 sm:text-sm"
                 />
                 <div className="text-right mt-1">
-                  <Link to="/forgot-password" className="text-sm text-orange-800 hover:text-orange-900">
+                  <Link
+                    to="/forgot-password"
+                    className="text-sm text-orange-800 hover:text-orange-900"
+                  >
                     Forgot password?
                   </Link>
                 </div>
@@ -64,14 +97,19 @@ export default function Login() {
                 type="submit"
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-800 hover:bg-orange-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-800 transform transition duration-300 ease-in-out hover:scale-105"
               >
-                Sign In
+                {navigation.state === "submitting"
+                  ? "Signing in..."
+                  : "Sign in"}
               </button>
             </div>
-          </form>
+          </Form>
 
           <div className="mt-6 text-center text-sm">
             <span className="text-gray-500">Don't have an account?</span>{" "}
-            <Link to="/register" className="text-orange-800 hover:text-orange-900 font-medium">
+            <Link
+              to="/register"
+              className="text-orange-800 hover:text-orange-900 font-medium"
+            >
               Create one
             </Link>
           </div>
