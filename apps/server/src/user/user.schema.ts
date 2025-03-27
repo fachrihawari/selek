@@ -16,6 +16,8 @@ export const UserSchema = z.object({
 });
 export type TUser = z.infer<typeof UserSchema>;
 
+export type TUserSafe = Omit<TUser, 'password'>;
+
 export const UserBodySchema = UserSchema.pick({
   full_name: true,
   email: true,

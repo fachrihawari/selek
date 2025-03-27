@@ -7,6 +7,11 @@ import { UserModel } from './user.model';
 export class UserService {
   constructor(private readonly userModel: UserModel) {}
 
+  async findById(id: string) {
+    const user = await this.userModel.findById(id);
+    return user;
+  }
+
   async findByEmail(email: string) {
     const user = await this.userModel.findByEmail(email);
     return user;

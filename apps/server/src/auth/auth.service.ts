@@ -36,9 +36,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // Add JWT generation here later
-    return {
-      access_token: await this.jwtService.signAsync({ sub: user.id }),
-    };
+    const access_token = await this.jwtService.signAsync({ sub: user.id });
+    return { access_token };
   }
 }
