@@ -4,9 +4,9 @@
 
 ### Authentication & User Management
 - [x] User registration
-- [ ] User login
+- [x] User login
 - [ ] Password reset functionality
-- [ ] User profile (basic info)
+- [x] User profile (basic info)
 - [ ] User status (online/offline)
 
 ### Workspace Management
