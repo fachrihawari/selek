@@ -7,13 +7,13 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ZodValidationPipe } from 'src/shared/zod-validation.pipe';
 import { LoginSchema, RegisterSchema } from './auth.schema';
 import type { LoginDto, RegisterDto } from './auth.schema';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
 import { AuthUser } from './auth-user.decorator';
-import type { TUserSafe } from 'src/user/user.schema';
+import type { TUserSafe } from '~/user/user.schema';
+import { ZodValidationPipe } from '~/shared/zod-validation.pipe';
 
 @Controller('auth')
 export class AuthController {
@@ -28,11 +28,13 @@ export class AuthController {
   }
 
   @Post('login')
+  @HttpCode(HttpStatus.OK)
   async login(@Body(new ZodValidationPipe(LoginSchema)) body: LoginDto) {
     return this.authService.login(body);
   }
 
   @Get('me')
+  @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard)
   me(@AuthUser() user: TUserSafe) {
     return user;

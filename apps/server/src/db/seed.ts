@@ -15,7 +15,6 @@ async function seed() {
   console.log(`Seeder done.`);
 
   await sql.end();
-  process.exit(0);
 }
 
 seed().catch(console.error);

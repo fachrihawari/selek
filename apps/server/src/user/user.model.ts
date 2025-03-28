@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { TUser, TUserBody } from './user.schema';
-import { sql } from 'src/db/sql';
+import { sql } from '~/db/sql';
 
 @Injectable()
 export class UserModel {

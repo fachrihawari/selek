@@ -18,7 +18,6 @@ async function migrate() {
   console.log('All migrations completed successfully');
 
   await sql.end();
-  process.exit(0);
 }
 
 // Run migrations

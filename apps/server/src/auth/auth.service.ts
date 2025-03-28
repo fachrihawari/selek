@@ -3,10 +3,10 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UserService } from 'src/user/user.service';
-import type { LoginDto, RegisterDto } from './auth.schema';
-import { compare } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { compare } from 'bcrypt';
+import type { LoginDto, RegisterDto } from './auth.schema';
+import { UserService } from '~/user/user.service';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +22,7 @@ export class AuthService {
     }
 
     await this.userService.create(body);
-    return { message: 'User has been registered' };
+    return { message: 'User registered successfully' };
   }
 
   async login(body: LoginDto) {
