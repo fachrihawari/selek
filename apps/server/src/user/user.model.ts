@@ -4,29 +4,29 @@ import { sql } from 'src/db/sql';
 
 @Injectable()
 export class UserModel {
-  async findById(id: string) {
-    const users = await sql<TUser[]>`
+  async findById(id: string): Promise<TUser | null> {
+    const [user] = await sql<TUser[]>`
       SELECT id, full_name, email, password
       FROM users WHERE id = ${id}
       LIMIT 1
     `;
-    return users[0] ?? null;
+    return user ?? null;
   }
 
-  async findByEmail(email: string) {
-    const users = await sql<TUser[]>`
+  async findByEmail(email: string): Promise<TUser | null> {
+    const [user] = await sql<TUser[]>`
       SELECT id, full_name, email, password
       FROM users WHERE email = ${email}
       LIMIT 1
     `;
-    return users[0] ?? null;
+    return user ?? null;
   }
 
   async create(body: TUserBody) {
-    const result = await sql<TUser[]>`
+    const [user] = await sql<TUser[]>`
       INSERT INTO users ${sql(body)} 
       RETURNING id, full_name, email, password
     `;
-    return result[0];
+    return user;
   }
 }

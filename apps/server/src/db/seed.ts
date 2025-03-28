@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import { hash } from 'bcrypt';
 import { sql } from './sql';
 
@@ -13,7 +12,7 @@ async function seed() {
 
   await sql`INSERT INTO users ${sql(user)}`;
 
-  console.info(`Seeder done.`);
+  console.log(`Seeder done.`);
 
   await sql.end();
   process.exit(0);

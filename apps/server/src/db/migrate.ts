@@ -1,5 +1,3 @@
-import 'dotenv/config';
-import { log } from 'node:console';
 import { readdir } from 'node:fs/promises';
 import { sql } from './sql';
 
@@ -14,7 +12,7 @@ async function migrate() {
   for (const migration of migrationFiles) {
     const migrationFile = __dirname + '/migrations/' + migration;
     await sql.file(migrationFile);
-    log(`Executed ${migration}`);
+    console.log(`Executed ${migration}`);
   }
 
   console.log('All migrations completed successfully');
