@@ -6,4 +6,12 @@ declare global {
       user?: TUser; // Add other user properties as needed
     }
   }
+
+  namespace NodeJS {
+    interface ProcessEnv {
+      DATABASE_URL: string;
+      JWT_SECRET: string;
+      JWT_EXPIRATION: string;
+    }
+  }
 }

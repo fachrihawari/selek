@@ -1,6 +1,7 @@
-import { sql } from 'bun';
+import 'dotenv/config';
 import { log } from 'node:console';
 import { readdir } from 'node:fs/promises';
+import { sql } from './sql';
 
 async function migrate() {
   // Get SQL files from the sql directory
@@ -17,6 +18,9 @@ async function migrate() {
   }
 
   console.log('All migrations completed successfully');
+
+  await sql.end();
+  process.exit(0);
 }
 
 // Run migrations

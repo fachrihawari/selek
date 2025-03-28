@@ -1,5 +1,6 @@
+import 'dotenv/config';
 import { hash } from 'bcrypt';
-import { sql } from 'bun';
+import { sql } from './sql';
 
 async function seed() {
   await sql`DELETE FROM users`;
@@ -13,6 +14,9 @@ async function seed() {
   await sql`INSERT INTO users ${sql(user)}`;
 
   console.info(`Seeder done.`);
+
+  await sql.end();
+  process.exit(0);
 }
 
 seed().catch(console.error);
