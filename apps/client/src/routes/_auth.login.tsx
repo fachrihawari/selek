@@ -1,14 +1,14 @@
 import toast from "react-hot-toast";
-import { Link, redirect, Form, useNavigation } from "react-router";
-import type { Route } from "./+types/register";
+import { Form, Link, redirect, useNavigation } from "react-router";
+import type { Route } from "./+types/_auth.login";
 import { http, type IHttpResponse } from "~/helpers/http";
 
 export function meta() {
   return [
-    { title: "Register - Selek" },
+    { title: "Sign In - Selek" },
     {
       name: "description",
-      content: "Join Selek and start collaborating with your team today.",
+      content: "Sign in to your Selek account and connect with your team.",
     },
   ];
 }
@@ -20,17 +20,21 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   try {
     const formData = await request.formData();
     const body = Object.fromEntries(formData);
-    const response = await http("/auth/register", { body });
+    const response = await http<{ access_token: string }>("/auth/login", {
+      body,
+    });
 
-    toast.success(response.message)
-    return redirect("/login");
+    localStorage.setItem("access_token", response.access_token);
+
+    toast.success("Welcome to Selek!");
+    return redirect("/workspaces");
   } catch (error) {
     toast.error((error as IHttpResponse).message);
   }
 }
 
-export default function Register() {
-  const navigation = useNavigation()
+export default function Login() {
+  const navigation = useNavigation();
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gradient-to-b from-orange-100 to-white">
@@ -38,33 +42,14 @@ export default function Register() {
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold tracking-tighter text-gray-900">
             <span className="bg-gradient-to-r from-orange-800 to-orange-600 bg-clip-text text-transparent">
-              Join Selek
+              Welcome Back
             </span>
           </h1>
-          <p className="mt-2 text-gray-500">
-            Create your account and start collaborating
-          </p>
+          <p className="mt-2 text-gray-500">Sign in to continue to Selek</p>
         </div>
 
         <div className="bg-white/80 backdrop-blur-sm shadow-sm rounded-lg px-8 py-6 border border-orange-200">
           <Form className="space-y-6" method="post">
-            <div>
-              <label
-                htmlFor="full_name"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Full Name
-              </label>
-              <input
-                type="text"
-                name="full_name"
-                id="full_name"
-                required
-                className="mt-1 block w-full px-3 py-2 border border-orange-200 rounded-md shadow-sm focus:ring-orange-800 focus:border-orange-800 sm:text-sm"
-                defaultValue={"Fachri"}
-              />
-            </div>
-
             <div>
               <label
                 htmlFor="email"
@@ -78,7 +63,6 @@ export default function Register() {
                 id="email"
                 required
                 className="mt-1 block w-full px-3 py-2 border border-orange-200 rounded-md shadow-sm focus:ring-orange-800 focus:border-orange-800 sm:text-sm"
-                defaultValue={"fachri@mail.com"}
               />
             </div>
 
@@ -89,14 +73,23 @@ export default function Register() {
               >
                 Password
               </label>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                required
-                className="mt-1 block w-full px-3 py-2 border border-orange-200 rounded-md shadow-sm focus:ring-orange-800 focus:border-orange-800 sm:text-sm"
-                defaultValue={"qweqwe"}
-              />
+              <div className="mt-1 relative">
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  required
+                  className="block w-full px-3 py-2 border border-orange-200 rounded-md shadow-sm focus:ring-orange-800 focus:border-orange-800 sm:text-sm"
+                />
+                <div className="text-right mt-1">
+                  <Link
+                    to="/forgot-password"
+                    className="text-sm text-orange-800 hover:text-orange-900"
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
+              </div>
             </div>
 
             <div>
@@ -104,18 +97,20 @@ export default function Register() {
                 type="submit"
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-800 hover:bg-orange-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-800 transform transition duration-300 ease-in-out hover:scale-105"
               >
-                {navigation.state === "submitting" ? "Registering..." : "Register"}
+                {navigation.state === "submitting"
+                  ? "Signing in..."
+                  : "Sign in"}
               </button>
             </div>
           </Form>
 
           <div className="mt-6 text-center text-sm">
-            <span className="text-gray-500">Already have an account?</span>{" "}
+            <span className="text-gray-500">Don't have an account?</span>{" "}
             <Link
-              to="/login"
+              to="/register"
               className="text-orange-800 hover:text-orange-900 font-medium"
             >
-              Sign in
+              Create one
             </Link>
           </div>
         </div>
