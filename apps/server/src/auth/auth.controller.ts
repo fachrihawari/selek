@@ -12,7 +12,7 @@ import type { LoginDto, RegisterDto } from './auth.schema';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
 import { AuthUser } from './auth-user.decorator';
-import type { TUserSafe } from '~/user/user.schema';
+import type { TUserSafe } from '~/users/users.schema';
 import { ZodValidationPipe } from '~/shared/zod-validation.pipe';
 
 @Controller('auth')

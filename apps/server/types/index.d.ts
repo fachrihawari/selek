@@ -1,4 +1,4 @@
-import type { TUser } from 'src/user/user.schema'; // Adjust path to your user entity
+import type { TUser } from '~/users/users.schema'; // Adjust path to your user entity
 
 declare global {
   namespace Express {

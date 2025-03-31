@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { TUser, TUserBody } from './user.schema';
+import { TUser, TUserBody } from './users.schema';
 import { sql } from '~/db/sql';
 
 @Injectable()
-export class UserModel {
+export class UsersModel {
   async findById(id: string): Promise<TUser | null> {
     const [user] = await sql<TUser[]>`
       SELECT id, full_name, email, password

@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { hash } from 'bcrypt';
-import { TUserBody } from './user.schema';
-import { UserModel } from './user.model';
+import { TUserBody } from './users.schema';
+import { UsersModel } from './users.model';
 
 @Injectable()
-export class UserService {
-  constructor(private readonly userModel: UserModel) {}
+export class UsersService {
+  constructor(private readonly userModel: UsersModel) {}
 
   async findById(id: string) {
     const user = await this.userModel.findById(id);

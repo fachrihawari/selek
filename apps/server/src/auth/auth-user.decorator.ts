@@ -1,6 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { Request } from 'express';
-import { TUserSafe } from 'src/user/user.schema';
+import { TUserSafe } from '~/users/users.schema';
 
 export const AuthUser = createParamDecorator(
   (_: unknown, ctx: ExecutionContext) => {

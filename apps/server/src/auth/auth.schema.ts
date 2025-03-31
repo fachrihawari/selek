@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { UserBodySchema } from '~/user/user.schema';
+import { UserBodySchema } from '~/users/users.schema';
 
 export const RegisterSchema = UserBodySchema;
 export type RegisterDto = z.infer<typeof RegisterSchema>;

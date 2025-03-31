@@ -6,7 +6,7 @@ import * as jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import { AppModule } from '~/app.module';
 import { sql } from '~/db/sql';
-import { TUserBody } from '~/user/user.schema';
+import { TUserBody } from '~/users/users.schema';
 import { ZodExceptionFilter } from '~/shared/zod-exception.filter';
 
 const RegisterResponseSchema = z.object({
