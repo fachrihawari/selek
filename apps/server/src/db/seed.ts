@@ -7,17 +7,17 @@ async function seed() {
   // Seed users
   const users = [
     {
-      full_name: 'fachri',
+      fullName: 'fachri',
       email: 'fachri@mail.com',
       password: await hash('qweqwe', 10),
     },
     {
-      full_name: 'budi',
+      fullName: 'budi',
       email: 'budi@mail.com',
       password: await hash('qweqwe', 10),
     },
     {
-      full_name: 'udin',
+      fullName: 'udin',
       email: 'udin@mail.com',
       password: await hash('qweqwe', 10),
     },

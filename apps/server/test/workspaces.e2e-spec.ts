@@ -33,7 +33,7 @@ describe('WorkspacesController (e2e)', () => {
   const testUser = {
     email: faker.internet.email(),
     password: faker.internet.password(),
-    full_name: faker.person.fullName(),
+    fullName: faker.person.fullName(),
   };
 
   beforeAll(async () => {

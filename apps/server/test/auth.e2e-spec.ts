@@ -21,7 +21,7 @@ const LoginResponseSchema = z.object({
 const UserProfileSchema = z.object({
   id: z.string(),
   email: z.string().email(),
-  full_name: z.string(),
+  fullName: z.string(),
 });
 
 const ErrorResponseSchema = z.object({
@@ -35,7 +35,7 @@ describe('AuthController (e2e)', () => {
   const testUser: TUserBody = {
     email: faker.internet.email(),
     password: faker.internet.password(),
-    full_name: faker.person.fullName(),
+    fullName: faker.person.fullName(),
   };
   let authToken: string;
 
@@ -122,7 +122,7 @@ describe('AuthController (e2e)', () => {
 
       const body = UserProfileSchema.parse(response.body);
       expect(body).toHaveProperty('email', testUser.email);
-      expect(body).toHaveProperty('full_name', testUser.full_name);
+      expect(body).toHaveProperty('fullName', testUser.fullName);
       expect(body).toHaveProperty('id');
       expect(response.body).not.toHaveProperty('password');
     });

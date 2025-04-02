@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const UserSchema = z.object({
   id: z.string().uuid(),
-  full_name: z
+  fullName: z
     .string({ message: 'Full Name is required' })
     .min(1, { message: 'Full Name is required' }),
   email: z
@@ -19,7 +19,7 @@ export type TUser = z.infer<typeof UserSchema>;
 export type TUserSafe = Omit<TUser, 'password'>;
 
 export const UserBodySchema = UserSchema.pick({
-  full_name: true,
+  fullName: true,
   email: true,
   password: true,
 });

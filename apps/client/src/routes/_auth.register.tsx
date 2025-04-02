@@ -50,15 +50,15 @@ export default function Register() {
           <Form className="space-y-6" method="post">
             <div>
               <label
-                htmlFor="full_name"
+                htmlFor="fullName"
                 className="block text-sm font-medium text-gray-700"
               >
                 Full Name
               </label>
               <input
                 type="text"
-                name="full_name"
-                id="full_name"
+                name="fullName"
+                id="fullName"
                 required
                 className="mt-1 block w-full px-3 py-2 border border-orange-200 rounded-md shadow-sm focus:ring-orange-800 focus:border-orange-800 sm:text-sm"
                 defaultValue={"Fachri"}
