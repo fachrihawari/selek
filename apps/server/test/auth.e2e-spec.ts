@@ -49,12 +49,7 @@ describe('AuthController (e2e)', () => {
   });
 
   afterAll(async () => {
-    await sql.begin(async (sql) => {
-      await sql`DELETE FROM users WHERE email = ${testUser.email}`;
-    });
-  });
-
-  afterAll(async () => {
+    await sql`DELETE FROM users WHERE email = ${testUser.email}`;
     await app.close();
   });
 

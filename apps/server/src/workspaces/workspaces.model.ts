@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { sql } from '~/db/sql';
-import { TWorkspace } from './workspaces.schema';
+import { TCreateWorkspaceBody, TWorkspace } from './workspaces.schema';
 
 @Injectable()
 export class WorkspacesModel {
-  getUserWorkspaces(user_id: string) {
-    const workspaces = sql<TWorkspace[]>`
+  async findManyByUserId(user_id: string) {
+    const workspaces = await sql<TWorkspace[]>`
       SELECT 
         w.id,
         w.name,
@@ -20,5 +20,24 @@ export class WorkspacesModel {
     `;
 
     return workspaces;
+  }
+
+  async create(owner_id: string, { name, logo_url }: TCreateWorkspaceBody) {
+    const workspace = await sql.begin(async (sql) => {
+      const [workspace] = await sql<TWorkspace[]>`
+        INSERT INTO workspaces (name, logo_url, owner_id)
+        VALUES (${name}, ${logo_url ?? ''}, ${owner_id})
+        RETURNING id, name, logo_url, owner_id
+      `;
+
+      await sql`
+        INSERT INTO workspace_members (workspace_id, user_id, role)
+        VALUES (${workspace.id}, ${owner_id}, 'owner')
+      `;
+
+      return workspace;
+    });
+
+    return workspace;
   }
 }
