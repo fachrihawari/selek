@@ -88,7 +88,7 @@ describe('WorkspacesController (e2e)', () => {
       expect(response.body).toBeInstanceOf(Array);
       expect(response.body).toHaveLength(1);
       expect(response.body).toHaveProperty('[0].name', 'Test Workspace');
-      expect(response.body).toHaveProperty('[0].owner_id');
+      expect(response.body).toHaveProperty('[0].ownerId');
     });
 
     it('should reject unauthorized requests', async () => {
@@ -108,7 +108,7 @@ describe('WorkspacesController (e2e)', () => {
     it('should create new workspace', async () => {
       const workspaceData = {
         name: 'New Workspace',
-        logo_url: 'https://example.com/logo.png',
+        logoUrl: 'https://example.com/logo.png',
       };
 
       const response: CreateWorkspacesResponse = await request(
@@ -120,11 +120,11 @@ describe('WorkspacesController (e2e)', () => {
 
       expect(response.status).toBe(HttpStatus.CREATED);
       expect(response.body).toHaveProperty('name', workspaceData.name);
-      expect(response.body).toHaveProperty('logo_url', workspaceData.logo_url);
-      expect(response.body).toHaveProperty('owner_id');
+      expect(response.body).toHaveProperty('logoUrl', workspaceData.logoUrl);
+      expect(response.body).toHaveProperty('ownerId');
     });
 
-    it('should create workspace with default empty logo_url', async () => {
+    it('should create workspace with default empty logoUrl', async () => {
       const response: CreateWorkspacesResponse = await request(
         app.getHttpServer(),
       )
@@ -134,7 +134,7 @@ describe('WorkspacesController (e2e)', () => {
 
       expect(response.status).toBe(HttpStatus.CREATED);
       expect(response.body).toHaveProperty('name', 'No Logo Workspace');
-      expect(response.body).toHaveProperty('logo_url', '');
+      expect(response.body).toHaveProperty('logoUrl', '');
     });
 
     it('should reject invalid workspace data', async () => {

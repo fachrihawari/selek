@@ -152,7 +152,7 @@ describe('AuthController (e2e)', () => {
 
     it('should reject expired JWT token', async () => {
       const expiredToken = jwt.sign(
-        { sub: 'user_id', email: testUser.email },
+        { sub: 'userId', email: testUser.email },
         process.env.JWT_SECRET,
         { expiresIn: '-1h' },
       );
@@ -169,7 +169,7 @@ describe('AuthController (e2e)', () => {
 
     it('should reject token with invalid signature', async () => {
       const invalidSignatureToken = jwt.sign(
-        { sub: 'user_id', email: testUser.email },
+        { sub: 'userId', email: testUser.email },
         'invalid-secret',
       );
 

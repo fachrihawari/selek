@@ -5,14 +5,14 @@ import { WorkspacesModel } from './workspaces.model';
 @Injectable()
 export class WorkspacesService {
   constructor(private readonly workspacesModel: WorkspacesModel) {}
-  async getWorkspaces(owner_id: string): Promise<TWorkspace[]> {
-    return await this.workspacesModel.findManyByUserId(owner_id);
+  async getWorkspaces(ownerId: string): Promise<TWorkspace[]> {
+    return await this.workspacesModel.findManyByUserId(ownerId);
   }
 
   async createWorkspace(
-    owner_id: string,
+    ownerId: string,
     workspace: TCreateWorkspaceBody,
   ): Promise<TWorkspace> {
-    return await this.workspacesModel.create(owner_id, workspace);
+    return await this.workspacesModel.create(ownerId, workspace);
   }
 }

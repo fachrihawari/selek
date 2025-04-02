@@ -7,6 +7,4 @@ if (!process.env.DATABASE_URL) {
   throw new Error('DATABASE_URL is not defined in environment variables');
 }
 
-export const sql = postgres(process.env.DATABASE_URL, {
-  transform: postgres.camel,
-});
+export const sql = postgres(process.env.DATABASE_URL);

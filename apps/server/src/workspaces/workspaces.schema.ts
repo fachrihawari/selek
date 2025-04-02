@@ -1,19 +1,21 @@
 import { z } from 'zod';
 
+// Base workspace schema
 export const WorkspaceSchema = z.object({
   id: z.string().uuid(),
   name: z.string({ message: 'Name is required' }),
-  logo_url: z.string().optional(),
-  owner_id: z
+  logoUrl: z.string().default(''),
+  ownerId: z
     .string({ message: 'Owner Id is required' })
     .uuid({ message: 'Owner Id is invalid' }),
-  created_at: z.date(),
-  updated_at: z.date(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 });
 export type TWorkspace = z.infer<typeof WorkspaceSchema>;
 
+// Workspace schema for creating a new workspace
 export const CreateWorkspaceBodySchema = WorkspaceSchema.pick({
   name: true,
-  logo_url: true,
+  logoUrl: true,
 });
 export type TCreateWorkspaceBody = z.infer<typeof CreateWorkspaceBodySchema>;

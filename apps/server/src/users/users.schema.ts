@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+// Base user schema
 export const UserSchema = z.object({
   id: z.string().uuid(),
   fullName: z
@@ -11,13 +12,13 @@ export const UserSchema = z.object({
   password: z
     .string({ message: 'Password is required' })
     .min(6, { message: 'Password must be at least 6 characters' }),
-  created_at: z.date(),
-  updated_at: z.date(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 });
 export type TUser = z.infer<typeof UserSchema>;
-
 export type TUserSafe = Omit<TUser, 'password'>;
 
+// User body schema for creating and updating a user
 export const UserBodySchema = UserSchema.pick({
   fullName: true,
   email: true,

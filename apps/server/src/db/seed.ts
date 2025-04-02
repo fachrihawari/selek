@@ -31,11 +31,11 @@ async function seed() {
   const workspaces = [
     {
       name: 'Hawari Dev',
-      owner_id: fachri.id,
+      ownerId: fachri.id,
     },
     {
       name: 'Tangerang Dev',
-      owner_id: budi.id,
+      ownerId: budi.id,
     },
   ];
   await sql`DELETE FROM workspaces CASCADE`;
@@ -46,23 +46,23 @@ async function seed() {
   // Seed workspace members
   const workspaceMembers = [
     {
-      workspace_id: hdWorkspace.id,
-      user_id: fachri.id,
+      workspaceId: hdWorkspace.id,
+      userId: fachri.id,
       role: 'owner',
     },
     {
-      workspace_id: tdWorkspace.id,
-      user_id: budi.id,
+      workspaceId: tdWorkspace.id,
+      userId: budi.id,
       role: 'owner',
     },
     {
-      workspace_id: tdWorkspace.id,
-      user_id: fachri.id,
+      workspaceId: tdWorkspace.id,
+      userId: fachri.id,
       role: 'member',
     },
     {
-      workspace_id: hdWorkspace.id,
-      user_id: udin.id,
+      workspaceId: hdWorkspace.id,
+      userId: udin.id,
       role: 'member',
     },
   ];

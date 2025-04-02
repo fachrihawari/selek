@@ -4,36 +4,42 @@ import { TCreateWorkspaceBody, TWorkspace } from './workspaces.schema';
 
 @Injectable()
 export class WorkspacesModel {
-  async findManyByUserId(user_id: string) {
+  async findManyByUserId(userId: string) {
     const workspaces = await sql<TWorkspace[]>`
       SELECT 
         w.id,
         w.name,
-        w.logo_url,
-        w.owner_id,
-        w.created_at,
-        w.updated_at
+        w."logoUrl",
+        w."ownerId"
       FROM workspaces w
-      INNER JOIN workspace_members wm ON w.id = wm.workspace_id
-      WHERE wm.user_id = ${user_id}
-      ORDER BY w.created_at DESC
+      INNER JOIN workspace_members wm ON w.id = wm."workspaceId"
+      WHERE wm."userId" = ${userId}
+      ORDER BY w."createdAt" DESC
     `;
 
     return workspaces;
   }
 
-  async create(owner_id: string, { name, logo_url }: TCreateWorkspaceBody) {
+  async create(ownerId: string, { name, logoUrl }: TCreateWorkspaceBody) {
     const workspace = await sql.begin(async (sql) => {
+      // Insert workspace
+      const worksapceValue = {
+        name,
+        logoUrl,
+        ownerId,
+      };
       const [workspace] = await sql<TWorkspace[]>`
-        INSERT INTO workspaces (name, logo_url, owner_id)
-        VALUES (${name}, ${logo_url ?? ''}, ${owner_id})
-        RETURNING id, name, logo_url, owner_id
+        INSERT INTO workspaces ${sql(worksapceValue)}
+        RETURNING id, name, "logoUrl", "ownerId"
       `;
 
-      await sql`
-        INSERT INTO workspace_members (workspace_id, user_id, role)
-        VALUES (${workspace.id}, ${owner_id}, 'owner')
-      `;
+      // Insert workspace members
+      const workspaceMembersValue = {
+        workspaceId: workspace.id,
+        userId: ownerId,
+        role: 'owner',
+      };
+      await sql` INSERT INTO workspace_members ${sql(workspaceMembersValue)}`;
 
       return workspace;
     });
