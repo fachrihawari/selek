@@ -1,14 +1,34 @@
 import { faker } from '@faker-js/faker';
-import { INestApplication } from '@nestjs/common';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { HttpStatus } from '@nestjs/common';
+import { Express } from 'express';
 import * as request from 'supertest';
 import { AppModule } from '~/app.module';
 import { sql } from '~/db/sql';
 import { ZodExceptionFilter } from '~/shared/zod-exception.filter';
+import { TWorkspace } from '~/workspaces/workspaces.schema';
+
+type LoginResponse = {
+  body: {
+    access_token: string;
+  };
+};
+
+type GetWorkspacesResponse = request.Response & {
+  body: TWorkspace[];
+};
+
+type CreateWorkspacesResponse = request.Response & {
+  body: TWorkspace;
+};
+type ErrorResponse = request.Response & {
+  body: {
+    message: string;
+  };
+};
 
 describe('WorkspacesController (e2e)', () => {
-  let app: INestApplication;
+  let app: INestApplication<Express>;
   let authToken: string;
   const testUser = {
     email: faker.internet.email(),
@@ -28,7 +48,7 @@ describe('WorkspacesController (e2e)', () => {
     // Register and login test user
     await request(app.getHttpServer()).post('/auth/register').send(testUser);
 
-    const loginResponse = await request(app.getHttpServer())
+    const loginResponse: LoginResponse = await request(app.getHttpServer())
       .post('/auth/login')
       .send({
         email: testUser.email,
@@ -60,18 +80,21 @@ describe('WorkspacesController (e2e)', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .send({ name: 'Test Workspace' });
 
-      const response = await request(app.getHttpServer())
+      const response: GetWorkspacesResponse = await request(app.getHttpServer())
         .get('/workspaces')
         .set('Authorization', `Bearer ${authToken}`);
 
       expect(response.status).toBe(HttpStatus.OK);
+      expect(response.body).toBeInstanceOf(Array);
       expect(response.body).toHaveLength(1);
-      expect(response.body[0]).toHaveProperty('name', 'Test Workspace');
-      expect(response.body[0]).toHaveProperty('owner_id');
+      expect(response.body).toHaveProperty('[0].name', 'Test Workspace');
+      expect(response.body).toHaveProperty('[0].owner_id');
     });
 
     it('should reject unauthorized requests', async () => {
-      const response = await request(app.getHttpServer()).get('/workspaces');
+      const response: ErrorResponse = await request(app.getHttpServer()).get(
+        '/workspaces',
+      );
 
       expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
       expect(response.body).toHaveProperty(
@@ -88,7 +111,9 @@ describe('WorkspacesController (e2e)', () => {
         logo_url: 'https://example.com/logo.png',
       };
 
-      const response = await request(app.getHttpServer())
+      const response: CreateWorkspacesResponse = await request(
+        app.getHttpServer(),
+      )
         .post('/workspaces')
         .set('Authorization', `Bearer ${authToken}`)
         .send(workspaceData);
@@ -100,7 +125,9 @@ describe('WorkspacesController (e2e)', () => {
     });
 
     it('should create workspace with default empty logo_url', async () => {
-      const response = await request(app.getHttpServer())
+      const response: CreateWorkspacesResponse = await request(
+        app.getHttpServer(),
+      )
         .post('/workspaces')
         .set('Authorization', `Bearer ${authToken}`)
         .send({ name: 'No Logo Workspace' });
@@ -111,7 +138,7 @@ describe('WorkspacesController (e2e)', () => {
     });
 
     it('should reject invalid workspace data', async () => {
-      const response = await request(app.getHttpServer())
+      const response: ErrorResponse = await request(app.getHttpServer())
         .post('/workspaces')
         .set('Authorization', `Bearer ${authToken}`)
         .send({});

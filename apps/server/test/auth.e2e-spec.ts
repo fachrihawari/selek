@@ -1,8 +1,9 @@
+import { faker } from '@faker-js/faker';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import * as request from 'supertest';
-import { faker } from '@faker-js/faker';
+import { Express } from 'express';
 import * as jwt from 'jsonwebtoken';
+import * as request from 'supertest';
 import { z } from 'zod';
 import { AppModule } from '~/app.module';
 import { sql } from '~/db/sql';
@@ -30,7 +31,7 @@ const ErrorResponseSchema = z.object({
 });
 
 describe('AuthController (e2e)', () => {
-  let app: INestApplication;
+  let app: INestApplication<Express>;
   const testUser: TUserBody = {
     email: faker.internet.email(),
     password: faker.internet.password(),
