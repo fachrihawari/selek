@@ -5,15 +5,18 @@ import { TCreateWorkspaceBody, TWorkspace } from './workspaces.schema';
 @Injectable()
 export class WorkspacesModel {
   async findManyByUserId(userId: string) {
-    const workspaces = await sql<TWorkspace[]>`
+    const workspaces = await sql<TWorkspace & { memberCount: number }[]>`
       SELECT 
         w.id,
         w.name,
         w."logoUrl",
-        w."ownerId"
+        w."ownerId",
+        COUNT(DISTINCT wm2."userId")::int as "memberCount"
       FROM workspaces w
       INNER JOIN workspace_members wm ON w.id = wm."workspaceId"
+      LEFT JOIN workspace_members wm2 ON w.id = wm2."workspaceId"
       WHERE wm."userId" = ${userId}
+      GROUP BY w.id, w.name, w."logoUrl", w."ownerId"
       ORDER BY w."createdAt" DESC
     `;
 

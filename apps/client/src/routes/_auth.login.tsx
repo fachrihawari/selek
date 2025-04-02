@@ -1,6 +1,7 @@
 import toast from "react-hot-toast";
 import { Form, Link, redirect, useNavigation } from "react-router";
 import type { Route } from "./+types/_auth.login";
+import { ACCESS_TOKEN_KEY } from "~/constants";
 import { http, type IHttpResponse } from "~/helpers/http";
 
 export function meta() {
@@ -24,7 +25,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
       body,
     });
 
-    localStorage.setItem("access_token", response.access_token);
+    localStorage.setItem(ACCESS_TOKEN_KEY, response.access_token);
 
     toast.success("Welcome to Selek!");
     return redirect("/workspaces");

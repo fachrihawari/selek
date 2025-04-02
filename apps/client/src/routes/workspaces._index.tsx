@@ -1,4 +1,6 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import type { Route } from "./+types/workspaces._index";
+import { http } from "~/helpers/http";
 
 export function meta() {
   return [
@@ -10,16 +12,18 @@ export function meta() {
   ];
 }
 
-export default function Workspaces() {
-  // Mock data - replace with actual API call later
-  const workspaces = [
-    {
-      id: "1",
-      name: "Hacktiv8",
-      icon: "🦊",
-      memberCount: 142,
-    },
-  ];
+export async function clientLoader() {
+  try {
+    const workspaces = await http<IWorkspace[]>("/workspaces");
+    return { workspaces };
+  } catch {
+    return { workspaces: [] }; // Return an empty array if there's an error fetching workspaces for yo
+  }
+}
+
+export default function Workspaces({ loaderData }: Route.ComponentProps) {
+  const { workspaces } = loaderData;
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gradient-to-b from-orange-100 to-white">
@@ -45,7 +49,15 @@ export default function Workspaces() {
             >
               <div className="flex items-center">
                 <div className="bg-orange-100 h-14 w-14 rounded flex items-center justify-center text-2xl mr-4">
-                  {workspace.icon}
+                  {workspace.logoUrl ? (
+                    <img
+                      src={workspace.logoUrl}
+                      alt={workspace.name}
+                      className="h-14 w-14"
+                    />
+                  ) : (
+                    workspace.name[0]
+                  )}
                 </div>
                 <div>
                   <h3 className="font-bold">{workspace.name}</h3>
@@ -93,7 +105,16 @@ export default function Workspaces() {
 
         <div className="mt-4 text-center text-sm text-gray-500">
           Not seeing your workspace?{" "}
-          <button className="text-orange-600 hover:text-orange-700">
+          <button
+            onClick={() => {
+              console.log("TODO: Implement");
+              localStorage.clear();
+              navigate("/login", {
+                replace: true,
+              });
+            }}
+            className="text-orange-600 hover:text-orange-700"
+          >
             Try using a different email
           </button>
         </div>

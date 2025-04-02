@@ -1,4 +1,4 @@
-const localStorageKey = "__selek_token__";
+import { ACCESS_TOKEN_KEY } from "~/constants";
 
 interface HttpConfig extends RequestInit {
   body?: any;
@@ -19,7 +19,7 @@ export async function http<T = IHttpResponse>(
   };
 
   //  assign token to headers if exists in localstorage
-  const token = window.localStorage.getItem(localStorageKey);
+  const token = window.localStorage.getItem(ACCESS_TOKEN_KEY);
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   }
@@ -42,7 +42,7 @@ export async function http<T = IHttpResponse>(
     .then(async (response) => {
       // if token is expired, remove it from localstorage and redirect to login
       if (response.status === 401 && headers.Authorization) {
-        window.localStorage.removeItem(localStorageKey);
+        window.localStorage.removeItem(ACCESS_TOKEN_KEY);
         window.location.assign("/");
         return;
       }
