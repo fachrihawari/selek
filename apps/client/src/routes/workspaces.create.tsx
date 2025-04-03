@@ -3,6 +3,9 @@ import { Form, Link, redirect, useNavigation } from "react-router";
 import { http, type IHttpResponse } from "~/helpers/http";
 
 export async function clientAction({ request }: { request: Request }) {
+  // NOTE: remove later
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  
   try {
     const formData = await request.formData();
     const body = Object.fromEntries(formData);
@@ -77,9 +80,7 @@ export default function CreateWorkspacePage() {
                 type="submit"
                 className="flex-1 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-800 hover:bg-orange-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-800"
               >
-                {navigation.state === "submitting"
-                  ? "Creating..."
-                  : "Create"}
+                {navigation.state === "submitting" ? "Creating..." : "Create"}
               </button>
             </div>
           </Form>

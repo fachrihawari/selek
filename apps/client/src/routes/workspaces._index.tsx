@@ -69,7 +69,7 @@ export default function WorkspacesPage({ loaderData }: Route.ComponentProps) {
                 </div>
               </div>
               <Link
-                to={`/app/workspace/${workspace.id}`}
+                to={`/workspaces/${workspace.id}`}
                 className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors"
               >
                 Launch Selek
