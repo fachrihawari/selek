@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { TCreateWorkspaceBody, TWorkspace } from './workspaces.schema';
+import { TCreateWorkspaceBody } from './workspaces.schema';
 import { WorkspacesModel } from './workspaces.model';
 
 @Injectable()

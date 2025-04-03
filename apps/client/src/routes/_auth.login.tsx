@@ -34,7 +34,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   }
 }
 
-export default function Login() {
+export default function LoginPage() {
   const navigation = useNavigation();
 
   return (

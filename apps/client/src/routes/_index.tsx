@@ -12,7 +12,7 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function Home() {
+export default function HomePage() {
   return (
     <div className="min-h-screen flex justify-center items-center bg-gradient-to-b from-orange-100 to-white">
       {/* Hero Section */}

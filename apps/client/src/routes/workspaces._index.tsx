@@ -21,7 +21,7 @@ export async function clientLoader() {
   }
 }
 
-export default function Workspaces({ loaderData }: Route.ComponentProps) {
+export default function WorkspacesPage({ loaderData }: Route.ComponentProps) {
   const { workspaces } = loaderData;
   const navigate = useNavigate();
 
@@ -42,10 +42,12 @@ export default function Workspaces({ loaderData }: Route.ComponentProps) {
             Workspaces for you@example.com
           </h2>
 
-          {workspaces.map((workspace) => (
+          {workspaces.map((workspace, idx) => (
             <div
               key={workspace.id}
-              className="flex items-center justify-between border-b border-orange-100 pb-4 mb-4"
+              className={`flex items-center justify-between border-orange-100 ${
+                idx === workspaces.length - 1 ? "border-b-0 pb-0 mb-0" : "border-b pb-4 mb-4"
+              }`}
             >
               <div className="flex items-center">
                 <div className="bg-orange-100 h-14 w-14 rounded flex items-center justify-center text-2xl mr-4">
@@ -74,18 +76,12 @@ export default function Workspaces({ loaderData }: Route.ComponentProps) {
               </Link>
             </div>
           ))}
-
-          <div className="mt-4 text-center">
-            <button className="text-orange-600 hover:text-orange-700 text-sm">
-              See more
-            </button>
-          </div>
         </div>
 
         <div className="mt-8 bg-white/80 backdrop-blur-sm shadow-sm rounded-lg px-8 py-6 border border-orange-200">
           <div className="flex items-center">
             <div className="mr-4 hidden sm:block">
-              <div className="bg-orange-100 h-16 w-16 rounded-full flex items-center justify-center text-2xl">
+              <div className="bg-orange-100 h-16 w-16 rounded flex items-center justify-center text-2xl">
                 👥
               </div>
             </div>
@@ -94,7 +90,7 @@ export default function Workspaces({ loaderData }: Route.ComponentProps) {
                 Want to use Selek with a different team?
               </h3>
               <Link
-                to="/app/create-workspace"
+                to="/workspaces/create"
                 className="inline-block bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors"
               >
                 Create a new workspace

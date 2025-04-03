@@ -29,7 +29,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   }
 }
 
-export default function Register() {
+export default function RegisterPage() {
   const navigation = useNavigation();
 
   return (

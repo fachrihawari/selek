@@ -3,11 +3,11 @@ import { z } from 'zod';
 // Base workspace schema
 export const WorkspaceSchema = z.object({
   id: z.string().uuid(),
-  name: z.string({ message: 'Name is required' }),
+  name: z.string({ message: 'Workspace Name is required' }).min(3, {
+    message: 'Workspace Name must be at least 3 characters',
+  }),
   logoUrl: z.string().default(''),
-  ownerId: z
-    .string({ message: 'Owner Id is required' })
-    .uuid({ message: 'Owner Id is invalid' }),
+  ownerId: z.string().uuid(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
