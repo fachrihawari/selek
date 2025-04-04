@@ -64,6 +64,7 @@ export default function LoginPage() {
                 id="email"
                 required
                 className="mt-1 block w-full px-3 py-2 border border-orange-200 rounded-md shadow-sm focus:ring-orange-800 focus:border-orange-800 sm:text-sm"
+                defaultValue="fachri@mail.com"
               />
             </div>
 
@@ -81,6 +82,7 @@ export default function LoginPage() {
                   id="password"
                   required
                   className="block w-full px-3 py-2 border border-orange-200 rounded-md shadow-sm focus:ring-orange-800 focus:border-orange-800 sm:text-sm"
+                  defaultValue="qweqwe"
                 />
                 <div className="text-right mt-1">
                   <Link
