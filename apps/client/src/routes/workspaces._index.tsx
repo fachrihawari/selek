@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router";
 import type { Route } from "./+types/workspaces._index";
 import { http } from "~/helpers/http";
+import type { IWorkspace } from "~/interfaces/IWorkspace";
 
 export function meta() {
   return [

@@ -1,4 +1,4 @@
-interface IWorkspace {
+export interface IWorkspace {
     id: string;
     name: string;
     logoUrl: string;
