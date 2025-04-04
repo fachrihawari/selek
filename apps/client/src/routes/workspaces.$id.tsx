@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { Route } from "./+types/workspaces.$id";
 import {
   HiHashtag,
@@ -6,9 +7,10 @@ import {
   HiPlus,
   HiPaperAirplane,
   HiFaceSmile,
-  HiPencil,
   HiUser,
   HiBuildingOffice2,
+  HiBars3,
+  HiXMark,
 } from "react-icons/hi2";
 
 export async function clientLoader() {
@@ -24,11 +26,25 @@ export default function WorkspaceDetailPage({
   loaderData,
 }: Route.ComponentProps) {
   const { workspace } = loaderData;
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="h-screen flex">
+      {/* Mobile Sidebar Overlay */}
+      <div 
+        className={`fixed inset-0 bg-black/50 z-20 lg:hidden ${
+          sidebarOpen ? "block" : "hidden"
+        }`}
+        onClick={() => setSidebarOpen(false)}
+      />
+
       {/* Sidebar */}
-      <div className="w-64 bg-gradient-to-b from-orange-950 to-orange-900 text-white flex flex-col">
+      <div className={`
+        fixed inset-y-0 left-0 z-30 w-64 bg-gradient-to-b from-orange-950 to-orange-900 
+        text-white flex flex-col transform transition-transform duration-300 ease-in-out
+        lg:relative lg:translate-x-0
+        ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+      `}>
         {/* Workspace Header */}
         <div className="h-14 px-4 flex items-center justify-between border-b border-orange-800/50">
           <div className="flex items-center space-x-2">
@@ -39,8 +55,11 @@ export default function WorkspaceDetailPage({
               {workspace.name}
             </h1>
           </div>
-          <button className="w-8 h-8 flex items-center justify-center rounded hover:bg-orange-800/30">
-            <HiPencil className="text-xl" />
+          <button 
+            className="w-8 h-8 flex items-center justify-center rounded hover:bg-orange-800/30 lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          >
+            <HiXMark className="text-xl" />
           </button>
         </div>
 
@@ -101,24 +120,30 @@ export default function WorkspaceDetailPage({
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col bg-white">
+      <div className="flex-1 flex flex-col bg-white min-w-0">
         {/* Channel Header */}
         <div className="h-14 px-4 flex items-center justify-between border-b border-gray-200">
           <div className="flex items-center space-x-2">
+            <button 
+              className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-gray-100 lg:hidden"
+              onClick={() => setSidebarOpen(true)}
+            >
+              <HiBars3 className="text-xl text-gray-600" />
+            </button>
             <HiHashtag className="text-xl text-gray-600" />
-            <h2 className="font-medium text-gray-900">general</h2>
+            <h2 className="font-medium text-gray-900 truncate">general</h2>
           </div>
           <div className="flex items-center space-x-2">
-            <button className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-gray-100">
+            <button className="w-8 h-8 hidden sm:flex items-center justify-center rounded-md hover:bg-gray-100">
               <HiMagnifyingGlass className="text-xl text-gray-600" />
             </button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-gray-100">
+            <button className="w-8 h-8 hidden sm:flex items-center justify-center rounded-md hover:bg-gray-100">
               <HiInformationCircle className="text-xl text-gray-600" />
             </button>
           </div>
         </div>
 
-        {/* Messages Area */}
+        {/* Messages Area - remains mostly the same */}
         <div className="flex-1 overflow-y-auto">
           <div className="p-4">
             <div className="text-center text-gray-500 py-8">
@@ -134,18 +159,18 @@ export default function WorkspaceDetailPage({
         </div>
 
         {/* Message Input */}
-        <div className="p-4 border-t border-gray-200 bg-white">
-          <div className="flex items-center justify-between px-4 py-2 border border-gray-300 rounded-lg">
+        <div className="p-2 sm:p-4 border-t border-gray-200 bg-white">
+          <div className="flex items-center justify-between px-2 sm:px-4 py-2 border border-gray-300 rounded-lg">
             <input
               type="text"
               placeholder="Message #general"
-              className="flex-1 focus:outline-none"
+              className="flex-1 focus:outline-none min-w-0"
             />
-            <div className="flex items-center space-x-2 ml-4">
-              <button className="w-8 h-8 flex items-center justify-center rounded hover:bg-gray-100">
+            <div className="flex items-center space-x-1 sm:space-x-2 ml-2 sm:ml-4">
+              <button className="w-8 h-8 hidden sm:flex items-center justify-center rounded hover:bg-gray-100">
                 <HiPlus className="text-xl text-gray-600" />
               </button>
-              <button className="w-8 h-8 flex items-center justify-center rounded hover:bg-gray-100">
+              <button className="w-8 h-8 hidden sm:flex items-center justify-center rounded hover:bg-gray-100">
                 <HiFaceSmile className="text-xl text-gray-600" />
               </button>
               <button className="w-8 h-8 flex items-center justify-center rounded hover:bg-gray-100">
