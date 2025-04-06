@@ -1,7 +1,7 @@
 import toast from "react-hot-toast";
 import { Link, redirect, Form, useNavigation } from "react-router";
 import type { Route } from "./+types/_auth.register";
-import { http, type IHttpResponse } from "~/helpers/http";
+import { http, type IHttpResponse } from "~/helpers/http.helper";
 
 export function meta() {
   return [
@@ -14,9 +14,6 @@ export function meta() {
 }
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
-  // NOTE: remove later
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
   try {
     const formData = await request.formData();
     const body = Object.fromEntries(formData);

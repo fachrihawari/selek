@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router";
-import type { Route } from "./+types/workspaces._index";
-import { http } from "~/helpers/http";
-import type { IWorkspace } from "~/interfaces/IWorkspace";
+import useSWR from "swr";
+import type { IUser } from "~/interfaces/user.interface";
+import type { IWorkspace } from "~/interfaces/workspace.interface";
 
 export function meta() {
   return [
@@ -13,17 +13,9 @@ export function meta() {
   ];
 }
 
-export async function clientLoader() {
-  try {
-    const workspaces = await http<IWorkspace[]>("/workspaces");
-    return { workspaces };
-  } catch {
-    return { workspaces: [] }; // Return an empty array if there's an error fetching workspaces for yo
-  }
-}
-
-export default function WorkspacesPage({ loaderData }: Route.ComponentProps) {
-  const { workspaces } = loaderData;
+export default function WorkspacesPage() {
+  const { data: me, isValidating } = useSWR<IUser>("/auth/me");
+  const { data: workspaces } = useSWR<IWorkspace[]>("/workspaces");
   const navigate = useNavigate();
 
   return (
@@ -40,14 +32,16 @@ export default function WorkspacesPage({ loaderData }: Route.ComponentProps) {
 
         <div className="bg-white/80 backdrop-blur-sm shadow-sm rounded-lg px-8 py-6 border border-orange-200">
           <h2 className="text-gray-700 mb-4 font-medium">
-            Workspaces for you@example.com
+            Workspaces for {isValidating ? "..." : me && me.email}
           </h2>
 
-          {workspaces.map((workspace, idx) => (
+          {workspaces?.map((workspace, idx) => (
             <div
               key={workspace.id}
               className={`flex items-center justify-between border-orange-100 ${
-                idx === workspaces.length - 1 ? "border-b-0 pb-0 mb-0" : "border-b pb-4 mb-4"
+                idx === workspaces?.length - 1
+                  ? "border-b-0 pb-0 mb-0"
+                  : "border-b pb-4 mb-4"
               }`}
             >
               <div className="flex items-center">

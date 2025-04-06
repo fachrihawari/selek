@@ -10,6 +10,8 @@ import {
 import type { Route } from "./+types/root";
 import "./app.css";
 import { Toaster } from "react-hot-toast";
+import { SWRConfig } from "swr";
+import { http } from "./helpers/http.helper";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -35,7 +37,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <Toaster position="top-center" />
-        {children}
+        <SWRConfig
+          value={{
+            fetcher: http,
+            dedupingInterval: 5 * 60 * 1000, // 5 minutes
+          }}
+        >
+          {children}
+        </SWRConfig>
         <ScrollRestoration />
         <Scripts />
       </body>

@@ -5,7 +5,7 @@ import { TCreateWorkspaceBody, TWorkspace } from './workspaces.schema';
 @Injectable()
 export class WorkspacesModel {
   async findManyByUserId(userId: string) {
-    const workspaces = await sql<TWorkspace & { memberCount: number }[]>`
+    const workspaces = await sql<(TWorkspace & { memberCount: number })[]>`
       SELECT 
         w.id,
         w.name,
@@ -31,7 +31,7 @@ export class WorkspacesModel {
         logoUrl,
         ownerId,
       };
-      const [workspace] = await sql<TWorkspace[]>`
+      const [workspace] = await sql<(TWorkspace & { memberCount: number })[]>`
         INSERT INTO workspaces ${sql(worksapceValue)}
         RETURNING id, name, "logoUrl", "ownerId"
       `;
@@ -43,6 +43,9 @@ export class WorkspacesModel {
         role: 'owner',
       };
       await sql` INSERT INTO workspace_members ${sql(workspaceMembersValue)}`;
+
+      // Hardcode member count, cause we only have one member for newly created workspace
+      workspace.memberCount = 1;
 
       return workspace;
     });

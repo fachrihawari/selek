@@ -1,15 +1,26 @@
 import toast from "react-hot-toast";
 import { Form, Link, redirect, useNavigation } from "react-router";
-import { http, type IHttpResponse } from "~/helpers/http";
+import { mutate } from "swr";
+import { http, type IHttpResponse } from "~/helpers/http.helper";
+import type { IWorkspace } from "~/interfaces/workspace.interface";
 
 export async function clientAction({ request }: { request: Request }) {
-  // NOTE: remove later
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  
   try {
+    // Create workspace
     const formData = await request.formData();
     const body = Object.fromEntries(formData);
-    await http("/workspaces", { body });
+    const workspace = await http<IWorkspace>("/workspaces", { body });
+
+    // Update the cache
+    mutate<IWorkspace[]>(
+      "/workspaces",
+      (currentData) => [workspace, ...(currentData ?? [])],
+      {
+        revalidate: false,
+      }
+    );
+
+    // Redirect to workspaces
     toast.success("Create workspace successfully");
     return redirect("/workspaces");
   } catch (error) {

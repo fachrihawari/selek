@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 import { Form, Link, redirect, useNavigation } from "react-router";
 import type { Route } from "./+types/_auth.login";
 import { ACCESS_TOKEN_KEY } from "~/constants";
-import { http, type IHttpResponse } from "~/helpers/http";
+import { http, type IHttpResponse } from "~/helpers/http.helper";
 
 export function meta() {
   return [
@@ -15,9 +15,6 @@ export function meta() {
 }
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
-  // NOTE: remove later
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
   try {
     const formData = await request.formData();
     const body = Object.fromEntries(formData);
