@@ -1,4 +1,4 @@
-import { ACCESS_TOKEN_KEY } from "~/constants";
+import { ACCESS_TOKEN_KEY } from "~/shared/app.constant";
 
 interface HttpConfig extends RequestInit {
   body?: any;

@@ -1,7 +1,8 @@
 import { Link, useNavigate } from "react-router";
 import useSWR from "swr";
-import type { IUser } from "~/interfaces/user.interface";
-import type { IWorkspace } from "~/interfaces/workspace.interface";
+
+import type { IUser } from "~/users";
+import type { IWorkspace } from "~/workspaces/types/workspaces.interface";
 
 export function meta() {
   return [

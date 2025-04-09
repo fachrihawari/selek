@@ -6,12 +6,12 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
+import { Toaster } from "react-hot-toast";
+import { SWRConfig } from "swr";
 
 import type { Route } from "./+types/root";
 import "./app.css";
-import { Toaster } from "react-hot-toast";
-import { SWRConfig } from "swr";
-import { http } from "./helpers/http.helper";
+import { http } from "./shared";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },

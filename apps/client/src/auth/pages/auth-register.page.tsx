@@ -1,7 +1,8 @@
 import toast from "react-hot-toast";
 import { Link, redirect, Form, useNavigation } from "react-router";
-import type { Route } from "./+types/_auth.register";
-import { http, type IHttpResponse } from "~/helpers/http.helper";
+
+import type { Route } from "./+types/auth-register.page";
+import { http, type IHttpResponse } from "~/shared";
 
 export function meta() {
   return [

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import type { Route } from "./+types/workspaces.$id";
 import {
   HiHashtag,
   HiMagnifyingGlass,
@@ -12,6 +11,8 @@ import {
   HiBars3,
   HiXMark,
 } from "react-icons/hi2";
+
+import type { Route } from "./+types/workspaces-detail.page";
 
 export async function clientLoader() {
   return {
@@ -31,7 +32,7 @@ export default function WorkspaceDetailPage({
   return (
     <div className="h-screen flex">
       {/* Mobile Sidebar Overlay */}
-      <div 
+      <div
         className={`fixed inset-0 bg-black/50 z-20 lg:hidden ${
           sidebarOpen ? "block" : "hidden"
         }`}
@@ -39,12 +40,14 @@ export default function WorkspaceDetailPage({
       />
 
       {/* Sidebar */}
-      <div className={`
+      <div
+        className={`
         fixed inset-y-0 left-0 z-30 w-64 bg-gradient-to-b from-orange-950 to-orange-900 
         text-white flex flex-col transform transition-transform duration-300 ease-in-out
         lg:relative lg:translate-x-0
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-      `}>
+      `}
+      >
         {/* Workspace Header */}
         <div className="h-14 px-4 flex items-center justify-between border-b border-orange-800/50">
           <div className="flex items-center space-x-2">
@@ -55,7 +58,7 @@ export default function WorkspaceDetailPage({
               {workspace.name}
             </h1>
           </div>
-          <button 
+          <button
             className="w-8 h-8 flex items-center justify-center rounded hover:bg-orange-800/30 lg:hidden"
             onClick={() => setSidebarOpen(false)}
           >
@@ -124,7 +127,7 @@ export default function WorkspaceDetailPage({
         {/* Channel Header */}
         <div className="h-14 px-4 flex items-center justify-between border-b border-gray-200">
           <div className="flex items-center space-x-2">
-            <button 
+            <button
               className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-gray-100 lg:hidden"
               onClick={() => setSidebarOpen(true)}
             >
