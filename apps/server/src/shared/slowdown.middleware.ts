@@ -1,15 +1,22 @@
+import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NextFunction, Request, Response } from 'express';
 
-const SLOWDOWN_INTERVAL = 2000;
+@Injectable()
+export class SlowdownMiddleware implements NestMiddleware {
+  private readonly logger = new Logger(SlowdownMiddleware.name);
+  private readonly slowdownInterval = 2000;
 
-export async function slowdownMiddleware(
-  _req: Request,
-  _res: Response,
-  next: NextFunction,
-) {
-  if (process.env.NODE_ENV === 'development') {
-    console.log(`Slowdown request for ${SLOWDOWN_INTERVAL}ms`);
-    await new Promise((resolve) => setTimeout(resolve, SLOWDOWN_INTERVAL));
+  constructor(private readonly configService: ConfigService) {
+    this.logger.log(`Slowdown interval: ${this.slowdownInterval}ms`);
   }
-  next();
+
+  use(_req: Request, _res: Response, next: NextFunction) {
+    if (this.configService.getOrThrow('NODE_ENV') === 'development') {
+      this.logger.warn(`Slowdown request for ${this.slowdownInterval}ms`);
+      new Promise((resolve) => setTimeout(resolve, this.slowdownInterval)).then(
+        next,
+      );
+    }
+  }
 }

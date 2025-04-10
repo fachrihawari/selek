@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ZodExceptionFilter } from './shared/zod-exception.filter';
-import { slowdownMiddleware } from './shared/slowdown.middleware';
 
 async function bootstrap() {
   // Create the NestJS application
@@ -12,9 +11,6 @@ async function bootstrap() {
 
   // Enable CORS
   app.enableCors();
-
-  // Enable slowdown
-  app.use(slowdownMiddleware);
 
   // Start the server
   await app.listen(process.env.PORT ?? 3000);
