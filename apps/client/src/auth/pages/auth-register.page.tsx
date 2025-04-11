@@ -99,7 +99,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <Button type="submit">
+              <Button fullWidth type="submit">
                 {navigation.state === "submitting"
                   ? "Registering..."
                   : "Register"}

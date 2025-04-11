@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 
 import type { Route } from "./+types/home.page";
+import { Button } from "./components";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -31,23 +32,18 @@ export default function HomePage() {
             Selek brings all your team communication into one place, making it
             searchable and accessible anywhere.
           </p>
-          <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
-            <div className="rounded-md shadow">
-              <Link
-                to="/register"
-                className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-orange-800 hover:bg-orange-900 md:py-4 md:text-lg md:px-10 transform transition duration-300 ease-in-out hover:scale-105"
-              >
-                Get Started for Free
-              </Link>
-            </div>
-            <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
-              <Link
-                to="/login"
-                className="w-full flex items-center justify-center px-8 py-3 border border-orange-300 text-base font-medium rounded-md text-orange-800 bg-white hover:bg-orange-50 md:py-4 md:text-lg md:px-10 transform transition duration-300 ease-in-out hover:scale-105"
-              >
-                Sign In
-              </Link>
-            </div>
+          <div className="mt-5 max-w-md mx-auto flex flex-col md:flex-row md:mt-8">
+            <Button size="lg" to="/register">
+              Get Started for Free
+            </Button>
+            <Button
+              size="lg"
+              variant="secondary"
+              to="/login"
+              className="mt-3 md:mt-0 md:ml-3"
+            >
+              Sign In
+            </Button>
           </div>
         </div>
       </div>

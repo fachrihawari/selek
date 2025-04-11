@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router";
 import useSWR from "swr";
+import { Button } from "~/components";
 
 import type { IUser } from "~/users";
 import type { IWorkspace } from "~/workspaces/types/workspaces.interface";
@@ -64,12 +65,7 @@ export default function WorkspacesPage() {
                   </div>
                 </div>
               </div>
-              <Link
-                to={`/workspaces/${workspace.id}`}
-                className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors"
-              >
-                Launch Selek
-              </Link>
+              <Button to={`/workspaces/${workspace.id}`}>Launch Selek</Button>
             </div>
           ))}
         </div>
@@ -85,12 +81,7 @@ export default function WorkspacesPage() {
               <h3 className="font-medium text-gray-900 mb-2">
                 Want to use Selek with a different team?
               </h3>
-              <Link
-                to="/workspaces/create"
-                className="inline-block bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors"
-              >
-                Create a new workspace
-              </Link>
+              <Button to="/workspaces/create">Create a new workspace</Button>
             </div>
           </div>
         </div>

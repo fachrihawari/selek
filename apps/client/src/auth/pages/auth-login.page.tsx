@@ -94,7 +94,7 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <Button type="submit">
+              <Button fullWidth type="submit">
                 {navigation.state === "submitting"
                   ? "Signing in..."
                   : "Sign in"}
