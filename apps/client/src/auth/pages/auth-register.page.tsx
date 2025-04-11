@@ -2,6 +2,7 @@ import toast from "react-hot-toast";
 import { Link, redirect, Form, useNavigation } from "react-router";
 
 import type { Route } from "./+types/auth-register.page";
+import { Button } from "~/components";
 import { http, type IHttpResponse } from "~/shared";
 
 export function meta() {
@@ -98,14 +99,11 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <button
-                type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-800 hover:bg-orange-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-800 transform transition duration-300 ease-in-out hover:scale-105"
-              >
+              <Button type="submit">
                 {navigation.state === "submitting"
                   ? "Registering..."
                   : "Register"}
-              </button>
+              </Button>
             </div>
           </Form>
 
