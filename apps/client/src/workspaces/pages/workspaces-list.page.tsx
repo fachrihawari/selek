@@ -18,7 +18,7 @@ export function meta() {
 }
 
 export default function WorkspacesPage() {
-  const { data: me, isValidating } = useSWR<IUser>("/auth/me");
+  const { data: me } = useSWR<IUser>("/auth/me");
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gradient-to-b from-orange-100 to-white">
@@ -26,9 +26,11 @@ export default function WorkspacesPage() {
         <WorkspacesHeader />
 
         <div className="bg-white/80 backdrop-blur-sm shadow-sm rounded-lg px-8 py-6 border border-orange-200">
-          <h2 className="text-gray-700 mb-4 font-medium">
-            Workspaces for {isValidating ? "..." : me && me.email}
-          </h2>
+          {me && (
+            <h2 className="text-gray-700 mb-4 font-medium">
+              Workspaces for {me.email}
+            </h2>
+          )}
 
           <WorkspacesList />
         </div>
@@ -55,16 +57,18 @@ function WorkspacesHeader() {
 }
 
 function WorkspacesList() {
-  const workspaces = useSWR<IWorkspace[], IHttpResponse>("/workspaces");
+  const { isLoading, error, data } = useSWR<IWorkspace[], IHttpResponse>(
+    "/workspaces"
+  );
 
-  if (workspaces.isLoading) {
+  if (isLoading) {
     return <Loading />;
   }
-  if (workspaces.error) {
-    return <AlertError message={workspaces.error.message} />;
+  if (error) {
+    return <AlertError message={error.message} />;
   }
 
-  return (workspaces.data ?? []).map((workspace) => (
+  return (data ?? []).map((workspace) => (
     <WorkspaceCard workspace={workspace} />
   ));
 }
