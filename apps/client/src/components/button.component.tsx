@@ -11,8 +11,11 @@ const button = cva(
           "border border-transparent bg-orange-800 hover:bg-orange-900 text-white",
         secondary:
           "border border-orange-300 bg-white hover:bg-orange-50 text-orange-800",
+        danger:
+          "border border-red-300 bg-red-50 hover:bg-red-100 text-red-800",
       },
       size: {
+        xs: "py-1 px-2 text-xs",
         sm: "py-2 px-4 text-sm",
         lg: "py-3 px-8 text-base md:py-4 md:text-lg md:px-10 ",
       },
