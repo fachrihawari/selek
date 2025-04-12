@@ -52,4 +52,25 @@ export class WorkspacesModel {
 
     return workspace;
   }
+  async isMember(userId: string, workspaceId: string) {
+    const [workspace] = await sql<{ id: string }[]>`
+      SELECT "joinedAt"
+      FROM workspace_members
+      WHERE "userId" = ${userId} AND "workspaceId" = ${workspaceId}
+    `;
+    return Boolean(workspace);
+  }
+
+  async findById(workspaceId: string) {
+    const [workspace] = await sql<(TWorkspace & { memberCount: number })[]>`
+      SELECT
+        id,
+        name,
+        "logoUrl",
+        "ownerId"
+      FROM workspaces 
+      where id = ${workspaceId}
+    `;
+    return workspace;
+  }
 }

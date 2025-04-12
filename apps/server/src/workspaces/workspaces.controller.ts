@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -16,6 +17,7 @@ import {
   CreateWorkspaceBodySchema,
   TCreateWorkspaceBody,
 } from './workspaces.schema';
+import { WorkspaceGuard } from './workspaces.guard';
 
 @Controller('workspaces')
 @UseGuards(AuthGuard)
@@ -26,6 +28,13 @@ export class WorkspacesController {
   @HttpCode(HttpStatus.OK)
   async getWorkspaces(@AuthUser() user: TUserSafe) {
     return await this.workspacesService.getWorkspaces(user.id);
+  }
+
+  @Get('/:id')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(WorkspaceGuard)
+  async getWorkspace(@Param('id') workspaceId: string) {
+    return await this.workspacesService.getWorkspace(workspaceId);
   }
 
   @Post('/')
