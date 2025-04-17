@@ -4,6 +4,11 @@ import { TUser } from '~/users/users.schema';
 import { TWorkspace } from '~/workspaces/workspaces.schema';
 
 async function seed() {
+  await sql`DELETE FROM workspace_members`;
+  await sql`DELETE FROM workspace_channels`;
+  await sql`DELETE FROM workspaces`;
+  await sql`DELETE FROM users`;
+
   // Seed users
   const users = [
     {
@@ -22,7 +27,6 @@ async function seed() {
       password: await hash('qweqwe', 10),
     },
   ];
-  await sql`DELETE FROM users CASCADE`;
   const [fachri, budi, udin]: Pick<TUser, 'id'>[] = await sql`
     INSERT INTO users ${sql(users)} RETURNING id
   `;
@@ -38,10 +42,27 @@ async function seed() {
       ownerId: budi.id,
     },
   ];
-  await sql`DELETE FROM workspaces CASCADE`;
   const [hdWorkspace, tdWorkspace]: Pick<TWorkspace, 'id'>[] = await sql`
     INSERT INTO workspaces ${sql(workspaces)} RETURNING id
   `;
+
+  // Seed workspace channels
+  const channels = [
+    {
+      name: 'General',
+      workspaceId: hdWorkspace.id,
+      ownerId: fachri.id,
+      members: [fachri.id, udin.id],
+    },
+    {
+      name: 'Random',
+      workspaceId: hdWorkspace.id,
+      ownerId: fachri.id,
+      members: [fachri.id, budi.id],
+    }
+  ];
+
+  await sql`INSERT INTO workspace_channels ${sql(channels)}`;
 
   // Seed workspace members
   const workspaceMembers = [
@@ -66,7 +87,6 @@ async function seed() {
       role: 'member',
     },
   ];
-  await sql`DELETE FROM workspace_members CASCADE`;
   await sql`INSERT INTO workspace_members ${sql(workspaceMembers)}`;
 
   await sql.end();

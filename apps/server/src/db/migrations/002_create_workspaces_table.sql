@@ -11,5 +11,4 @@ CREATE TABLE IF NOT EXISTS workspaces (
 );
 
 -- Add indexes for faster lookups
-CREATE INDEX IF NOT EXISTS workspaces_name_idx ON workspaces(name);
 CREATE INDEX IF NOT EXISTS workspaces_ownerId_idx ON workspaces("ownerId");
