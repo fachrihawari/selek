@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router";
 import useSWR from "swr";
 
-import type { IWorkspace } from "~/workspaces/types/workspaces.interface";
-import WorkspaceCard from "~/workspaces/components/workspace-card.component";
+import type { IWorkspace } from "~/workspaces/workspaces.interface";
+import WorkspaceCard from "~/workspaces/workspace-card.component";
 import { AlertError, Button, Loading } from "~/components";
 import type { IUser } from "~/users";
 import type { IHttpResponse } from "~/shared";
@@ -69,7 +69,7 @@ function WorkspacesList() {
   }
 
   return (data ?? []).map((workspace) => (
-    <WorkspaceCard workspace={workspace} />
+    <WorkspaceCard key={workspace.id} workspace={workspace} />
   ));
 }
 

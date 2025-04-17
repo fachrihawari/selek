@@ -3,7 +3,7 @@ import { Form, Link, redirect, useNavigation } from "react-router";
 import { mutate } from "swr";
 
 import { http, type IHttpResponse } from "~/shared";
-import type { IWorkspace } from "~/workspaces/types/workspaces.interface";
+import type { IWorkspace } from "~/workspaces/workspaces.interface";
 
 export async function clientAction({ request }: { request: Request }) {
   try {

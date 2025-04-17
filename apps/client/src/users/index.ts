@@ -1,1 +1,1 @@
-export type { IUser } from "./types/users.interface";
+export type { IUser } from "./users.interface";
