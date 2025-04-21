@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { sql } from '~/db/sql';
-import { TCreateWorkspaceBody, TWorkspace } from './workspaces.schema';
+import { TCreateWorkspaceBody, TWorkspace, TWorkspaceChannelsQueryResult, TWorkspacesQueryResult } from './workspaces.schema';
 
 @Injectable()
 export class WorkspacesModel {
   async findManyByUserId(userId: string) {
-    const workspaces = await sql<(TWorkspace & { memberCount: number })[]>`
+    const workspaces = await sql<TWorkspacesQueryResult>`
       SELECT 
         w.id,
         w.name,
@@ -31,7 +31,7 @@ export class WorkspacesModel {
         logoUrl,
         ownerId,
       };
-      const [workspace] = await sql<(TWorkspace & { memberCount: number })[]>`
+      const [workspace] = await sql<TWorkspacesQueryResult>`
         INSERT INTO workspaces ${sql(worksapceValue)}
         RETURNING id, name, "logoUrl", "ownerId"
       `;
@@ -53,7 +53,7 @@ export class WorkspacesModel {
     return workspace;
   }
   async isMember(userId: string, workspaceId: string) {
-    const [workspace] = await sql<{ id: string }[]>`
+    const [workspace] = await sql<{ joinedAt: string }[]>`
       SELECT "joinedAt"
       FROM workspace_members
       WHERE "userId" = ${userId} AND "workspaceId" = ${workspaceId}
@@ -62,7 +62,7 @@ export class WorkspacesModel {
   }
 
   async findById(workspaceId: string) {
-    const [workspace] = await sql<(TWorkspace & { memberCount: number })[]>`
+    const [workspace] = await sql<TWorkspacesQueryResult>`
       SELECT
         id,
         name,
@@ -72,5 +72,16 @@ export class WorkspacesModel {
       where id = ${workspaceId}
     `;
     return workspace;
+  }
+
+  async getChannels(workspaceId: string) {
+    const channels = await sql<TWorkspaceChannelsQueryResult>`
+      SELECT 
+        c.id,
+        c.name,
+      FROM workspace_channels c
+      WHERE c."workspaceId" = ${workspaceId}
+    `;
+    return channels;
   }
 }

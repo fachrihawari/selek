@@ -46,4 +46,11 @@ export class WorkspacesController {
   ) {
     return await this.workspacesService.createWorkspace(user.id, body);
   }
+
+  @Get('/:id/channels')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(WorkspaceGuard)
+  async getChannels(@Param('id') workspaceId: string) {
+    return await this.workspacesService.getChannels(workspaceId);
+  }
 }
