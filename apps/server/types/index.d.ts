@@ -1,9 +1,9 @@
-import type { TUser } from '~/users/users.schema'; // Adjust path to your user entity
+import type { TUser, TUserSafe } from '~/users/users.schema'; // Adjust path to your user entity
 
 declare global {
   namespace Express {
     interface Request {
-      user?: TUser; // Add other user properties as needed
+      user?: TUserSafe; // Add other user properties as needed
     }
   }
 

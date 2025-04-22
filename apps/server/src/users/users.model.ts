@@ -5,7 +5,7 @@ import { sql } from '~/db/sql';
 @Injectable()
 export class UsersModel {
   async findById(id: string) {
-    const [user] = await sql<TUserQueryResult>`
+    const [user] = await sql<TUserQueryResult[]>`
       SELECT id, "fullName", email, password
       FROM users WHERE id = ${id}
       LIMIT 1
@@ -14,7 +14,7 @@ export class UsersModel {
   }
 
   async findByEmail(email: string) {
-    const [user] = await sql<TUserQueryResult>`
+    const [user] = await sql<TUserQueryResult[]>`
       SELECT id, "fullName", email, password
       FROM users WHERE email = ${email}
       LIMIT 1
@@ -23,7 +23,7 @@ export class UsersModel {
   }
 
   async create(body: TUserBody) {
-    const [user] = await sql<TUserQueryResult>`
+    const [user] = await sql<TUserQueryResult[]>`
       INSERT INTO users ${sql(body)} 
       RETURNING id, "fullName", email, password
     `;

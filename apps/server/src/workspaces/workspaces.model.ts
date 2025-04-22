@@ -5,7 +5,7 @@ import { TCreateWorkspaceBody, TWorkspace, TWorkspaceChannelsQueryResult, TWorks
 @Injectable()
 export class WorkspacesModel {
   async findManyByUserId(userId: string) {
-    const workspaces = await sql<TWorkspacesQueryResult>`
+    const workspaces = await sql<TWorkspacesQueryResult[]>`
       SELECT 
         w.id,
         w.name,
@@ -31,7 +31,7 @@ export class WorkspacesModel {
         logoUrl,
         ownerId,
       };
-      const [workspace] = await sql<TWorkspacesQueryResult>`
+      const [workspace] = await sql<TWorkspacesQueryResult[]>`
         INSERT INTO workspaces ${sql(worksapceValue)}
         RETURNING id, name, "logoUrl", "ownerId"
       `;
@@ -62,7 +62,7 @@ export class WorkspacesModel {
   }
 
   async findById(workspaceId: string) {
-    const [workspace] = await sql<TWorkspacesQueryResult>`
+    const [workspace] = await sql<TWorkspacesQueryResult[]>`
       SELECT
         id,
         name,
@@ -75,7 +75,7 @@ export class WorkspacesModel {
   }
 
   async getChannels(workspaceId: string) {
-    const channels = await sql<TWorkspaceChannelsQueryResult>`
+    const channels = await sql<TWorkspaceChannelsQueryResult[]>`
       SELECT 
         c.id,
         c.name,

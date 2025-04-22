@@ -16,9 +16,8 @@ export const UserSchema = z.object({
   updatedAt: z.date(),
 });
 export type TUser = z.infer<typeof UserSchema>;
-export type TUserSafe = Omit<TUser, 'password'>;
-
-export type TUserQueryResult = Pick<TUser, 'id' | 'fullName' | 'email' | 'password'>[];
+export type TUserQueryResult = Pick<TUser, 'id' | 'fullName' | 'email' | 'password'>;
+export type TUserSafe = Omit<TUserQueryResult, 'password'>;
 
 // User body schema for creating and updating a user
 export const UserBodySchema = UserSchema.pick({
