@@ -78,7 +78,7 @@ export class WorkspacesModel {
     const channels = await sql<TWorkspaceChannelsQueryResult[]>`
       SELECT 
         c.id,
-        c.name,
+        c.name
       FROM workspace_channels c
       WHERE c."workspaceId" = ${workspaceId}
     `;

@@ -5,3 +5,8 @@ export interface IWorkspace {
   ownerId: string;
   memberCount: number;
 }
+
+export interface IWorkspaceChannel {  
+  id: string;
+  name: string;
+}

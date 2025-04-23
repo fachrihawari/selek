@@ -17,15 +17,15 @@ export default function WorkspaceDetailPage() {
   const { data: workspace } = useSWR<IWorkspace, IHttpResponse>(
     "/workspaces/" + workspaceId
   );
+  const channels = useSWR<any>("/workspaces/" + workspaceId + "/channels");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="h-screen flex">
       {/* Mobile Sidebar Overlay */}
       <div
-        className={`fixed inset-0 bg-black/50 z-20 lg:hidden ${
-          sidebarOpen ? "block" : "hidden"
-        }`}
+        className={`fixed inset-0 bg-black/50 z-20 lg:hidden ${sidebarOpen ? "block" : "hidden"
+          }`}
         onClick={() => setSidebarOpen(false)}
       />
 
@@ -67,10 +67,13 @@ export default function WorkspaceDetailPage() {
               </button>
             </div>
             <nav className="space-y-0.5">
-              <a className="flex items-center px-3 py-1.5 rounded-md bg-orange-800/30 text-orange-100">
-                <HiHashtag className="mr-3 text-lg" />
-                <span className="font-medium">general</span>
-              </a>
+              {channels.data?.map((channel: any) => (
+                <a className="flex items-center px-3 py-1.5 rounded-md bg-orange-800/30 text-orange-100">
+                  <HiHashtag className="mr-3 text-lg" />
+                  <span className="font-medium">{channel.name}</span>
+                </a>
+              ))
+              }
               <a className="flex items-center px-3 py-1.5 rounded-md hover:bg-orange-800/30 text-orange-200 hover:text-orange-100">
                 <HiHashtag className="mr-3 text-lg" />
                 <span className="font-medium">announcements</span>
