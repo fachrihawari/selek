@@ -13,13 +13,13 @@ export const WorkspaceSchema = z.object({
 });
 export type TWorkspace = z.infer<typeof WorkspaceSchema>;
 
-export type TWorkspacesQueryResult = (Pick<TWorkspace, 'id' | 'name' | 'logoUrl' | 'ownerId'> & {
+export type TWorkspaceQueryResult = (Pick<TWorkspace, 'id' | 'name' | 'logoUrl' | 'ownerId'> & {
   memberCount: number;
 });
 
 // Workspace schema for creating a new workspace
-export const CreateWorkspaceBodySchema = WorkspaceSchema.pick({
+export const CreateWorkspaceSchema = WorkspaceSchema.pick({
   name: true,
   logoUrl: true,
 });
-export type TCreateWorkspaceBody = z.infer<typeof CreateWorkspaceBodySchema>;
+export type CreateWorkspaceDto = z.infer<typeof CreateWorkspaceSchema>;

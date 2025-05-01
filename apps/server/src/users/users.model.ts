@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { TUser, TUserBody, TUserQueryResult } from './users.schema';
+import { TUserBody, TUserQueryResult } from './users.schema';
 import { sql } from '~/db/sql';
 
 @Injectable()

@@ -14,8 +14,8 @@ import { AuthUser } from '~/auth/auth-user.decorator';
 import { TUserSafe } from '~/users/users.schema';
 import { ZodValidationPipe } from '~/shared/zod-validation.pipe';
 import {
-  CreateWorkspaceBodySchema,
-  TCreateWorkspaceBody,
+  CreateWorkspaceSchema,
+  CreateWorkspaceDto,
 } from './workspaces.schema';
 import { WorkspaceGuard } from './workspaces.guard';
 
@@ -41,8 +41,8 @@ export class WorkspacesController {
   @HttpCode(HttpStatus.CREATED)
   async createWorkspace(
     @AuthUser() user: TUserSafe,
-    @Body(new ZodValidationPipe(CreateWorkspaceBodySchema))
-    body: TCreateWorkspaceBody,
+    @Body(new ZodValidationPipe(CreateWorkspaceSchema))
+    body: CreateWorkspaceDto,
   ) {
     return await this.workspacesService.createWorkspace(user.id, body);
   }
