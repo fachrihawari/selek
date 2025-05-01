@@ -25,16 +25,18 @@ export const CreateWorkspaceBodySchema = WorkspaceSchema.pick({
 export type TCreateWorkspaceBody = z.infer<typeof CreateWorkspaceBodySchema>;
 
 // Workspace Channel schema
-export const WorkspaceChannelSchema = z.object({
+export const ConversationSchema = z.object({
   id: z.string().uuid(),
-  name: z.string({ message: 'Channel Name is required' }).min(3, {
-    message: 'Channel Name must be at least 3 characters',
+  name: z.string({ message: 'Conversation Name is required' }).min(3, {
+    message: 'Conversation Name must be at least 3 characters',
   }),
   workspaceId: z.string().uuid(),
   members: z.array(z.string().uuid()),
+  ownerId: z.string().uuid(),
+  type: z.enum(['channels', 'dms', 'group']),
   createdAt: z.date(),
 });
 
-export type TWorkspaceChannel = z.infer<typeof WorkspaceChannelSchema>;
+export type TConversation = z.infer<typeof ConversationSchema>;
 
-export type TWorkspaceChannelsQueryResult = Pick<TWorkspaceChannel, 'id' | 'name'>[]
+export type TConversationsQueryResult = Pick<TConversation, 'id' | 'name' | 'type'>[];

@@ -21,7 +21,7 @@ export class WorkspacesService {
     return await this.workspacesModel.create(ownerId, workspace);
   }
 
-  async getChannels(workspaceId: string) {
-    return await this.workspacesModel.getChannels(workspaceId);
+  async getConversations(workspaceId: string, type: 'channels' | 'dms' | 'group' = 'channels') {
+    return await this.workspacesModel.getConversations(workspaceId, type);
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { sql } from '~/db/sql';
-import { TCreateWorkspaceBody, TWorkspace, TWorkspaceChannelsQueryResult, TWorkspacesQueryResult } from './workspaces.schema';
+import { TCreateWorkspaceBody, TWorkspacesQueryResult, TConversationsQueryResult } from './workspaces.schema';
 
 @Injectable()
 export class WorkspacesModel {
@@ -74,14 +74,15 @@ export class WorkspacesModel {
     return workspace;
   }
 
-  async getChannels(workspaceId: string) {
-    const channels = await sql<TWorkspaceChannelsQueryResult[]>`
+  async getConversations(workspaceId: string, type: 'channels' | 'dms' | 'group' = 'channels') {
+    const conversations = await sql<TConversationsQueryResult[]>`
       SELECT 
         c.id,
-        c.name
-      FROM workspace_channels c
-      WHERE c."workspaceId" = ${workspaceId}
+        c.name,
+        c.type
+      FROM conversations c
+      WHERE c."workspaceId" = ${workspaceId} AND c.type = ${type}
     `;
-    return channels;
+    return conversations;
   }
 }

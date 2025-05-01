@@ -5,7 +5,7 @@ import { TWorkspace } from '~/workspaces/workspaces.schema';
 
 async function seed() {
   await sql`DELETE FROM workspace_members`;
-  await sql`DELETE FROM workspace_channels`;
+  await sql`DELETE FROM conversations`;
   await sql`DELETE FROM workspaces`;
   await sql`DELETE FROM users`;
 
@@ -46,23 +46,25 @@ async function seed() {
     INSERT INTO workspaces ${sql(workspaces)} RETURNING id
   `;
 
-  // Seed workspace channels
-  const channels = [
+  // Seed conversations
+  const conversations = [
     {
       name: 'General',
       workspaceId: hdWorkspace.id,
       ownerId: fachri.id,
       members: [fachri.id, udin.id],
+      type: 'channels',
     },
     {
       name: 'Random',
       workspaceId: hdWorkspace.id,
       ownerId: fachri.id,
       members: [fachri.id, budi.id],
+      type: 'channels',
     }
   ];
 
-  await sql`INSERT INTO workspace_channels ${sql(channels)}`;
+  await sql`INSERT INTO conversations ${sql(conversations)}`;
 
   // Seed workspace members
   const workspaceMembers = [

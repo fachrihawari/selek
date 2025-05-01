@@ -1,7 +1,7 @@
-DROP TABLE IF EXISTS workspace_channels CASCADE;
+DROP TABLE IF EXISTS conversations CASCADE;
 
--- Create workspace_channels table
-CREATE TABLE IF NOT EXISTS workspace_channels (
+-- Create conversations table
+CREATE TABLE IF NOT EXISTS conversations (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(255) NOT NULL,
     "ownerId" UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -11,4 +11,4 @@ CREATE TABLE IF NOT EXISTS workspace_channels (
 );
 
 -- Add index for workspace membership queries
-CREATE INDEX workspace_channels_workspace_idx ON workspace_channels("workspaceId");
+CREATE INDEX conversations_workspace_idx ON conversations("workspaceId");

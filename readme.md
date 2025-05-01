@@ -10,7 +10,7 @@
 - [ ] User status (online/offline)
 
 ### Workspace Management
-- [ ] Create workspace
+- [x] Create workspace
 - [ ] Invite members to workspace
 - [ ] Basic workspace settings
 - [ ] Switch between workspaces
