@@ -6,9 +6,10 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { WorkspacesModule } from './workspaces/workspaces.module';
 import { SlowdownMiddleware } from './shared/slowdown.middleware';
+import { ConversationsModule } from './conversations/conversations.module';
 
 @Module({
-  imports: [AuthModule, ConfigModule.forRoot(), UsersModule, WorkspacesModule],
+  imports: [AuthModule, ConfigModule.forRoot(), UsersModule, WorkspacesModule, ConversationsModule],
   controllers: [AppController],
   providers: [AppService],
 })

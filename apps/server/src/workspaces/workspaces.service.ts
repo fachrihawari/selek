@@ -20,8 +20,4 @@ export class WorkspacesService {
   async createWorkspace(ownerId: string, workspace: TCreateWorkspaceBody) {
     return await this.workspacesModel.create(ownerId, workspace);
   }
-
-  async getConversations(workspaceId: string, type: 'channels' | 'dms' | 'group' = 'channels') {
-    return await this.workspacesModel.getConversations(workspaceId, type);
-  }
 }

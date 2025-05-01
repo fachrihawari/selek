@@ -46,33 +46,27 @@ async function seed() {
     INSERT INTO workspaces ${sql(workspaces)} RETURNING id
   `;
 
-  // Seed conversations
-  const conversations = [
-    {
-      name: 'General',
-      workspaceId: hdWorkspace.id,
-      ownerId: fachri.id,
-      members: [fachri.id, udin.id],
-      type: 'channels',
-    },
-    {
-      name: 'Random',
-      workspaceId: hdWorkspace.id,
-      ownerId: fachri.id,
-      members: [fachri.id, budi.id],
-      type: 'channels',
-    }
-  ];
-
-  await sql`INSERT INTO conversations ${sql(conversations)}`;
-
   // Seed workspace members
   const workspaceMembers = [
+    // HD workspace
     {
       workspaceId: hdWorkspace.id,
       userId: fachri.id,
       role: 'owner',
     },
+    {
+      workspaceId: hdWorkspace.id,
+      userId: udin.id,
+      role: 'member',
+    },
+    {
+      workspaceId: hdWorkspace.id,
+      userId: budi.id,
+      role: 'member',
+    },
+
+
+    // TD workspace
     {
       workspaceId: tdWorkspace.id,
       userId: budi.id,
@@ -83,13 +77,44 @@ async function seed() {
       userId: fachri.id,
       role: 'member',
     },
-    {
-      workspaceId: hdWorkspace.id,
-      userId: udin.id,
-      role: 'member',
-    },
   ];
   await sql`INSERT INTO workspace_members ${sql(workspaceMembers)}`;
+
+
+  // Seed conversations
+  const conversations = [
+    {
+      name: 'General',
+      workspaceId: hdWorkspace.id,
+      ownerId: fachri.id,
+      members: [fachri.id, udin.id],
+      type: 'channel',
+    },
+    {
+      name: 'Random',
+      workspaceId: hdWorkspace.id,
+      ownerId: fachri.id,
+      members: [fachri.id, budi.id],
+      type: 'channel',
+    },
+    {
+      name: 'Budi, Fachri, Udin',
+      workspaceId: hdWorkspace.id,
+      ownerId: fachri.id,
+      members: [fachri.id, budi.id, udin.id],
+      type: 'group',
+    },
+    {
+      name: 'Fachri, Udin',
+      workspaceId: hdWorkspace.id,
+      ownerId: fachri.id,
+      members: [fachri.id, udin.id],
+      type: 'dm',
+    }
+  ];
+
+  await sql`INSERT INTO conversations ${sql(conversations)}`;
+
 
   await sql.end();
   console.log(`Seeder done.`);
