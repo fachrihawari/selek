@@ -10,5 +10,3 @@ CREATE TABLE IF NOT EXISTS workspaces (
     "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Add indexes for faster lookups
-CREATE INDEX IF NOT EXISTS workspaces_ownerId_idx ON workspaces("ownerId");
