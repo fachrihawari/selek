@@ -50,6 +50,9 @@ export class WorkspaceGuard implements CanActivate {
   }
 
   private getWorkspaceId(request: Request): string | null {
-    return request.params?.id || request.body?.id || request.query?.id;
+    return (
+      request.params?.id || request.body?.id || request.query?.id ||
+      request.params?.workspaceId || request.body?.workspaceId || request.query?.workspaceId
+    );
   }
 }

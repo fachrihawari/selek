@@ -5,7 +5,7 @@ import { ConversationsModel } from './conversations.model';
 export class ConversationsService {
   constructor(private readonly conversationsModel: ConversationsModel) {}
 
-  async getConversations(workspaceId: string) {
-    return this.conversationsModel.getConversations(workspaceId);
+  async getConversations(workspaceId: string, userId: string) {
+    return this.conversationsModel.getConversations(workspaceId, userId);
   }
 }
