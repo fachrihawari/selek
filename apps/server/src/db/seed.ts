@@ -4,8 +4,9 @@ import { TUser } from '~/users/users.schema';
 import { TWorkspace } from '~/workspaces/workspaces.schema';
 
 async function seed() {
-  await sql`DELETE FROM workspace_members`;
+  await sql`DELETE FROM conversation_members`;
   await sql`DELETE FROM conversations`;
+  await sql`DELETE FROM workspace_members`;
   await sql`DELETE FROM workspaces`;
   await sql`DELETE FROM users`;
 
@@ -65,7 +66,6 @@ async function seed() {
       role: 'member',
     },
 
-
     // TD workspace
     {
       workspaceId: tdWorkspace.id,
@@ -80,41 +80,89 @@ async function seed() {
   ];
   await sql`INSERT INTO workspace_members ${sql(workspaceMembers)}`;
 
-
   // Seed conversations
   const conversations = [
     {
       name: 'General',
       workspaceId: hdWorkspace.id,
       ownerId: fachri.id,
-      members: [fachri.id, udin.id],
       type: 'channel',
     },
     {
       name: 'Random',
       workspaceId: hdWorkspace.id,
       ownerId: fachri.id,
-      members: [fachri.id, budi.id],
       type: 'channel',
     },
     {
       name: 'Budi, Fachri, Udin',
       workspaceId: hdWorkspace.id,
       ownerId: fachri.id,
-      members: [fachri.id, budi.id, udin.id],
       type: 'group',
     },
     {
       name: 'Fachri, Udin',
       workspaceId: hdWorkspace.id,
       ownerId: fachri.id,
-      members: [fachri.id, udin.id],
       type: 'dm',
-    }
+    },
   ];
 
-  await sql`INSERT INTO conversations ${sql(conversations)}`;
+  const [generalChannel, randomChannel, group, dm] = await sql`
+    INSERT INTO conversations ${sql(conversations)}
+    RETURNING id
+  `;
 
+  const conversationMembers = [
+    {
+      conversationId: generalChannel.id,
+      userId: fachri.id,
+      role: 'owner',
+    },
+    {
+      conversationId: generalChannel.id,
+      userId: udin.id,
+      role: 'member',
+    },
+    {
+      conversationId: randomChannel.id,
+      userId: fachri.id,
+      role:'owner',
+    },
+    {
+      conversationId: randomChannel.id,
+      userId: budi.id,
+      role:'member',
+    },
+    {
+      conversationId: group.id,
+      userId: fachri.id,
+      role:'owner',
+    },
+    {
+      conversationId: group.id,
+      userId: budi.id,
+      role:'member',
+    },
+    {
+      conversationId: group.id,
+      userId: udin.id,
+      role:'member',
+    },
+    {
+      conversationId: dm.id,
+      userId: fachri.id,
+      role:'owner',
+    },
+    {
+      conversationId: dm.id,
+      userId: udin.id,
+      role:'member',
+    },
+  ]
+  await sql`
+    INSERT INTO conversation_members ${sql(conversationMembers)}
+  `;
 
   await sql.end();
   console.log(`Seeder done.`);
