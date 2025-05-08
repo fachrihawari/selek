@@ -8,10 +8,10 @@ import {
   HiBars3,
 } from "react-icons/hi2";
 
-export default function ChannelsDetailPage() {
+export default function ConversationsDetailPage() {
   return (
     <>
-      {/* Channel Header */}
+      {/* Conversation Header */}
       <div className="h-14 px-4 flex items-center justify-between border-b border-gray-200">
         <div className="flex items-center space-x-2">
           <button

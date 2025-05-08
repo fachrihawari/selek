@@ -5,7 +5,7 @@ import { NextFunction, Request, Response } from 'express';
 @Injectable()
 export class SlowdownMiddleware implements NestMiddleware {
   private readonly logger = new Logger(SlowdownMiddleware.name);
-  private readonly slowdownInterval = 2000;
+  private readonly slowdownInterval = 500;
 
   constructor(private readonly configService: ConfigService) { }
 

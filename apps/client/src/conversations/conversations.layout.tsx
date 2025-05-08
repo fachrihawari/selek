@@ -11,21 +11,29 @@ import useSWR from "swr";
 
 import type { IHttpResponse } from "~/shared";
 import type { IWorkspace } from "~/workspaces";
+import type { TConversationsList } from "./conversations.interface";
+import { conversationTypes } from "./conversations.constant";
+import type { IUser } from "~/users";
 
-export default function WorkspaceDetailPage() {
+export default function ConversationsLayout() {
   const { workspaceId } = useParams();
   const { data: workspace } = useSWR<IWorkspace, IHttpResponse>(
     "/workspaces/" + workspaceId
   );
-  const channels = useSWR<any>("/workspaces/" + workspaceId + "/channels");
+  const { data: conversations } = useSWR<TConversationsList>(
+    "/conversations?workspaceId=" + workspaceId
+  );
+  const { data: user } = useSWR<IUser>("/auth/me");
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="h-screen flex">
       {/* Mobile Sidebar Overlay */}
       <div
-        className={`fixed inset-0 bg-black/50 z-20 lg:hidden ${sidebarOpen ? "block" : "hidden"
-          }`}
+        className={`fixed inset-0 bg-black/50 z-20 lg:hidden ${
+          sidebarOpen ? "block" : "hidden"
+        }`}
         onClick={() => setSidebarOpen(false)}
       />
 
@@ -58,47 +66,32 @@ export default function WorkspaceDetailPage() {
 
         {/* Navigation Sections */}
         <div className="flex-1 overflow-y-auto">
-          {/* Main Navigation */}
-          <div className="px-3 py-4">
-            <div className="flex items-center justify-between px-3 py-2 text-orange-300 text-sm">
-              <span>Channels</span>
-              <button className="w-6 h-6 flex items-center justify-center rounded hover:bg-orange-800/30">
-                <HiPlus className="text-base" />
-              </button>
-            </div>
-            <nav className="space-y-0.5">
-              {channels.data?.map((channel: any) => (
-                <a className="flex items-center px-3 py-1.5 rounded-md bg-orange-800/30 text-orange-100">
-                  <HiHashtag className="mr-3 text-lg" />
-                  <span className="font-medium">{channel.name}</span>
-                </a>
-              ))
-              }
-              <a className="flex items-center px-3 py-1.5 rounded-md hover:bg-orange-800/30 text-orange-200 hover:text-orange-100">
-                <HiHashtag className="mr-3 text-lg" />
-                <span className="font-medium">announcements</span>
-              </a>
-            </nav>
-          </div>
-
-          {/* Direct Messages */}
-          <div className="px-3 pb-4">
-            <div className="flex items-center justify-between px-3 py-2 text-orange-300 text-sm">
-              <span>Direct messages</span>
-              <button className="w-6 h-6 flex items-center justify-center rounded hover:bg-orange-800/30">
-                <HiPlus className="text-base" />
-              </button>
-            </div>
-            <nav className="space-y-0.5">
-              <a className="flex items-center px-3 py-1.5 rounded-md hover:bg-orange-800/30 text-orange-200 hover:text-orange-100">
-                <div className="w-5 h-5 rounded-full bg-orange-700 flex items-center justify-center mr-3">
-                  <HiUser className="text-sm" />
+          {conversations?.map?.((conversation) => {
+            return (
+              <div className="px-3 pt-4">
+                <div className="flex items-center justify-between px-3 py-2 text-orange-300 text-sm">
+                  <span>{conversationTypes[conversation.type]}</span>
+                  <button className="w-6 h-6 flex items-center justify-center rounded hover:bg-orange-800/30">
+                    <HiPlus className="text-base" />
+                  </button>
                 </div>
-                <span className="font-medium">John Doe</span>
-                <span className="ml-auto w-2 h-2 rounded-full bg-green-500"></span>
-              </a>
-            </nav>
-          </div>
+                <nav className="space-y-0.5">
+                  {conversation.conversations.map((c) => (
+                    <a className="flex items-center px-3 py-1.5 rounded-md hover:bg-orange-800/30 text-orange-100">
+                      {conversation.type === "dm" ? (
+                        <div className="w-5 h-5 rounded-full bg-orange-700 flex items-center justify-center">
+                          <HiUser className="text-sm" />
+                        </div>
+                      ) : (
+                        <HiHashtag className="text-lg" />
+                      )}
+                      <span className="font-medium ml-3">{c.name}</span>
+                    </a>
+                  ))}
+                </nav>
+              </div>
+            );
+          })}
         </div>
 
         {/* User Profile */}
@@ -108,7 +101,9 @@ export default function WorkspaceDetailPage() {
               <HiUser className="text-sm" />
             </div>
             <div className="ml-3 flex-1 min-w-0">
-              <div className="text-sm font-medium truncate">Your Name</div>
+              <div className="text-sm font-medium truncate">
+                {user?.fullName}
+              </div>
             </div>
             <span className="w-2 h-2 rounded-full bg-green-500"></span>
           </div>

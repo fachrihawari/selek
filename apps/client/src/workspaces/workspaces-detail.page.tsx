@@ -6,7 +6,7 @@ export default function WorkspaceDetailPage() {
   const { workspaceId } = useParams();
 
   useEffect(() => {
-    navigate(`/workspaces/${workspaceId}/threads`, { replace: true });
+    navigate(`/${workspaceId}/threads`, { replace: true });
   }, []);
 
   return null;
