@@ -7,16 +7,19 @@ import {
   HiFaceSmile,
   HiBars3,
 } from "react-icons/hi2";
+import { useAppContext } from "~/shared/app.context";
 
 export default function ConversationsDetailPage() {
+  const { toggleSidebar } = useAppContext();
+
   return (
     <>
       {/* Conversation Header */}
       <div className="h-14 px-4 flex items-center justify-between border-b border-gray-200">
         <div className="flex items-center space-x-2">
           <button
-            className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-gray-100 lg:hidden"
-            onClick={() => {}}
+            className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-gray-100"
+            onClick={toggleSidebar}
           >
             <HiBars3 className="text-xl text-gray-600" />
           </button>

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { HiBuildingOffice2, HiUser, HiXMark } from "react-icons/hi2";
 import { Outlet } from "react-router";
 import useSWR from "swr";
@@ -8,31 +7,30 @@ import type { IHttpResponse } from "~/shared";
 import type { IWorkspace } from "~/workspaces";
 import type { IUser } from "~/users";
 import { ConversationsList } from "./components";
+import { useAppContext } from "~/shared/app.context";
 
 export default function ConversationsLayout({ params }: Route.ComponentProps) {
   const { workspaceId } = params;
-  const { data: workspace } = useSWR<IWorkspace, IHttpResponse>(workspaceId);
+  const { data: workspace } = useSWR<IWorkspace, IHttpResponse>(`/workspaces/${workspaceId}`);
   const { data: user } = useSWR<IUser>("/auth/me");
 
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { sidebarOpen, closeSidebar } = useAppContext();
 
   return (
-    <div className="h-screen flex">
+    <div className="h-screen flex relative">
+
       {/* Mobile Sidebar Overlay */}
       <div
-        className={`fixed inset-0 bg-black/50 z-20 lg:hidden ${
-          sidebarOpen ? "block" : "hidden"
-        }`}
-        onClick={() => setSidebarOpen(false)}
+        className={`fixed inset-0 bg-black/50 z-20 md:hidden ${sidebarOpen ? "block" : "hidden"
+          }`}
+        onClick={closeSidebar}
       />
-
       {/* Sidebar */}
       <div
         className={`
         fixed inset-y-0 left-0 z-30 w-64 bg-gradient-to-b from-orange-950 to-orange-900
         text-white flex flex-col transform transition-transform duration-300 ease-in-out
-        lg:relative lg:translate-x-0
-        ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+        ${sidebarOpen ? "md:relative translate-x-0" : "-translate-x-full"}
       `}
       >
         {/* Workspace Header */}
@@ -46,8 +44,8 @@ export default function ConversationsLayout({ params }: Route.ComponentProps) {
             </h1>
           </div>
           <button
-            className="w-8 h-8 flex items-center justify-center rounded hover:bg-orange-800/30 lg:hidden"
-            onClick={() => setSidebarOpen(false)}
+            className="w-8 h-8 flex items-center justify-center rounded hover:bg-orange-800/30 md:hidden"
+            onClick={closeSidebar}
           >
             <HiXMark className="text-xl" />
           </button>
