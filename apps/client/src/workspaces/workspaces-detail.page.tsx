@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router';
 
 export default function WorkspaceDetailPage() {
   const navigate = useNavigate();
@@ -7,7 +7,7 @@ export default function WorkspaceDetailPage() {
 
   useEffect(() => {
     navigate(`/${workspaceId}/threads`, { replace: true });
-  }, []);
+  }, [workspaceId, navigate]);
 
   return null;
 }

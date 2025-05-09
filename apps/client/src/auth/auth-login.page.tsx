@@ -1,16 +1,16 @@
-import toast from "react-hot-toast";
-import { Form, Link, redirect, useNavigation } from "react-router";
+import toast from 'react-hot-toast';
+import { Form, Link, redirect, useNavigation } from 'react-router';
 
-import type { Route } from "./+types/auth-login.page";
-import { Button } from "~/components";
-import { http, type IHttpResponse, ACCESS_TOKEN_KEY } from "~/shared";
+import { Button } from '~/components';
+import { http, ACCESS_TOKEN_KEY, type IHttpResponse } from '~/shared';
+import type { Route } from './+types/auth-login.page';
 
 export function meta() {
   return [
-    { title: "Sign In - Selek" },
+    { title: 'Sign In - Selek' },
     {
-      name: "description",
-      content: "Sign in to your Selek account and connect with your team.",
+      name: 'description',
+      content: 'Sign in to your Selek account and connect with your team.',
     },
   ];
 }
@@ -19,14 +19,14 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   try {
     const formData = await request.formData();
     const body = Object.fromEntries(formData);
-    const response = await http<{ access_token: string }>("/auth/login", {
+    const response = await http<{ access_token: string }>('/auth/login', {
       body,
     });
 
     localStorage.setItem(ACCESS_TOKEN_KEY, response.access_token);
 
-    toast.success("Welcome to Selek!");
-    return redirect("/workspaces");
+    toast.success('Welcome to Selek!');
+    return redirect('/workspaces');
   } catch (error) {
     toast.error((error as IHttpResponse).message);
   }
@@ -95,15 +95,15 @@ export default function LoginPage() {
 
             <div>
               <Button fullWidth type="submit">
-                {navigation.state === "submitting"
-                  ? "Signing in..."
-                  : "Sign in"}
+                {navigation.state === 'submitting'
+                  ? 'Signing in...'
+                  : 'Sign in'}
               </Button>
             </div>
           </Form>
 
           <div className="mt-6 text-center text-sm">
-            <span className="text-gray-500">Don't have an account?</span>{" "}
+            <span className="text-gray-500">Don't have an account?</span>{' '}
             <Link
               to="/register"
               className="text-orange-800 hover:text-orange-900 font-medium"

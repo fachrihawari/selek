@@ -1,5 +1,5 @@
-import { useNavigate } from "react-router";
-import { mutate } from "swr";
+import { useNavigate } from 'react-router';
+import { mutate } from 'swr';
 
 export function useLogout() {
   const navigate = useNavigate();
@@ -12,8 +12,8 @@ export function useLogout() {
     mutate(() => true, null, { revalidate: false });
 
     // Redirect to the login page
-    navigate("/login");
+    navigate('/login');
   }
 
-  return logout
+  return logout;
 }

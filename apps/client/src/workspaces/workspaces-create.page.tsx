@@ -1,29 +1,29 @@
-import toast from "react-hot-toast";
-import { Form, Link, redirect, useNavigation } from "react-router";
-import { mutate } from "swr";
+import toast from 'react-hot-toast';
+import { Form, Link, redirect, useNavigation } from 'react-router';
+import { mutate } from 'swr';
 
-import { http, type IHttpResponse } from "~/shared";
-import type { IWorkspace } from "~/workspaces/workspaces.interface";
+import { http, type IHttpResponse } from '~/shared';
+import type { IWorkspace } from '~/workspaces/workspaces.interface';
 
 export async function clientAction({ request }: { request: Request }) {
   try {
     // Create workspace
     const formData = await request.formData();
     const body = Object.fromEntries(formData);
-    const workspace = await http<IWorkspace>("/workspaces", { body });
+    const workspace = await http<IWorkspace>('/workspaces', { body });
 
     // Update the cache
     mutate<IWorkspace[]>(
-      "/workspaces",
+      '/workspaces',
       (currentData) => [workspace, ...(currentData ?? [])],
       {
         revalidate: false,
-      }
+      },
     );
 
     // Redirect to workspaces
-    toast.success("Create workspace successfully");
-    return redirect("/workspaces");
+    toast.success('Create workspace successfully');
+    return redirect('/workspaces');
   } catch (error) {
     toast.error((error as IHttpResponse).message);
   }
@@ -92,7 +92,7 @@ export default function CreateWorkspacePage() {
                 type="submit"
                 className="flex-1 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-800 hover:bg-orange-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-800"
               >
-                {navigation.state === "submitting" ? "Creating..." : "Create"}
+                {navigation.state === 'submitting' ? 'Creating...' : 'Create'}
               </button>
             </div>
           </Form>

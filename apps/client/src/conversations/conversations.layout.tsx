@@ -1,38 +1,47 @@
-import { HiBuildingOffice2, HiUser } from "react-icons/hi2";
-import { Link, Outlet, useNavigate } from "react-router";
-import useSWR from "swr";
-import { HiSwitchHorizontal } from "react-icons/hi";
+import { HiSwitchHorizontal } from 'react-icons/hi';
+import { HiBuildingOffice2, HiUser } from 'react-icons/hi2';
+import { Link, Outlet } from 'react-router';
+import useSWR from 'swr';
 
-import type { Route } from "./+types/conversations.layout";
-import type { IHttpResponse } from "~/shared";
-import type { IWorkspace } from "~/workspaces";
-import type { IUser } from "~/users";
-import { ConversationsList } from "./components";
-import { useAppContext, useLogout } from "~/shared";
+import type { IHttpResponse } from '~/shared';
+import { useAppContext, useLogout } from '~/shared';
+import type { IUser } from '~/users';
+import type { IWorkspace } from '~/workspaces';
+import type { Route } from './+types/conversations.layout';
+import { ConversationsList } from './components';
 
 export default function ConversationsLayout({ params }: Route.ComponentProps) {
   const { workspaceId } = params;
   const logout = useLogout();
-  const { data: workspace } = useSWR<IWorkspace, IHttpResponse>(`/workspaces/${workspaceId}`);
-  const { data: user } = useSWR<IUser>("/auth/me");
+  const { data: workspace } = useSWR<IWorkspace, IHttpResponse>(
+    `/workspaces/${workspaceId}`,
+  );
+  const { data: user } = useSWR<IUser>('/auth/me');
 
   const { sidebarOpen, toggleSidebar } = useAppContext();
 
   return (
     <div className="h-screen flex relative">
-
       {/* Mobile Sidebar Overlay */}
       <div
-        className={`fixed inset-0 bg-black/50 z-20 md:hidden ${sidebarOpen ? "block" : "hidden"
-          }`}
+        className={`fixed inset-0 bg-black/50 z-20 md:hidden ${
+          sidebarOpen ? 'block' : 'hidden'
+        }`}
         onClick={toggleSidebar}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            toggleSidebar();
+          }
+        }}
+        role="button"
+        tabIndex={0}
       />
       {/* Sidebar */}
       <div
         className={`
         fixed inset-y-0 left-0 z-30 w-64 bg-gradient-to-b from-orange-950 to-orange-900
         text-white flex flex-col transform transition-transform duration-300 ease-in-out
-        ${sidebarOpen ? "md:relative translate-x-0" : "-translate-x-full"}
+        ${sidebarOpen ? 'md:relative translate-x-0' : '-translate-x-full'}
       `}
       >
         {/* Workspace Header */}
@@ -58,32 +67,30 @@ export default function ConversationsLayout({ params }: Route.ComponentProps) {
               </div>
             </>
           ) : (
-            <div className="w-24 h-5 bg-orange-900/40 rounded animate-pulse"></div>
+            <div className="w-24 h-5 bg-orange-900/40 rounded animate-pulse" />
           )}
         </div>
-
 
         {/* Navigation Sections */}
         <ConversationsList workspaceId={workspaceId} />
 
         {/* User Profile */}
         <div className="p-3 border-t border-orange-800/50">
-          {
-            user && (
-              <div className="flex items-center px-3 py-1.5 rounded-md hover:bg-orange-800/30 cursor-pointer">
-                <div className="w-5 h-5 rounded-full bg-orange-700 flex items-center justify-center">
-                  <HiUser className="text-sm" />
-                </div>
-                <div className="ml-3 flex-1 min-w-0">
-                  <div className="text-sm font-medium truncate">
-                    {user?.fullName}
-                  </div>
-                </div>
-                <span className="w-2 h-2 rounded-full bg-green-500"></span>
+          {user && (
+            <div className="flex items-center px-3 py-1.5 rounded-md hover:bg-orange-800/30 cursor-pointer">
+              <div className="w-5 h-5 rounded-full bg-orange-700 flex items-center justify-center">
+                <HiUser className="text-sm" />
               </div>
-            )
-          }
+              <div className="ml-3 flex-1 min-w-0">
+                <div className="text-sm font-medium truncate">
+                  {user?.fullName}
+                </div>
+              </div>
+              <span className="w-2 h-2 rounded-full bg-green-500" />
+            </div>
+          )}
           <button
+            type="button"
             className="mt-2 w-full px-3 py-1.5 text-sm rounded-md bg-orange-800 hover:bg-orange-900 transition-colors"
             onClick={logout}
           >

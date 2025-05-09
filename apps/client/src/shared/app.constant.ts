@@ -1,1 +1,1 @@
-export const ACCESS_TOKEN_KEY = "__selek_token__"
+export const ACCESS_TOKEN_KEY = '__selek_token__';

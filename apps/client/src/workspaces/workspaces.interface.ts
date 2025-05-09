@@ -6,7 +6,7 @@ export interface IWorkspace {
   memberCount: number;
 }
 
-export interface IWorkspaceChannel {  
+export interface IWorkspaceChannel {
   id: string;
   name: string;
 }

@@ -1,33 +1,32 @@
-import type { ButtonHTMLAttributes } from "react";
-import { Link } from "react-router";
-import { cva, type VariantProps, cx } from "class-variance-authority";
+import { type VariantProps, cva, cx } from 'class-variance-authority';
+import type { ButtonHTMLAttributes } from 'react';
+import { Link } from 'react-router';
 
 const button = cva(
-  "rounded-md shadow-sm font-medium transform transition duration-300 ease-in-out hover:scale-105",
+  'rounded-md shadow-sm font-medium transform transition duration-300 ease-in-out hover:scale-105',
   {
     variants: {
       variant: {
         primary:
-          "border border-transparent bg-orange-800 hover:bg-orange-900 text-white",
+          'border border-transparent bg-orange-800 hover:bg-orange-900 text-white',
         secondary:
-          "border border-orange-300 bg-white hover:bg-orange-50 text-orange-800",
-        danger:
-          "border border-red-300 bg-red-50 hover:bg-red-100 text-red-800",
+          'border border-orange-300 bg-white hover:bg-orange-50 text-orange-800',
+        danger: 'border border-red-300 bg-red-50 hover:bg-red-100 text-red-800',
       },
       size: {
-        xs: "py-1 px-2 text-xs",
-        sm: "py-2 px-4 text-sm",
-        lg: "py-3 px-8 text-base md:py-4 md:text-lg md:px-10 ",
+        xs: 'py-1 px-2 text-xs',
+        sm: 'py-2 px-4 text-sm',
+        lg: 'py-3 px-8 text-base md:py-4 md:text-lg md:px-10 ',
       },
       fullWidth: {
-        true: "w-full",
+        true: 'w-full',
       },
     },
     defaultVariants: {
-      variant: "primary",
-      size: "sm",
+      variant: 'primary',
+      size: 'sm',
     },
-  }
+  },
 );
 
 interface ButtonProps

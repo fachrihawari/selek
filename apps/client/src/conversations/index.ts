@@ -1,1 +1,1 @@
-export { conversationsRoute } from "./conversations.route";
+export { conversationsRoute } from './conversations.route';

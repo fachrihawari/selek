@@ -1,4 +1,4 @@
-import { ACCESS_TOKEN_KEY } from "~/shared/app.constant";
+import { ACCESS_TOKEN_KEY } from '~/shared/app.constant';
 
 interface HttpConfig extends RequestInit {
   body?: any;
@@ -11,11 +11,11 @@ export interface IHttpResponse {
 
 export async function http<T = IHttpResponse>(
   endpoint: string,
-  { body, ...customConfig }: HttpConfig = {}
+  { body, ...customConfig }: HttpConfig = {},
 ): Promise<T> {
   // Basic headers
   const headers: Record<string, string> = {
-    "content-type": "application/json",
+    'content-type': 'application/json',
   };
 
   //  assign token to headers if exists in localstorage
@@ -25,7 +25,7 @@ export async function http<T = IHttpResponse>(
   }
 
   const config: HttpConfig = {
-    method: body ? "POST" : "GET",
+    method: body ? 'POST' : 'GET',
     ...customConfig,
     headers: {
       ...headers,
@@ -43,16 +43,15 @@ export async function http<T = IHttpResponse>(
       // if token is expired, remove it from localstorage and redirect to login
       if (response.status === 401 && headers.Authorization) {
         window.localStorage.removeItem(ACCESS_TOKEN_KEY);
-        window.location.assign("/");
+        window.location.assign('/');
         return;
       }
 
       // if response is ok, return data
       if (response.ok) {
         return await response.json();
-      } else {
-        const errorMessage = await response.text();
-        return Promise.reject(JSON.parse(errorMessage));
       }
+      const errorMessage = await response.text();
+      return Promise.reject(JSON.parse(errorMessage));
     });
 }

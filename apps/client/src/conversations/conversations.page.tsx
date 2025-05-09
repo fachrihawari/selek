@@ -1,13 +1,12 @@
 import {
-  HiHashtag,
-  HiPlus,
-  HiPaperAirplane,
   HiFaceSmile,
-} from "react-icons/hi2";
-import { ConversationHeader } from "./components/conversation-header.component";
+  HiHashtag,
+  HiPaperAirplane,
+  HiPlus,
+} from 'react-icons/hi2';
+import { ConversationHeader } from './components/conversation-header.component';
 
 export default function ConversationsDetailPage() {
-
   return (
     <>
       {/* Conversation Header */}
@@ -37,13 +36,22 @@ export default function ConversationsDetailPage() {
             className="flex-1 focus:outline-none min-w-0"
           />
           <div className="flex items-center space-x-1 sm:space-x-2 ml-2 sm:ml-4">
-            <button className="w-8 h-8 hidden sm:flex items-center justify-center rounded hover:bg-gray-100">
+            <button
+              type="button"
+              className="w-8 h-8 hidden sm:flex items-center justify-center rounded hover:bg-gray-100"
+            >
               <HiPlus className="text-xl text-gray-600" />
             </button>
-            <button className="w-8 h-8 hidden sm:flex items-center justify-center rounded hover:bg-gray-100">
+            <button
+              type="button"
+              className="w-8 h-8 hidden sm:flex items-center justify-center rounded hover:bg-gray-100"
+            >
               <HiFaceSmile className="text-xl text-gray-600" />
             </button>
-            <button className="w-8 h-8 flex items-center justify-center rounded hover:bg-gray-100">
+            <button
+              type="button"
+              className="w-8 h-8 flex items-center justify-center rounded hover:bg-gray-100"
+            >
               <HiPaperAirplane className="text-xl text-gray-600" />
             </button>
           </div>

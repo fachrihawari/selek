@@ -1,5 +1,5 @@
-import { Button } from "~/components";
-import type { IWorkspace } from "~/workspaces";
+import { Button } from '~/components';
+import type { IWorkspace } from '~/workspaces';
 
 interface WorkspaceCardProps {
   workspace: IWorkspace;

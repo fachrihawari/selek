@@ -1,4 +1,4 @@
-import Button from "./button.component";
+import Button from './button.component';
 
 type Props = {
   title?: string;
@@ -7,7 +7,7 @@ type Props = {
 };
 
 export default function AlertError(props: Props) {
-  const { title = "Error", message, onRetry } = props;
+  const { title = 'Error', message, onRetry } = props;
   return (
     <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-4">
       <div className="flex">
@@ -17,6 +17,8 @@ export default function AlertError(props: Props) {
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             fill="currentColor"
+            role="img"
+            aria-label="Error icon"
           >
             <path
               fillRule="evenodd"
@@ -28,7 +30,7 @@ export default function AlertError(props: Props) {
         <div className="ml-3">
           <h3 className="text-sm font-medium text-red-800">{title}</h3>
           <div className="mt-2 text-sm text-red-700">
-            {message || "Please try again later or contact support."}
+            {message || 'Please try again later or contact support.'}
           </div>
           <div className="mt-3">
             {onRetry && (

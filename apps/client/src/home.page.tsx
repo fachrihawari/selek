@@ -1,15 +1,12 @@
-import { Link } from "react-router";
+import { Button } from './components';
 
-import type { Route } from "./+types/home.page";
-import { Button } from "./components";
-
-export function meta({}: Route.MetaArgs) {
+export function meta() {
   return [
-    { title: "Selek - Team Communication Made Simple" },
+    { title: 'Selek - Team Communication Made Simple' },
     {
-      name: "description",
+      name: 'description',
       content:
-        "Connect, collaborate, and communicate with your team in real-time using Selek - the modern platform for team chat and collaboration.",
+        'Connect, collaborate, and communicate with your team in real-time using Selek - the modern platform for team chat and collaboration.',
     },
   ];
 }

@@ -1,16 +1,16 @@
-import toast from "react-hot-toast";
-import { Link, redirect, Form, useNavigation } from "react-router";
+import toast from 'react-hot-toast';
+import { Form, Link, redirect, useNavigation } from 'react-router';
 
-import type { Route } from "./+types/auth-register.page";
-import { Button } from "~/components";
-import { http, type IHttpResponse } from "~/shared";
+import { Button } from '~/components';
+import { http, type IHttpResponse } from '~/shared';
+import type { Route } from './+types/auth-register.page';
 
 export function meta() {
   return [
-    { title: "Register - Selek" },
+    { title: 'Register - Selek' },
     {
-      name: "description",
-      content: "Join Selek and start collaborating with your team today.",
+      name: 'description',
+      content: 'Join Selek and start collaborating with your team today.',
     },
   ];
 }
@@ -19,10 +19,10 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   try {
     const formData = await request.formData();
     const body = Object.fromEntries(formData);
-    const response = await http("/auth/register", { body });
+    const response = await http('/auth/register', { body });
 
     toast.success(response.message);
-    return redirect("/login");
+    return redirect('/login');
   } catch (error) {
     toast.error((error as IHttpResponse).message);
   }
@@ -60,7 +60,7 @@ export default function RegisterPage() {
                 id="fullName"
                 required
                 className="mt-1 block w-full px-3 py-2 border border-orange-200 rounded-md shadow-sm focus:ring-orange-800 focus:border-orange-800 sm:text-sm"
-                defaultValue={"Fachri"}
+                defaultValue={'Fachri'}
               />
             </div>
 
@@ -77,7 +77,7 @@ export default function RegisterPage() {
                 id="email"
                 required
                 className="mt-1 block w-full px-3 py-2 border border-orange-200 rounded-md shadow-sm focus:ring-orange-800 focus:border-orange-800 sm:text-sm"
-                defaultValue={"fachri@mail.com"}
+                defaultValue={'fachri@mail.com'}
               />
             </div>
 
@@ -94,21 +94,21 @@ export default function RegisterPage() {
                 id="password"
                 required
                 className="mt-1 block w-full px-3 py-2 border border-orange-200 rounded-md shadow-sm focus:ring-orange-800 focus:border-orange-800 sm:text-sm"
-                defaultValue={"qweqwe"}
+                defaultValue={'qweqwe'}
               />
             </div>
 
             <div>
               <Button fullWidth type="submit">
-                {navigation.state === "submitting"
-                  ? "Registering..."
-                  : "Register"}
+                {navigation.state === 'submitting'
+                  ? 'Registering...'
+                  : 'Register'}
               </Button>
             </div>
           </Form>
 
           <div className="mt-6 text-center text-sm">
-            <span className="text-gray-500">Already have an account?</span>{" "}
+            <span className="text-gray-500">Already have an account?</span>{' '}
             <Link
               to="/login"
               className="text-orange-800 hover:text-orange-900 font-medium"
