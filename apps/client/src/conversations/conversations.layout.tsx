@@ -1,28 +1,17 @@
 import { useState } from "react";
-import {
-  HiHashtag,
-  HiPlus,
-  HiUser,
-  HiBuildingOffice2,
-  HiXMark,
-} from "react-icons/hi2";
-import { Outlet, useParams } from "react-router";
+import { HiBuildingOffice2, HiUser, HiXMark } from "react-icons/hi2";
+import { Outlet } from "react-router";
 import useSWR from "swr";
 
+import type { Route } from "./+types/conversations.layout";
 import type { IHttpResponse } from "~/shared";
 import type { IWorkspace } from "~/workspaces";
-import type { TConversationsList } from "./conversations.interface";
-import { conversationTypes } from "./conversations.constant";
 import type { IUser } from "~/users";
+import { ConversationsList } from "./components";
 
-export default function ConversationsLayout() {
-  const { workspaceId } = useParams();
-  const { data: workspace } = useSWR<IWorkspace, IHttpResponse>(
-    "/workspaces/" + workspaceId
-  );
-  const { data: conversations } = useSWR<TConversationsList>(
-    "/conversations?workspaceId=" + workspaceId
-  );
+export default function ConversationsLayout({ params }: Route.ComponentProps) {
+  const { workspaceId } = params;
+  const { data: workspace } = useSWR<IWorkspace, IHttpResponse>(workspaceId);
   const { data: user } = useSWR<IUser>("/auth/me");
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -40,7 +29,7 @@ export default function ConversationsLayout() {
       {/* Sidebar */}
       <div
         className={`
-        fixed inset-y-0 left-0 z-30 w-64 bg-gradient-to-b from-orange-950 to-orange-900 
+        fixed inset-y-0 left-0 z-30 w-64 bg-gradient-to-b from-orange-950 to-orange-900
         text-white flex flex-col transform transition-transform duration-300 ease-in-out
         lg:relative lg:translate-x-0
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
@@ -65,34 +54,7 @@ export default function ConversationsLayout() {
         </div>
 
         {/* Navigation Sections */}
-        <div className="flex-1 overflow-y-auto">
-          {conversations?.map?.((conversation) => {
-            return (
-              <div className="px-3 pt-4">
-                <div className="flex items-center justify-between px-3 py-2 text-orange-300 text-sm">
-                  <span>{conversationTypes[conversation.type]}</span>
-                  <button className="w-6 h-6 flex items-center justify-center rounded hover:bg-orange-800/30">
-                    <HiPlus className="text-base" />
-                  </button>
-                </div>
-                <nav className="space-y-0.5">
-                  {conversation.conversations.map((c) => (
-                    <a className="flex items-center px-3 py-1.5 rounded-md hover:bg-orange-800/30 text-orange-100">
-                      {conversation.type === "dm" ? (
-                        <div className="w-5 h-5 rounded-full bg-orange-700 flex items-center justify-center">
-                          <HiUser className="text-sm" />
-                        </div>
-                      ) : (
-                        <HiHashtag className="text-lg" />
-                      )}
-                      <span className="font-medium ml-3">{c.name}</span>
-                    </a>
-                  ))}
-                </nav>
-              </div>
-            );
-          })}
-        </div>
+        <ConversationsList workspaceId={workspaceId} />
 
         {/* User Profile */}
         <div className="p-3 border-t border-orange-800/50">
