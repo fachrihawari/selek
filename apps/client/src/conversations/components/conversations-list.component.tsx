@@ -5,6 +5,7 @@ import { ConversationItem } from "./conversation-item.component";
 import { conversationTypes } from "../conversations.constant";
 import type { TConversationsList } from "../conversations.interface";
 import useSWR from "swr";
+import { ConversationsListLoader } from "./conversations-list-loader.component";
 
 interface ConversationsListProps {
   workspaceId: string;
@@ -14,16 +15,20 @@ export const ConversationsList: React.FC<ConversationsListProps> = ({
   workspaceId,
 }) => {
   const [activeConversationId] = useState("");
-  const { data: conversations } = useSWR<TConversationsList>(
+  const { data: conversations, isLoading } = useSWR<TConversationsList>(
     "/conversations?workspaceId=" + workspaceId,
   );
 
-  const handleConversationClick = (conversationId: string) => {};
-  const handleAddClick = (type: string) => {};
+  const handleConversationClick = (conversationId: string) => { };
+  const handleAddClick = (type: string) => { };
+
+  if (isLoading) {
+    return <ConversationsListLoader />
+  }
 
   if (!conversations || conversations.length === 0) {
     return (
-      <div className="p-4 text-orange-300 text-sm">
+      <div className="flex-1 p-4 text-orange-300 text-sm">
         No conversations available
       </div>
     );

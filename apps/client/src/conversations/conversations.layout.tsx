@@ -1,20 +1,22 @@
-import { HiBuildingOffice2, HiUser, HiXMark } from "react-icons/hi2";
-import { Outlet } from "react-router";
+import { HiBuildingOffice2, HiUser } from "react-icons/hi2";
+import { Link, Outlet, useNavigate } from "react-router";
 import useSWR from "swr";
+import { HiSwitchHorizontal } from "react-icons/hi";
 
 import type { Route } from "./+types/conversations.layout";
 import type { IHttpResponse } from "~/shared";
 import type { IWorkspace } from "~/workspaces";
 import type { IUser } from "~/users";
 import { ConversationsList } from "./components";
-import { useAppContext } from "~/shared/app.context";
+import { useAppContext, useLogout } from "~/shared";
 
 export default function ConversationsLayout({ params }: Route.ComponentProps) {
   const { workspaceId } = params;
+  const logout = useLogout();
   const { data: workspace } = useSWR<IWorkspace, IHttpResponse>(`/workspaces/${workspaceId}`);
   const { data: user } = useSWR<IUser>("/auth/me");
 
-  const { sidebarOpen, closeSidebar } = useAppContext();
+  const { sidebarOpen, toggleSidebar } = useAppContext();
 
   return (
     <div className="h-screen flex relative">
@@ -23,7 +25,7 @@ export default function ConversationsLayout({ params }: Route.ComponentProps) {
       <div
         className={`fixed inset-0 bg-black/50 z-20 md:hidden ${sidebarOpen ? "block" : "hidden"
           }`}
-        onClick={closeSidebar}
+        onClick={toggleSidebar}
       />
       {/* Sidebar */}
       <div
@@ -35,38 +37,58 @@ export default function ConversationsLayout({ params }: Route.ComponentProps) {
       >
         {/* Workspace Header */}
         <div className="h-14 px-4 flex items-center justify-between border-b border-orange-800/50">
-          <div className="flex items-center space-x-2">
-            <div className="w-6 h-6 rounded bg-orange-700/50 flex items-center justify-center">
-              <HiBuildingOffice2 className="text-lg" />
-            </div>
-            <h1 className="font-semibold text-base truncate">
-              {workspace?.name}
-            </h1>
-          </div>
-          <button
-            className="w-8 h-8 flex items-center justify-center rounded hover:bg-orange-800/30 md:hidden"
-            onClick={closeSidebar}
-          >
-            <HiXMark className="text-xl" />
-          </button>
+          {workspace ? (
+            <>
+              <div className="flex items-center space-x-2">
+                <div className="w-6 h-6 rounded bg-orange-700/50 flex items-center justify-center">
+                  <HiBuildingOffice2 className="text-lg" />
+                </div>
+                <h1 className="font-semibold text-base truncate">
+                  {workspace.name}
+                </h1>
+              </div>
+              <div className="flex items-center space-x-2">
+                {/* Switch Workspace Button */}
+                <Link
+                  to="/workspaces"
+                  className="w-8 h-8 flex items-center justify-center rounded hover:bg-orange-800/30"
+                >
+                  <HiSwitchHorizontal className="text-xl" />
+                </Link>
+              </div>
+            </>
+          ) : (
+            <div className="w-24 h-5 bg-orange-900/40 rounded animate-pulse"></div>
+          )}
         </div>
+
 
         {/* Navigation Sections */}
         <ConversationsList workspaceId={workspaceId} />
 
         {/* User Profile */}
         <div className="p-3 border-t border-orange-800/50">
-          <div className="flex items-center px-3 py-1.5 rounded-md hover:bg-orange-800/30 cursor-pointer">
-            <div className="w-5 h-5 rounded-full bg-orange-700 flex items-center justify-center">
-              <HiUser className="text-sm" />
-            </div>
-            <div className="ml-3 flex-1 min-w-0">
-              <div className="text-sm font-medium truncate">
-                {user?.fullName}
+          {
+            user && (
+              <div className="flex items-center px-3 py-1.5 rounded-md hover:bg-orange-800/30 cursor-pointer">
+                <div className="w-5 h-5 rounded-full bg-orange-700 flex items-center justify-center">
+                  <HiUser className="text-sm" />
+                </div>
+                <div className="ml-3 flex-1 min-w-0">
+                  <div className="text-sm font-medium truncate">
+                    {user?.fullName}
+                  </div>
+                </div>
+                <span className="w-2 h-2 rounded-full bg-green-500"></span>
               </div>
-            </div>
-            <span className="w-2 h-2 rounded-full bg-green-500"></span>
-          </div>
+            )
+          }
+          <button
+            className="mt-2 w-full px-3 py-1.5 text-sm rounded-md bg-orange-800 hover:bg-orange-900 transition-colors"
+            onClick={logout}
+          >
+            Logout
+          </button>
         </div>
       </div>
 

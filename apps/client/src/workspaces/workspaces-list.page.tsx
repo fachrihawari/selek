@@ -1,11 +1,10 @@
-import { useNavigate } from "react-router";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 
 import type { IWorkspace } from "~/workspaces/workspaces.interface";
 import WorkspaceCard from "~/workspaces/workspace-card.component";
 import { AlertError, Button, Loading } from "~/components";
 import type { IUser } from "~/users";
-import type { IHttpResponse } from "~/shared";
+import { useLogout, type IHttpResponse } from "~/shared";
 
 export function meta() {
   return [
@@ -112,21 +111,13 @@ function WorkspacesCreate() {
 }
 
 function WorkspacesHelp() {
-  const navigate = useNavigate();
+  const logout = useLogout()
 
   return (
     <div className="mt-4 text-center text-sm text-gray-500">
       Not seeing your workspace?{" "}
       <button
-        onClick={() => {
-          localStorage.clear();
-          navigate("/login", {
-            replace: true,
-          });
-
-          // Revalidate the SWR cache for the user
-          mutate(() => true, null, { revalidate: false });
-        }}
+        onClick={logout}
         className="text-orange-600 hover:text-orange-700"
       >
         Try using a different email

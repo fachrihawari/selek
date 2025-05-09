@@ -7,7 +7,7 @@ import {
   HiFaceSmile,
   HiBars3,
 } from "react-icons/hi2";
-import { useAppContext } from "~/shared/app.context";
+import { useAppContext } from "~/shared";
 
 export default function ConversationsDetailPage() {
   const { toggleSidebar } = useAppContext();

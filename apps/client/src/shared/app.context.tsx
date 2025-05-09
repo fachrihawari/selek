@@ -1,6 +1,8 @@
 import { createContext, useContext, useState } from "react";
 import type { ReactNode } from "react";
 import { SWRConfig } from "swr";
+import { useMediaQuery } from "usehooks-ts";
+
 import { http } from "./http.helper";
 
 type AppContextType = {
@@ -23,7 +25,8 @@ type AppProviderProps = {
   children: ReactNode;
 };
 export function AppProvider({ children }: AppProviderProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const matches = useMediaQuery("(min-width: 768px)");
+  const [sidebarOpen, setSidebarOpen] = useState(matches);
 
   const openSidebar = () => setSidebarOpen(true);
   const closeSidebar = () => setSidebarOpen(false);
