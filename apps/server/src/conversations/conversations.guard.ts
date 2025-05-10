@@ -5,22 +5,22 @@ import {
   ForbiddenException,
   Logger,
 } from '@nestjs/common';
-import { WorkspacesService } from './workspaces.service';
+import { ConversationsService } from './conversations.service';
 import { Request } from 'express';
 
 @Injectable()
-export class WorkspaceGuard implements CanActivate {
-  private readonly logger = new Logger(WorkspaceGuard.name);
+export class ConversationGuard implements CanActivate {
+  private readonly logger = new Logger(ConversationGuard.name);
 
-  constructor(private workspacesService: WorkspacesService) { }
+  constructor(private conversationsService: ConversationsService) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
     const user = request.user;
-    const workspaceId = this.getWorkspaceId(request);
+    const conversationId = this.getConversationId(request);
 
-    if (!workspaceId) {
-      this.logger.warn('Workspace ID missing in request');
+    if (!conversationId) {
+      this.logger.warn('Conversation ID missing in request');
       throw new ForbiddenException('Access denied'); // Use generic error for security reasons
     }
 
@@ -30,30 +30,30 @@ export class WorkspaceGuard implements CanActivate {
     }
 
     try {
-      const isMember = await this.workspacesService.isWorkspaceMember(
+      const isMember = await this.conversationsService.isConversationMember(
         user.id,
-        workspaceId,
+        conversationId,
       );
 
       if (!isMember) {
         this.logger.log(
-          `Access denied for user ${user.id} on workspace ${workspaceId}`,
+          `Access denied for user ${user.id} on conversation ${conversationId}`,
         );
         throw new ForbiddenException('Access denied'); // Use generic error for security reasons
       }
 
       return true;
     } catch (error) {
-      this.logger.error(`Workspace access check failed: ${error.message}`);
+      this.logger.error(`Conversation access check failed: ${error.message}`);
       throw new ForbiddenException('Access denied'); // Use generic error for security reasons
     }
   }
 
-  private getWorkspaceId(request: Request): string | null {
+  private getConversationId(request: Request): string | null {
     return (
-      request.params?.workspaceId ||
-      request.body?.workspaceId ||
-      request.query?.workspaceId
+      request.params?.conversationId ||
+      request.body?.conversationId ||
+      request.query?.conversationId
     );
   }
 }

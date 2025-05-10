@@ -20,7 +20,6 @@ export const ConversationsList: React.FC<ConversationsListProps> = ({
     `/conversations?workspaceId=${workspaceId}`,
   );
 
-  const handleConversationClick = (conversationId: string) => {};
   const handleAddClick = (type: string) => {};
 
   if (isLoading) {
@@ -59,7 +58,7 @@ export const ConversationsList: React.FC<ConversationsListProps> = ({
                 name={conversation.name}
                 type={conversationGroup.type}
                 isActive={conversation.id === activeConversationId}
-                onClick={() => handleConversationClick?.(conversation.id)}
+                to={`/${workspaceId}/${conversation.id}`}
               />
             ))}
           </nav>

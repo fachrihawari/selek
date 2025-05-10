@@ -30,10 +30,10 @@ export class WorkspacesController {
     return await this.workspacesService.getWorkspaces(user.id);
   }
 
-  @Get('/:id')
+  @Get('/:workspaceId')
   @HttpCode(HttpStatus.OK)
   @UseGuards(WorkspaceGuard)
-  async getWorkspace(@Param('id') workspaceId: string) {
+  async getWorkspace(@Param('workspaceId') workspaceId: string) {
     return await this.workspacesService.getWorkspace(workspaceId);
   }
 

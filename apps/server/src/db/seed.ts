@@ -4,6 +4,7 @@ import { TUser } from '~/users/users.schema';
 import { TWorkspace } from '~/workspaces/workspaces.schema';
 
 async function seed() {
+  await sql`DELETE FROM conversation_messages`;
   await sql`DELETE FROM conversation_members`;
   await sql`DELETE FROM conversations`;
   await sql`DELETE FROM workspace_members`;
@@ -127,41 +128,57 @@ async function seed() {
     {
       conversationId: randomChannel.id,
       userId: fachri.id,
-      role:'owner',
+      role: 'owner',
     },
     {
       conversationId: randomChannel.id,
       userId: budi.id,
-      role:'member',
+      role: 'member',
     },
     {
       conversationId: group.id,
       userId: fachri.id,
-      role:'owner',
+      role: 'owner',
     },
     {
       conversationId: group.id,
       userId: budi.id,
-      role:'member',
+      role: 'member',
     },
     {
       conversationId: group.id,
       userId: udin.id,
-      role:'member',
+      role: 'member',
     },
     {
       conversationId: dm.id,
       userId: fachri.id,
-      role:'owner',
+      role: 'owner',
     },
     {
       conversationId: dm.id,
       userId: udin.id,
-      role:'member',
+      role: 'member',
     },
   ]
   await sql`
     INSERT INTO conversation_members ${sql(conversationMembers)}
+  `;
+
+  const messages = [
+    {
+      conversationId: generalChannel.id,
+      senderId: fachri.id,
+      content: 'Hi everyone',
+    },
+    {
+      conversationId: generalChannel.id,
+      senderId: udin.id,
+      content: 'yo fachri',
+    }
+  ];
+  await sql`
+    INSERT INTO conversation_messages ${sql(messages)}
   `;
 
   await sql.end();
