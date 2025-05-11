@@ -6,6 +6,7 @@ import { ConversationHeader } from './components/conversation-header.component';
 import { MessageBubble } from './components/message-bubble.component';
 import { MessageInput } from './components/message-input.component';
 import type { IConversation, IMessage } from './conversations.interface';
+import { ConversationTypeIcon } from './components/conversation-type-icon.component';
 
 export default function ConversationsDetailPage({
   params,
@@ -23,19 +24,7 @@ export default function ConversationsDetailPage({
     isLoading: messagesLoading,
   } = useSWR<IMessage[]>(`/conversations/${conversationId}/messages`);
 
-  let content: React.ReactNode = (
-    <div className="text-center text-gray-500">
-      <div className="w-12 h-12 rounded-full bg-orange-100 mx-auto mb-3 flex items-center justify-center">
-        <HiHashtag className="text-3xl text-orange-900" />
-      </div>
-      <h3 className="text-lg font-medium text-gray-900 mb-1">
-        Welcome to {conversation?.name}
-      </h3>
-      <p>
-        This is the start of the {conversation?.name} {conversation?.type}
-      </p>
-    </div>
-  );
+  let content: React.ReactNode
 
   if (messagesLoading) {
     content = <Loading />;
@@ -44,10 +33,24 @@ export default function ConversationsDetailPage({
     content = <AlertError message="Failed to load messages" />;
   }
 
-  if (messages?.length) {
+  if (messages && messages.length) {
     content = messages.map((message) => (
       <MessageBubble key={message.id} message={message} />
     ));
+  }
+
+  if (conversation) {
+    content = (
+      <div className="text-center text-gray-500">
+        <ConversationTypeIcon size='lg' center type={conversation.type} />
+        <h3 className="text-lg font-medium text-gray-900 mb-1 mt-3">
+          Welcome to {conversation.name}
+        </h3>
+        <p>
+          This is the start of the {conversation.name} {conversation.type}
+        </p>
+      </div>
+    );
   }
 
   return (

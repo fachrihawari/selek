@@ -1,11 +1,9 @@
 import type React from 'react';
-import { HiUsers } from 'react-icons/hi';
-import { HiHashtag, HiUser } from 'react-icons/hi2';
 import { Link } from 'react-router';
+import { ConversationTypeIcon } from './conversation-type-icon.component';
+import type { IConversation } from '~/conversations/conversations.interface';
 
-interface ConversationItemProps {
-  name: string;
-  type: string;
+interface ConversationItemProps extends Pick<IConversation, 'name' | 'type'> {
   to: string;
   isActive?: boolean;
 }
@@ -22,20 +20,9 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
     ? 'bg-orange-800/50'
     : 'hover:bg-orange-800/30';
 
-  let icon: React.ReactNode;
-  if (type === 'dm') {
-    icon = <HiUser className="text-sm" />;
-  } else if (type === 'group') {
-    icon = <HiUsers className="text-sm" />;
-  } else {
-    icon = <HiHashtag className="text-sm" />;
-  }
-
   return (
     <Link className={`${baseClassName} ${activeClassName}`} to={to}>
-      <div className="w-6 h-6 rounded-full bg-orange-700 flex items-center justify-center">
-        {icon}
-      </div>
+      <ConversationTypeIcon type={type} />
       <span className="font-medium ml-2">{name}</span>
     </Link>
   );
