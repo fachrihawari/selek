@@ -18,6 +18,23 @@ export class ConversationsModel {
     return conversations;
   }
 
+  async getConversation(conversationId: string) {
+    const [conversation] = await sql`
+      SELECT
+        c.id,
+        c.name,
+        c.type,
+        c."createdAt",
+        JSON_AGG(JSON_BUILD_OBJECT('id', u.id, 'fullName', u."fullName")) AS "members"
+      FROM conversations c
+      JOIN conversation_members cm ON c.id = cm."conversationId"
+      JOIN users u ON cm."userId" = u.id
+      WHERE c.id = ${conversationId}
+      GROUP BY c.id
+    `;
+    return conversation;
+  }
+
   async getMessages(
     conversationId: string,
     page: number = 1,

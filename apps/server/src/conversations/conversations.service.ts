@@ -9,6 +9,10 @@ export class ConversationsService {
     return this.conversationsModel.getConversations(workspaceId, userId);
   }
 
+  async getConversation(conversationId: string) {
+    return this.conversationsModel.getConversation(conversationId);
+  }
+
   async getMessages(
     conversationId: string,
     page: number,

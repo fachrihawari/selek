@@ -12,17 +12,29 @@ import { TUserSafe } from '~/users/users.schema';
 import { ConversationGuard } from './conversations.guard';
 
 @Controller('conversations')
-@UseGuards(AuthGuard, WorkspaceGuard)
+@UseGuards(AuthGuard)
 export class ConversationsController {
   constructor(private readonly conversationsService: ConversationsService) { }
 
   @Get()
+  @UseGuards(WorkspaceGuard)
   getConversationsList(
     @AuthUser() user: TUserSafe,
     @Query(new ZodValidationPipe(GetConversationsListQuerySchema))
     query: TGetConversationsListQuery,
   ) {
     return this.conversationsService.getConversations(query.workspaceId, user.id);
+  }
+
+  @Get('/:conversationId')
+  @UseGuards(ConversationGuard)
+  async getConversation(
+    @Param('conversationId') conversationId: string,
+  ) {
+    const conversation = await this.conversationsService.getConversation(
+      conversationId,
+    );
+    return conversation;
   }
 
   @Get('/:conversationId/messages')

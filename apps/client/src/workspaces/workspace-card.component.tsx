@@ -31,7 +31,7 @@ export default function WorkspaceCard(props: WorkspaceCardProps) {
           </div>
         </div>
       </div>
-      <Button to={`/workspaces/${workspace.id}`}>Launch Selek</Button>
+      <Button to={`/${workspace.id}`}>Launch Selek</Button>
     </div>
   );
 }

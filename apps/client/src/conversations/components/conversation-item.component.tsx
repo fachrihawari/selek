@@ -1,4 +1,5 @@
 import type React from 'react';
+import { HiUsers } from 'react-icons/hi';
 import { HiHashtag, HiUser } from 'react-icons/hi2';
 import { Link } from 'react-router';
 
@@ -21,19 +22,21 @@ export const ConversationItem: React.FC<ConversationItemProps> = ({
     ? 'bg-orange-800/50'
     : 'hover:bg-orange-800/30';
 
+  let icon: React.ReactNode;
+  if (type === 'dm') {
+    icon = <HiUser className="text-sm" />;
+  } else if (type === 'group') {
+    icon = <HiUsers className="text-sm" />;
+  } else {
+    icon = <HiHashtag className="text-sm" />;
+  }
+
   return (
-    <Link
-      className={`${baseClassName} ${activeClassName}`}
-      to={to}
-    >
-      {type === 'dm' ? (
-        <div className="w-5 h-5 rounded-full bg-orange-700 flex items-center justify-center">
-          <HiUser className="text-sm" />
-        </div>
-      ) : (
-        <HiHashtag className="text-lg" />
-      )}
-      <span className="font-medium ml-3">{name}</span>
+    <Link className={`${baseClassName} ${activeClassName}`} to={to}>
+      <div className="w-6 h-6 rounded-full bg-orange-700 flex items-center justify-center">
+        {icon}
+      </div>
+      <span className="font-medium ml-2">{name}</span>
     </Link>
   );
 };

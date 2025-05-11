@@ -1,6 +1,11 @@
+import type { IUser } from '~/users';
+
 export interface IConversation {
   id: string;
   name: string;
+  type: 'dm' | 'group' | 'channel';
+  createdAt: string;
+  members: Pick<IUser, 'id' | 'fullName'>[];
 }
 
 export interface IConversationGroup {
@@ -9,3 +14,11 @@ export interface IConversationGroup {
 }
 
 export type TConversationsList = IConversationGroup[];
+
+export interface IMessage {
+  id: string;
+  senderId: string;
+  content: string;
+  createdAt: string;
+  sender: Pick<IUser, 'id' | 'fullName'>;
+}

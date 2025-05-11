@@ -1,7 +1,7 @@
 import type React from 'react';
-import { useState } from 'react';
 import { HiPlus } from 'react-icons/hi2';
 
+import { useParams } from 'react-router';
 import useSWR from 'swr';
 import { conversationTypes } from '../conversations.constant';
 import type { TConversationsList } from '../conversations.interface';
@@ -15,7 +15,7 @@ interface ConversationsListProps {
 export const ConversationsList: React.FC<ConversationsListProps> = ({
   workspaceId,
 }) => {
-  const [activeConversationId] = useState('');
+  const activeConversationId = useParams().conversationId;
   const { data: conversations, isLoading } = useSWR<TConversationsList>(
     `/conversations?workspaceId=${workspaceId}`,
   );

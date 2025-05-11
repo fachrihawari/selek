@@ -8,7 +8,7 @@ import { useAppContext, useLogout } from '~/shared';
 import type { IUser } from '~/users';
 import type { IWorkspace } from '~/workspaces';
 import type { Route } from './+types/conversations.layout';
-import { ConversationsList } from './components';
+import { ConversationsList } from './components/conversations-list.component';
 
 export default function ConversationsLayout({ params }: Route.ComponentProps) {
   const { workspaceId } = params;

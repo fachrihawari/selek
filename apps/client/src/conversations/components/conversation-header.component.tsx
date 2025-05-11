@@ -9,10 +9,12 @@ import { useAppContext } from '~/shared';
 
 interface ConversationHeaderProps {
   title: string;
+  isLoading: boolean;
 }
 
 export const ConversationHeader: React.FC<ConversationHeaderProps> = ({
   title,
+  isLoading,
 }) => {
   const { toggleSidebar } = useAppContext();
 
@@ -26,8 +28,12 @@ export const ConversationHeader: React.FC<ConversationHeaderProps> = ({
         >
           <HiBars3 className="text-xl text-gray-600" />
         </button>
-        <HiHashtag className="text-xl text-gray-600" />
-        <h2 className="font-medium text-gray-900 truncate">{title}</h2>
+
+        {isLoading ? (
+          <div className="w-32 h-5 bg-gray-200 rounded animate-pulse" />
+        ) : (
+          <h2 className="font-medium text-gray-900 truncate">{title}</h2>
+        )}
       </div>
       <div className="flex items-center space-x-2">
         <button
