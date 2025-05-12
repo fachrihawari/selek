@@ -1,22 +1,23 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import useSWR from 'swr';
-import { useIntersectionObserver } from 'usehooks-ts';
 import { AlertError, Loading } from '~/components';
 import { useScrollToBottom } from '~/shared';
+import {
+  useInfiniteScrollTop,
+  usePreserveScrollOnPrepend,
+} from '~/shared/app.hook';
 import type { Route } from './+types/conversations-detail.page';
 import { ConversationHeader } from './components/conversation-header.component';
 import { ConversationTypeIcon } from './components/conversation-type-icon.component';
 import { MessageBubble } from './components/message-bubble.component';
 import { MessageInput } from './components/message-input.component';
-import type { IConversation, IMessage } from './conversations.interface';
+import type { IConversation } from './conversations.interface';
+import { useMessages } from './hooks/use-messages';
 
 export default function ConversationsDetailPage({
   params,
 }: Route.ComponentProps) {
   const { conversationId } = params;
-
-  // Reference to the messages container
-  const ref = useRef<HTMLDivElement>(null);
 
   const {
     data: conversation,
@@ -24,26 +25,37 @@ export default function ConversationsDetailPage({
     isLoading: conversationLoading,
     isValidating: conversationValidating,
   } = useSWR<IConversation>(`/conversations/${conversationId}`);
-  const {
-    data: messages,
-    error: messagesError,
-    isLoading: messagesLoading,
-    isValidating: messagesValidating,
-  } = useSWR<IMessage[]>(`/conversations/${conversationId}/messages`);
 
-  // Infinite scroll
-  const { ref: inViewRef } = useIntersectionObserver({
-    threshold: 0.1,
-  });
+  const {
+    setSize,
+    hasMore,
+    messagesLoading,
+    messagesValidating,
+    messagesError,
+    messages,
+  } = useMessages(conversationId);
+
+  const ref = useRef<HTMLDivElement>(null);
 
   // Automatically scroll to the bottom of the messages when new messages are loaded
-  useScrollToBottom(ref, [messages]);
+  useScrollToBottom(ref, [messagesLoading]);
 
-  // Set the ref to the messages container and trigger the inViewRef callback
-  const setRefs = (node: HTMLDivElement) => {
-    ref.current = node;
-    inViewRef(node);
-  };
+  // Preserve scroll position after loading more messages (infinite scroll up)
+  const { onBeforeLoadMore } = usePreserveScrollOnPrepend(ref, [
+    messages.length,
+  ]);
+
+  // Infinite scroll for messages
+  const sentinelRef = useInfiniteScrollTop({
+    disabled: !hasMore || messagesValidating,
+    threshold: 0.1,
+    onLoadMore: () => {
+      if (hasMore && !messagesValidating) {
+        onBeforeLoadMore();
+        setSize((prevSize) => prevSize + 1);
+      }
+    },
+  });
 
   const hasMessages = messages && messages.length > 0;
   const hasError = conversationError || messagesError;
@@ -55,9 +67,6 @@ export default function ConversationsDetailPage({
 
   let content: React.ReactNode;
 
-  if (messagesLoading) {
-    content = <Loading />;
-  }
   if (hasError) {
     content = <AlertError message="Failed to load messages" />;
   }
@@ -90,9 +99,14 @@ export default function ConversationsDetailPage({
 
       {/* Messages Area */}
       <div
-        ref={setRefs}
+        ref={ref}
         className="mt-auto flex flex-col overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
       >
+        {messagesValidating ? (
+          <Loading />
+        ) : (
+          <div ref={sentinelRef} className="w-full h-4" />
+        )}
         {content}
       </div>
 

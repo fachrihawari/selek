@@ -24,7 +24,7 @@ export default function ConversationsLayout({ params }: Route.ComponentProps) {
     <div className="h-screen flex relative">
       {/* Mobile Sidebar Overlay */}
       <div
-        className={`fixed inset-0 bg-black/50 z-20 md:hidden ${
+        className={`fixed inset-0 bg-black/50 z-20 sm:hidden ${
           sidebarOpen ? 'block' : 'hidden'
         }`}
         onClick={toggleSidebar}
@@ -41,7 +41,7 @@ export default function ConversationsLayout({ params }: Route.ComponentProps) {
         className={`
         fixed inset-y-0 left-0 z-30 w-64 bg-gradient-to-b from-orange-950 to-orange-900
         text-white flex flex-col transform transition-transform duration-300 ease-in-out
-        ${sidebarOpen ? 'md:relative translate-x-0' : '-translate-x-full'}
+        ${sidebarOpen ? 'sm:relative translate-x-0' : '-translate-x-full'}
       `}
       >
         {/* Workspace Header */}

@@ -22,3 +22,8 @@ export interface IMessage {
   createdAt: string;
   sender: Pick<IUser, 'id' | 'fullName'>;
 }
+
+export interface IMessagesResponse {
+  messages: IMessage[];
+  hasMore: boolean;
+}

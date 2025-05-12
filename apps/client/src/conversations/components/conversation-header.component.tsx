@@ -1,7 +1,6 @@
 import type React from 'react';
 import {
   HiBars3,
-  HiHashtag,
   HiInformationCircle,
   HiMagnifyingGlass,
 } from 'react-icons/hi2';
@@ -19,7 +18,7 @@ export const ConversationHeader: React.FC<ConversationHeaderProps> = ({
   const { toggleSidebar } = useAppContext();
 
   return (
-    <div className="h-14 px-4 flex items-center justify-between border-b border-gray-200">
+    <div className="min-h-14 px-4 flex items-center justify-between border-b border-gray-200">
       <div className="flex items-center space-x-2">
         <button
           type="button"

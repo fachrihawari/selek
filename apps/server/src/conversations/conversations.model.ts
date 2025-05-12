@@ -42,6 +42,12 @@ export class ConversationsModel {
   ) {
     const offset = (page - 1) * limit;
 
+    // Fetch messages with pagination
+    // Use a subquery to first get the messages in descending order
+    // and then order them in ascending order for the final result
+    // This is to ensure that the latest messages are at the top
+    // and the pagination works correctly
+    // Note: The limit + 1 is used to check if there is a next page
     const messages = await sql<TMessagesQueryResult[]>`
       SELECT * FROM (
         SELECT 
@@ -56,11 +62,19 @@ export class ConversationsModel {
         JOIN users u ON m."senderId" = u.id
         WHERE m."conversationId" = ${conversationId}
         ORDER BY m."createdAt" DESC
-        LIMIT ${limit} OFFSET ${offset}
+        LIMIT ${limit + 1} OFFSET ${offset}
       ) sub
       ORDER BY sub."createdAt" ASC
     `;
-    return messages;
+    // Determine if there is a next page
+    const hasMore = messages.length > limit;
+    
+    // Only return up to the requested limit
+    const paginatedMessages = hasMore ? messages.slice(0, limit) : messages;
+    return {
+      messages: paginatedMessages,
+      hasMore,
+    };
   }
 
   async isMember(userId: string, conversationId: string) {
