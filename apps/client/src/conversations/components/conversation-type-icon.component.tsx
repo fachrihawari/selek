@@ -1,4 +1,4 @@
-import { cva, type VariantProps } from 'class-variance-authority';
+import { type VariantProps, cva } from 'class-variance-authority';
 import type React from 'react';
 import { HiUsers } from 'react-icons/hi';
 import { HiHashtag, HiUser } from 'react-icons/hi2';
@@ -8,8 +8,7 @@ const conversationTypes = {
   dm: HiUser,
   group: HiUsers,
   channel: HiHashtag,
-} as const
-
+} as const;
 
 const typeIcon = cva(
   'rounded-full bg-orange-700 flex text-white items-center justify-center',
@@ -21,7 +20,7 @@ const typeIcon = cva(
       },
       center: {
         true: 'mx-auto',
-      }
+      },
     },
     defaultVariants: {
       size: 'sm',
@@ -42,7 +41,9 @@ const icon = cva('text-white', {
   },
 });
 
-interface ConversationTypeIconProps extends Pick<IConversation, 'type'>, VariantProps<typeof typeIcon> { }
+interface ConversationTypeIconProps
+  extends Pick<IConversation, 'type'>,
+    VariantProps<typeof typeIcon> {}
 
 export const ConversationTypeIcon: React.FC<ConversationTypeIconProps> = ({
   type,

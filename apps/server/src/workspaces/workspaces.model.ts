@@ -33,7 +33,7 @@ export class WorkspacesModel {
       };
       const [workspace] = await sql<TWorkspaceQueryResult[]>`
         INSERT INTO workspaces ${sql(worksapceValue)}
-        RETURNING id, name, "logoUrl", "ownerId"
+        RETURNING id, name, "logoUrl", "ownerId", 1 AS "memberCount"
       `;
 
       // Insert workspace members
@@ -43,9 +43,6 @@ export class WorkspacesModel {
         role: 'owner',
       };
       await sql` INSERT INTO workspace_members ${sql(workspaceMembersValue)}`;
-
-      // Hardcode member count, cause we only have one member for newly created workspace
-      workspace.memberCount = 1;
 
       return workspace;
     });

@@ -2,6 +2,7 @@ import { HiBuildingOffice } from 'react-icons/hi2';
 import useSWR from 'swr';
 import { Loading } from '~/components';
 import type { Route } from './+types/conversations-welcome.page';
+import { ConversationHeader } from './components/conversation-header.component';
 
 export default function ConversationsWelcomePage({
   params,
@@ -27,8 +28,11 @@ export default function ConversationsWelcomePage({
   }
 
   return (
-    <div className="w-full h-screen flex justify-center items-center overflow-y-auto">
-      {content}
-    </div>
+    <>
+      <ConversationHeader title="" isLoading={false} />
+      <div className="w-full h-screen flex justify-center items-center overflow-y-auto">
+        {content}
+      </div>
+    </>
   );
 }

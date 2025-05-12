@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { mutate } from 'swr';
 
@@ -16,4 +17,18 @@ export function useLogout() {
   }
 
   return logout;
+}
+
+export function useScrollToBottom(
+  ref: React.RefObject<HTMLDivElement | null>,
+  deps: Array<unknown>,
+) {
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.scrollTo({
+        top: ref.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  }, [ref, ...deps]);
 }

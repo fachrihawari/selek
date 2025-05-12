@@ -28,4 +28,8 @@ export class ConversationsService {
     );
     return result;
   }
+
+  async createMessage(body: { content: string, senderId: string, conversationId: string }) {
+    return this.conversationsModel.createMessage(body);
+  }
 }

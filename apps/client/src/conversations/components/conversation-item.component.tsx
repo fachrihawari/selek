@@ -1,7 +1,7 @@
 import type React from 'react';
 import { Link } from 'react-router';
-import { ConversationTypeIcon } from './conversation-type-icon.component';
 import type { IConversation } from '~/conversations/conversations.interface';
+import { ConversationTypeIcon } from './conversation-type-icon.component';
 
 interface ConversationItemProps extends Pick<IConversation, 'name' | 'type'> {
   to: string;

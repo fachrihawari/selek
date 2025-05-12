@@ -1,9 +1,9 @@
 import { Navigate, Outlet } from 'react-router';
 
-import { ACCESS_TOKEN_KEY } from '~/shared';
+import { getToken } from '~/shared';
 
 export default function AuthLayout() {
-  if (localStorage.getItem(ACCESS_TOKEN_KEY)) {
+  if (getToken()) {
     return <Navigate to="/workspaces" />;
   }
 

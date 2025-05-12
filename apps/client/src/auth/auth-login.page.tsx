@@ -2,7 +2,7 @@ import toast from 'react-hot-toast';
 import { Form, Link, redirect, useNavigation } from 'react-router';
 
 import { Button } from '~/components';
-import { http, ACCESS_TOKEN_KEY, type IHttpResponse } from '~/shared';
+import { http, type IHttpResponse, saveToken } from '~/shared';
 import type { Route } from './+types/auth-login.page';
 
 export function meta() {
@@ -23,7 +23,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
       body,
     });
 
-    localStorage.setItem(ACCESS_TOKEN_KEY, response.access_token);
+    saveToken(response.access_token);
 
     toast.success('Welcome to Selek!');
     return redirect('/workspaces');

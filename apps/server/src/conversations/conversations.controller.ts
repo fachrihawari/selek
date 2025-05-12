@@ -1,8 +1,9 @@
-import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { ConversationsService } from './conversations.service';
 import { WorkspaceGuard } from '~/workspaces/workspaces.guard';
 import { ZodValidationPipe } from '~/shared/zod-validation.pipe';
 import {
+  CreateMessageSchema,
   GetConversationsListQuerySchema,
   TGetConversationsListQuery,
 } from './conversations.schema';
@@ -45,5 +46,22 @@ export class ConversationsController {
     @Query('limit') limit: number,
   ) {
     return this.conversationsService.getMessages(conversationId, page, limit);
+  }
+
+  @Post('/:conversationId/messages')
+  @HttpCode(201)
+  @UseGuards(ConversationGuard)
+  async createMessage(
+    @AuthUser() user: TUserSafe,
+    @Param('conversationId') conversationId: string,
+    @Body(new ZodValidationPipe(CreateMessageSchema)) body
+  ) {
+
+    const newMessage = {
+      senderId: user.id,
+      content: body.content,
+      conversationId: conversationId,
+    }
+    return this.conversationsService.createMessage(newMessage);
   }
 }

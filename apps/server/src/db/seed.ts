@@ -177,6 +177,18 @@ async function seed() {
       content: 'yo fachri',
     }
   ];
+
+  for (let seq = 1; seq < 100; seq++) {
+    const element = {
+      conversationId: randomChannel.id,
+      senderId: fachri.id,
+      content: 'Msg seq: ' + seq,
+    }
+    await sql`
+      INSERT INTO conversation_messages ${sql(element)}
+    `;
+  }
+
   await sql`
     INSERT INTO conversation_messages ${sql(messages)}
   `;

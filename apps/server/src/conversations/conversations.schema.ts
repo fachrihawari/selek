@@ -29,3 +29,25 @@ export const GetConversationsListQuerySchema = ConversationSchema.pick({
 });
 
 export type TGetConversationsListQuery = z.infer<typeof GetConversationsListQuerySchema>;
+
+const MessageSchema = z.object({
+  id: z.string().uuid(),
+  content: z.string(),
+  senderId: z.string().uuid(),
+  conversationId: z.string().uuid(),
+  createdAt: z.date(),
+})
+export type TMessage = z.infer<typeof MessageSchema>;
+export type TMessagesQueryResult = {
+  id: string;
+  content: string;
+  createdAt: Date;
+  sender: {
+    id: string;
+    fullName: string;
+  }
+}
+
+export const CreateMessageSchema = MessageSchema.pick({
+  content: true
+})
