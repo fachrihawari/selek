@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react';
 import useSWR from 'swr';
 import { AlertError, Loading } from '~/components';
-import { useScrollToBottom } from '~/shared';
 import {
+  useScrollToBottom,
   useInfiniteScrollTop,
   usePreserveScrollOnPrepend,
-} from '~/shared/app.hook';
+} from '~/shared';
 import type { Route } from './+types/conversations-detail.page';
 import { ConversationHeader } from './components/conversation-header.component';
 import { ConversationTypeIcon } from './components/conversation-type-icon.component';
@@ -38,7 +38,7 @@ export default function ConversationsDetailPage({
   const ref = useRef<HTMLDivElement>(null);
 
   // Automatically scroll to the bottom of the messages when new messages are loaded
-  useScrollToBottom(ref, [messagesLoading]);
+  useScrollToBottom(ref, [conversationId, messagesLoading]);
 
   // Preserve scroll position after loading more messages (infinite scroll up)
   const { onBeforeLoadMore } = usePreserveScrollOnPrepend(ref, [

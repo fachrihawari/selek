@@ -1,4 +1,4 @@
-import { type RefObject, useEffect, useRef, useState } from 'react';
+import { type RefObject, useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { mutate } from 'swr';
 
@@ -55,16 +55,22 @@ export function useLogout() {
 
 export function useScrollToBottom(
   ref: RefObject<HTMLDivElement | null>,
-  deps: Array<unknown>,
+  deps: Array<unknown> = [],
+  behavior: ScrollBehavior = 'instant'
 ) {
-  useEffect(() => {
+  const scrollToBottom = useCallback(() => {
     if (ref.current) {
       ref.current.scrollTo({
         top: ref.current.scrollHeight,
-        behavior: 'auto',
+        behavior,
       });
     }
-  }, [ref, ...deps]);
+  }, [behavior]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [...deps, scrollToBottom]);
+  return { scrollToBottom };
 }
 
 export function useMediaQuery(query: string) {
@@ -104,6 +110,7 @@ export function usePreserveScrollOnPrepend(
 ) {
   const prevScrollHeightRef = useRef<number>(0);
 
+  // its a magic number, height of the loading component
   const LOADING_HEIGHT = 40;
 
   // Call this before loading more data
@@ -122,7 +129,7 @@ export function usePreserveScrollOnPrepend(
       }
       prevScrollHeightRef.current = 0;
     }
-  }, [...deps, ref.current]);
+  }, deps);
 
   return { onBeforeLoadMore };
 }

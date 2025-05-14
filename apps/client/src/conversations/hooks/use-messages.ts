@@ -18,8 +18,6 @@ export function useMessages(conversationId: string) {
     pageIndex: number,
     previousPageData: IMessagesResponse | null,
   ) => {
-    console.log('getMessagesKey', pageIndex, previousPageData);
-
     if (pageIndex === 0) {
       return `/conversations/${conversationId}/messages?page=1`;
     }
