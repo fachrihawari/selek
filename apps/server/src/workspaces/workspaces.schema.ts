@@ -13,9 +13,12 @@ export const WorkspaceSchema = z.object({
 });
 export type TWorkspace = z.infer<typeof WorkspaceSchema>;
 
-export type TWorkspaceQueryResult = (Pick<TWorkspace, 'id' | 'name' | 'logoUrl' | 'ownerId'> & {
+export type TWorkspaceQueryResult = Pick<
+  TWorkspace,
+  'id' | 'name' | 'logoUrl' | 'ownerId'
+> & {
   memberCount: number;
-});
+};
 
 // Workspace schema for creating a new workspace
 export const CreateWorkspaceSchema = WorkspaceSchema.pick({

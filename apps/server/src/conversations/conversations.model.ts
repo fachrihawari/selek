@@ -1,5 +1,8 @@
 import { sql } from '~/db/sql';
-import { TConversationsQueryResult, TMessagesQueryResult } from './conversations.schema';
+import {
+  TConversationsQueryResult,
+  TMessagesQueryResult,
+} from './conversations.schema';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -68,7 +71,7 @@ export class ConversationsModel {
     `;
     // Determine if there is a next page
     const hasMore = messages.length > limit;
-    
+
     // Only return up to the requested limit
     const paginatedMessages = hasMore ? messages.slice(0, limit) : messages;
     return {
@@ -86,7 +89,11 @@ export class ConversationsModel {
     return Boolean(conversation);
   }
 
-  async createMessage(body: { content: string, senderId: string, conversationId: string }) {
+  async createMessage(body: {
+    content: string;
+    senderId: string;
+    conversationId: string;
+  }) {
     const [message] = await sql<TMessagesQueryResult[]>`
       WITH inserted AS (
         INSERT INTO conversation_messages ${sql(body)}

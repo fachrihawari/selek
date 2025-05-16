@@ -12,7 +12,7 @@ import { Request } from 'express';
 export class ConversationGuard implements CanActivate {
   private readonly logger = new Logger(ConversationGuard.name);
 
-  constructor(private conversationsService: ConversationsService) { }
+  constructor(private conversationsService: ConversationsService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();

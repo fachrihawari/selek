@@ -13,10 +13,7 @@ import { AuthGuard } from '~/auth/auth.guard';
 import { AuthUser } from '~/auth/auth-user.decorator';
 import { TUserSafe } from '~/users/users.schema';
 import { ZodValidationPipe } from '~/shared/zod-validation.pipe';
-import {
-  CreateWorkspaceSchema,
-  CreateWorkspaceDto,
-} from './workspaces.schema';
+import { CreateWorkspaceSchema, CreateWorkspaceDto } from './workspaces.schema';
 import { WorkspaceGuard } from './workspaces.guard';
 
 @Controller('workspaces')

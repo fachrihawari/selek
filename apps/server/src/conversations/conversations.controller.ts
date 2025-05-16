@@ -1,10 +1,20 @@
-import { Body, Controller, Get, HttpCode, Param, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ConversationsService } from './conversations.service';
 import { WorkspaceGuard } from '~/workspaces/workspaces.guard';
 import { ZodValidationPipe } from '~/shared/zod-validation.pipe';
 import {
   CreateMessageSchema,
   GetConversationsListQuerySchema,
+  TCreateMessage,
   TGetConversationsListQuery,
 } from './conversations.schema';
 import { AuthGuard } from '~/auth/auth.guard';
@@ -15,7 +25,7 @@ import { ConversationGuard } from './conversations.guard';
 @Controller('conversations')
 @UseGuards(AuthGuard)
 export class ConversationsController {
-  constructor(private readonly conversationsService: ConversationsService) { }
+  constructor(private readonly conversationsService: ConversationsService) {}
 
   @Get()
   @UseGuards(WorkspaceGuard)
@@ -24,17 +34,17 @@ export class ConversationsController {
     @Query(new ZodValidationPipe(GetConversationsListQuerySchema))
     query: TGetConversationsListQuery,
   ) {
-    return this.conversationsService.getGrouppedConversations(query.workspaceId, user.id);
+    return this.conversationsService.getGrouppedConversations(
+      query.workspaceId,
+      user.id,
+    );
   }
 
   @Get('/:conversationId')
   @UseGuards(ConversationGuard)
-  async getConversation(
-    @Param('conversationId') conversationId: string,
-  ) {
-    const conversation = await this.conversationsService.getConversation(
-      conversationId,
-    );
+  async getConversation(@Param('conversationId') conversationId: string) {
+    const conversation =
+      await this.conversationsService.getConversation(conversationId);
     return conversation;
   }
 
@@ -54,14 +64,13 @@ export class ConversationsController {
   async createMessage(
     @AuthUser() user: TUserSafe,
     @Param('conversationId') conversationId: string,
-    @Body(new ZodValidationPipe(CreateMessageSchema)) body
+    @Body(new ZodValidationPipe(CreateMessageSchema)) body: TCreateMessage,
   ) {
-
     const newMessage = {
       senderId: user.id,
       content: body.content,
       conversationId: conversationId,
-    }
+    };
     return this.conversationsService.createMessage(newMessage);
   }
 }

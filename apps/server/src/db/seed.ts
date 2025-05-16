@@ -160,7 +160,7 @@ async function seed() {
       userId: udin.id,
       role: 'member',
     },
-  ]
+  ];
   await sql`
     INSERT INTO conversation_members ${sql(conversationMembers)}
   `;
@@ -175,7 +175,7 @@ async function seed() {
       conversationId: generalChannel.id,
       senderId: udin.id,
       content: 'yo fachri',
-    }
+    },
   ];
 
   for (let seq = 1; seq < 100; seq++) {
@@ -183,7 +183,7 @@ async function seed() {
       conversationId: randomChannel.id,
       senderId: fachri.id,
       content: 'Msg seq: ' + seq,
-    }
+    };
     await sql`
       INSERT INTO conversation_messages ${sql(element)}
     `;

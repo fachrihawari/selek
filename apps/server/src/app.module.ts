@@ -9,7 +9,13 @@ import { SlowdownMiddleware } from './shared/slowdown.middleware';
 import { ConversationsModule } from './conversations/conversations.module';
 
 @Module({
-  imports: [AuthModule, ConfigModule.forRoot(), UsersModule, WorkspacesModule, ConversationsModule],
+  imports: [
+    AuthModule,
+    ConfigModule.forRoot(),
+    UsersModule,
+    WorkspacesModule,
+    ConversationsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

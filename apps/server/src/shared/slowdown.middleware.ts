@@ -7,7 +7,7 @@ export class SlowdownMiddleware implements NestMiddleware {
   private readonly logger = new Logger(SlowdownMiddleware.name);
   private readonly slowdownInterval = 500;
 
-  constructor(private readonly configService: ConfigService) { }
+  constructor(private readonly configService: ConfigService) {}
 
   use(_req: Request, _res: Response, next: NextFunction) {
     if (this.configService.getOrThrow('NODE_ENV') === 'development') {

@@ -12,7 +12,7 @@ import { Request } from 'express';
 export class WorkspaceGuard implements CanActivate {
   private readonly logger = new Logger(WorkspaceGuard.name);
 
-  constructor(private workspacesService: WorkspacesService) { }
+  constructor(private workspacesService: WorkspacesService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
