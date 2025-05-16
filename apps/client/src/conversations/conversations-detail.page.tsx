@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import useSWR from 'swr';
 import { AlertError, Loading } from '~/components';
 import {

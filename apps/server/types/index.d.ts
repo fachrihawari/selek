@@ -12,6 +12,9 @@ declare global {
       DATABASE_URL: string;
       JWT_SECRET: string;
       JWT_EXPIRATION: string;
+      CLIENT_URL: string
+      NODE_ENV: 'development' | 'production' | 'test'
     }
   }
 }
+

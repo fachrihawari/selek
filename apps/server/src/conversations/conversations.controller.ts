@@ -24,7 +24,7 @@ export class ConversationsController {
     @Query(new ZodValidationPipe(GetConversationsListQuerySchema))
     query: TGetConversationsListQuery,
   ) {
-    return this.conversationsService.getConversations(query.workspaceId, user.id);
+    return this.conversationsService.getGrouppedConversations(query.workspaceId, user.id);
   }
 
   @Get('/:conversationId')

@@ -1,17 +1,26 @@
 import { HiSwitchHorizontal } from 'react-icons/hi';
 import { HiBuildingOffice2, HiUser } from 'react-icons/hi2';
-import { Link, Outlet } from 'react-router';
+import { Link, Navigate, Outlet } from 'react-router';
 import useSWR from 'swr';
 
 import type { IHttpResponse } from '~/shared';
-import { useAppContext, useLogout } from '~/shared';
+import { getToken, useAppContext, useLogout } from '~/shared';
 import type { IUser } from '~/users';
 import type { IWorkspace } from '~/workspaces';
 import type { Route } from './+types/conversations.layout';
 import { ConversationsList } from './components/conversations-list.component';
+import { useSocketJoin } from './hooks/use-socket-join';
 
 export default function ConversationsLayout({ params }: Route.ComponentProps) {
+  if (!getToken()) {
+    return <Navigate to="/login" />;
+  }
+
   const { workspaceId } = params;
+
+  // Connect the user to the socket server and join the workspace conversations
+  useSocketJoin(workspaceId)
+
   const logout = useLogout();
   const { data: workspace } = useSWR<IWorkspace, IHttpResponse>(
     `/workspaces/${workspaceId}`,
@@ -24,9 +33,8 @@ export default function ConversationsLayout({ params }: Route.ComponentProps) {
     <div className="h-screen flex relative">
       {/* Mobile Sidebar Overlay */}
       <div
-        className={`fixed inset-0 bg-black/50 z-20 sm:hidden ${
-          sidebarOpen ? 'block' : 'hidden'
-        }`}
+        className={`fixed inset-0 bg-black/50 z-20 sm:hidden ${sidebarOpen ? 'block' : 'hidden'
+          }`}
         onClick={toggleSidebar}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {

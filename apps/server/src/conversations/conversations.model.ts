@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ConversationsModel {
-  async getConversations(workspaceId: string, userId: string) {
+  async getGrouppedConversations(workspaceId: string, userId: string) {
     const conversations = await sql<TConversationsQueryResult[]>`
       SELECT 
         c.type,
