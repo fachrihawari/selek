@@ -1,23 +1,21 @@
-import { useEffect } from "react"
-import { getToken, socket } from "~/shared"
-
+import { useEffect } from 'react';
+import { getToken, socket } from '~/shared';
 
 export function useSocketJoin(workspaceId: string) {
   useEffect(() => {
     socket.auth = {
-      token: getToken()
-    }
+      token: getToken(),
+    };
     socket.connect();
-  }, [])
-
+  }, []);
 
   useEffect(() => {
-    socket.emit('workspaces:join', workspaceId)
-    socket.on('exception', console.error)
+    socket.emit('workspaces:join', workspaceId);
+    socket.on('exception', console.error);
 
     return () => {
-      socket.off('welcome')
-      socket.off('exception')
-    }
-  }, [workspaceId])
+      socket.off('welcome');
+      socket.off('exception');
+    };
+  }, [workspaceId]);
 }

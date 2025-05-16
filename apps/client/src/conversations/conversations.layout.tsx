@@ -19,7 +19,7 @@ export default function ConversationsLayout({ params }: Route.ComponentProps) {
   const { workspaceId } = params;
 
   // Connect the user to the socket server and join the workspace conversations
-  useSocketJoin(workspaceId)
+  useSocketJoin(workspaceId);
 
   const logout = useLogout();
   const { data: workspace } = useSWR<IWorkspace, IHttpResponse>(
@@ -33,8 +33,9 @@ export default function ConversationsLayout({ params }: Route.ComponentProps) {
     <div className="h-screen flex relative">
       {/* Mobile Sidebar Overlay */}
       <div
-        className={`fixed inset-0 bg-black/50 z-20 sm:hidden ${sidebarOpen ? 'block' : 'hidden'
-          }`}
+        className={`fixed inset-0 bg-black/50 z-20 sm:hidden ${
+          sidebarOpen ? 'block' : 'hidden'
+        }`}
         onClick={toggleSidebar}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {

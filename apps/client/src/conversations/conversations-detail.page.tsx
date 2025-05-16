@@ -2,9 +2,9 @@ import { useRef } from 'react';
 import useSWR from 'swr';
 import { AlertError, Loading } from '~/components';
 import {
-  useScrollToBottom,
   useInfiniteScrollTop,
   usePreserveScrollOnPrepend,
+  useScrollToBottom,
 } from '~/shared';
 import type { Route } from './+types/conversations-detail.page';
 import { ConversationHeader } from './components/conversation-header.component';

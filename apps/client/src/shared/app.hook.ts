@@ -1,4 +1,10 @@
-import { type RefObject, useCallback, useEffect, useRef, useState } from 'react';
+import {
+  type RefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useNavigate } from 'react-router';
 import { mutate } from 'swr';
 
@@ -56,7 +62,7 @@ export function useLogout() {
 export function useScrollToBottom(
   ref: RefObject<HTMLDivElement | null>,
   deps: Array<unknown> = [],
-  behavior: ScrollBehavior = 'instant'
+  behavior: ScrollBehavior = 'instant',
 ) {
   const scrollToBottom = useCallback(() => {
     if (ref.current) {
