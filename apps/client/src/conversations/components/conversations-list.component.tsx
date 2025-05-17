@@ -26,44 +26,56 @@ export const ConversationsList: React.FC<ConversationsListProps> = ({
     return <ConversationsListLoader />;
   }
 
-  if (!conversations || conversations.length === 0) {
-    return (
-      <div className="flex-1 p-4 text-orange-300 text-sm">
-        No conversations available
-      </div>
-    );
-  }
+  // Map API response by type for quick lookup
+  const groupMap = Object.fromEntries(
+    (conversations || []).map((g) => [g.type, g])
+  );
+
+  // List of all possible types
+  const allTypes = Object.keys(conversationTypes) as Array<'dm' | 'group' | 'channel'>;
 
   return (
     <div className="flex-1 overflow-y-auto">
-      {conversations.map((conversationGroup) => (
-        <div
-          key={`conversation-group-${conversationGroup.type}`}
-          className="px-3 pt-4"
-        >
-          <div className="flex items-center justify-between px-3 py-2 text-orange-300 text-sm">
-            <span>{conversationTypes[conversationGroup.type]}</span>
-            <button
-              type="button"
-              className="w-6 h-6 flex items-center justify-center rounded hover:bg-orange-800/30"
-              onClick={() => handleAddClick?.(conversationGroup.type)}
-            >
-              <HiPlus className="text-base" />
-            </button>
+      {allTypes.map((type) => {
+        // Get the label and group for the current type
+        const label = conversationTypes[type];
+
+        // Use the groupMap to find the corresponding group or create a new one
+        const group = groupMap[type] || { type, conversations: [] };
+
+        return (
+          <div
+            key={`conversation-group-${type}`}
+            className="px-3 pt-4"
+          >
+            <div className="flex items-center justify-between px-3 py-2 text-orange-300 text-sm">
+              <span>{label}</span>
+              <button
+                type="button"
+                className="w-6 h-6 flex items-center justify-center rounded hover:bg-orange-800/30"
+                onClick={() => handleAddClick(type)}
+              >
+                <HiPlus className="text-base" />
+              </button>
+            </div>
+            <nav className="space-y-0.5">
+              {group.conversations.length === 0 ? (
+                <div className="px-3 py-2 text-orange-500 text-xs opacity-60">No conversations</div>
+              ) : (
+                group.conversations.map((conversation) => (
+                  <ConversationItem
+                    key={conversation.id}
+                    name={conversation.name}
+                    type={type}
+                    isActive={conversation.id === activeConversationId}
+                    to={`/${workspaceId}/${conversation.id}`}
+                  />
+                ))
+              )}
+            </nav>
           </div>
-          <nav className="space-y-0.5">
-            {conversationGroup.conversations.map((conversation) => (
-              <ConversationItem
-                key={conversation.id}
-                name={conversation.name}
-                type={conversationGroup.type}
-                isActive={conversation.id === activeConversationId}
-                to={`/${workspaceId}/${conversation.id}`}
-              />
-            ))}
-          </nav>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };
