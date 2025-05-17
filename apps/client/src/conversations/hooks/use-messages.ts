@@ -6,12 +6,20 @@ import useSound from 'use-sound';
 import type { IUser } from '~/users';
 import useSWR from 'swr';
 
+// Merge messages from all pages into a single array
 const mergeMessages = (messagesInfinite?: IMessagesResponse[]) => {
-  if (!messagesInfinite) return [];
+  if (!messagesInfinite || messagesInfinite.length === 0) return [];
 
   const result = [];
-  for (const el of messagesInfinite.reverse()) {
-    result.push(...el.messages);
+
+  // Process pages in reverse order without mutating the original array
+  for (let i = messagesInfinite.length - 1; i >= 0; i--) {
+    const page = messagesInfinite[i];
+
+    // Check if the page has messages and add them to the result
+    if (page.messages && page.messages.length > 0) {
+      result.push(...page.messages);
+    }
   }
 
   return result;
@@ -63,9 +71,22 @@ export function useMessages(conversationId: string) {
 
   useEffect(() => {
     socket.on('messages:new', (message: IMessage) => {
-      const newData = structuredClone(messagesInfinite);
-      newData?.[0].messages?.push(message);
-      mutate(newData, false);
+      // Only mutate if we have data
+      if (messagesInfinite && messagesInfinite.length > 0) {
+        // Create a shallow copy of the array
+        const newData = [...messagesInfinite];
+        
+        // Make a shallow copy of just the first page
+        newData[0] = { 
+          ...newData[0], 
+          messages: [...(newData[0].messages || [])] 
+        };
+        
+        // Push the new message to the copied first page
+        newData[0].messages.push(message);
+        mutate(newData, false);
+      }
+      
       if (user?.id !== message.sender.id) play();
     });
     return () => {
