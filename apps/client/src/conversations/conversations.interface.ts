@@ -17,7 +17,6 @@ export type TConversationsList = IConversationGroup[];
 
 export interface IMessage {
   id: string;
-  senderId: string;
   content: string;
   createdAt: string;
   sender: Pick<IUser, 'id' | 'fullName'>;

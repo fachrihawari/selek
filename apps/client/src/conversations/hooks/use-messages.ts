@@ -1,7 +1,10 @@
 import { useEffect, useMemo } from 'react';
 import useSWRInfinite from 'swr/infinite';
 import { socket } from '~/shared';
-import type { IMessagesResponse } from '../conversations.interface';
+import type { IMessage, IMessagesResponse } from '../conversations.interface';
+import useSound from 'use-sound';
+import type { IUser } from '~/users';
+import useSWR from 'swr';
 
 const mergeMessages = (messagesInfinite?: IMessagesResponse[]) => {
   if (!messagesInfinite) return [];
@@ -42,6 +45,9 @@ export function useMessages(conversationId: string) {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
   });
+  const { data: user } = useSWR<IUser>('/auth/me');
+
+  const [play] = useSound('/sounds/notif.wav')
 
   const messages = useMemo(
     () => mergeMessages(messagesInfinite),
@@ -56,15 +62,16 @@ export function useMessages(conversationId: string) {
   }, [conversationId]);
 
   useEffect(() => {
-    socket.on('messages:new', (message) => {
+    socket.on('messages:new', (message: IMessage) => {
       const newData = structuredClone(messagesInfinite);
       newData?.[0].messages?.push(message);
       mutate(newData, false);
+      if (user?.id !== message.sender.id) play();
     });
     return () => {
       socket.off('messages:new');
     };
-  }, [mutate, messagesInfinite]);
+  }, [mutate, messagesInfinite, play, user]);
 
   return {
     messages,
