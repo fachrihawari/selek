@@ -36,7 +36,7 @@ export class ConversationGuard implements CanActivate {
       );
 
       if (!isMember) {
-        this.logger.log(
+        this.logger.warn(
           `Access denied for user ${user.id} on conversation ${conversationId}`,
         );
         throw new ForbiddenException('Access denied'); // Use generic error for security reasons
@@ -44,7 +44,7 @@ export class ConversationGuard implements CanActivate {
 
       return true;
     } catch (error) {
-      this.logger.error(`Conversation access check failed: ${error.message}`);
+      this.logger.warn(`Conversation access check failed: ${error.message}`);
       throw new ForbiddenException('Access denied'); // Use generic error for security reasons
     }
   }

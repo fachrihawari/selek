@@ -6,4 +6,6 @@ export default {
   ssr: false,
   prerender: ['/'],
   appDirectory: 'src',
+
+  // TODO: Enable middleware for auth
 } satisfies Config;

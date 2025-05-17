@@ -71,7 +71,7 @@ export function useScrollToBottom(
         behavior,
       });
     }
-  }, [behavior]);
+  }, [behavior, ref.current]);
 
   useEffect(() => {
     scrollToBottom();
@@ -135,7 +135,7 @@ export function usePreserveScrollOnPrepend(
       }
       prevScrollHeightRef.current = 0;
     }
-  }, deps);
+  }, [...deps, ref.current]);
 
   return { onBeforeLoadMore };
 }

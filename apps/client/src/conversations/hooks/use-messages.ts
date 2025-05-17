@@ -1,5 +1,6 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import useSWRInfinite from 'swr/infinite';
+import { socket } from '~/shared';
 import type { IMessagesResponse } from '../conversations.interface';
 
 const mergeMessages = (messagesInfinite?: IMessagesResponse[]) => {
@@ -35,14 +36,35 @@ export function useMessages(conversationId: string) {
     isValidating: messagesValidating,
     setSize,
     size,
+    mutate,
   } = useSWRInfinite<IMessagesResponse>(getMessagesKey, {
     revalidateFirstPage: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
   });
 
   const messages = useMemo(
     () => mergeMessages(messagesInfinite),
     [messagesInfinite],
   );
+
+  useEffect(() => {
+    socket.emit('conversations:join', conversationId);
+    return () => {
+      socket.emit('conversations:leave', conversationId);
+    };
+  }, [conversationId]);
+
+  useEffect(() => {
+    socket.on('messages:new', (message) => {
+      const newData = structuredClone(messagesInfinite);
+      newData?.[0].messages?.push(message);
+      mutate(newData, false);
+    });
+    return () => {
+      socket.off('messages:new');
+    };
+  }, [mutate, messagesInfinite]);
 
   return {
     messages,

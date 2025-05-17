@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { WorkspacesModule } from './workspaces/workspaces.module';
 import { SlowdownMiddleware } from './shared/slowdown.middleware';
 import { ConversationsModule } from './conversations/conversations.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -15,6 +16,9 @@ import { ConversationsModule } from './conversations/conversations.module';
     UsersModule,
     WorkspacesModule,
     ConversationsModule,
+    EventEmitterModule.forRoot({
+      delimiter: ':',
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

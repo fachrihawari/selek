@@ -38,7 +38,7 @@ export default function ConversationsDetailPage({
   const ref = useRef<HTMLDivElement>(null);
 
   // Automatically scroll to the bottom of the messages when new messages are loaded
-  useScrollToBottom(ref, [conversationId, messagesLoading]);
+  useScrollToBottom(ref, [conversationId, messagesLoading, messages]);
 
   // Preserve scroll position after loading more messages (infinite scroll up)
   const { onBeforeLoadMore } = usePreserveScrollOnPrepend(ref, [

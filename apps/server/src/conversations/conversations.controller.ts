@@ -21,11 +21,17 @@ import { AuthGuard } from '~/auth/auth.guard';
 import { AuthUser } from '~/auth/auth-user.decorator';
 import { TUserSafe } from '~/users/users.schema';
 import { ConversationGuard } from './conversations.guard';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { MessageCreatedEvent } from './conversations.event';
+import { emitterEvents } from './conversations.constant';
 
 @Controller('conversations')
 @UseGuards(AuthGuard)
 export class ConversationsController {
-  constructor(private readonly conversationsService: ConversationsService) {}
+  constructor(
+    private readonly conversationsService: ConversationsService,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
 
   @Get()
   @UseGuards(WorkspaceGuard)
@@ -71,6 +77,15 @@ export class ConversationsController {
       content: body.content,
       conversationId: conversationId,
     };
-    return this.conversationsService.createMessage(newMessage);
+    // Create the message
+    const message = await this.conversationsService.createMessage(newMessage);
+
+    // Emit the event to notify ConversationsGateway
+    this.eventEmitter.emit(
+      emitterEvents.MESSAGES_CREATED,
+      new MessageCreatedEvent(conversationId, message),
+    );
+
+    return message;
   }
 }

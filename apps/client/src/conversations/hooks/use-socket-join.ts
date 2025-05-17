@@ -14,8 +14,8 @@ export function useSocketJoin(workspaceId: string) {
     socket.on('exception', console.error);
 
     return () => {
-      socket.off('welcome');
       socket.off('exception');
+      socket.emit('workspaces:leave', workspaceId);
     };
   }, [workspaceId]);
 }

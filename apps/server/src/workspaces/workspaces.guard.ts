@@ -25,7 +25,9 @@ export class WorkspaceGuard implements CanActivate {
     }
 
     if (!user) {
-      this.logger.warn('Unauthenticated access attempt');
+      this.logger.warn('Unauthenticated access attempt to workspace', {
+        workspaceId,
+      });
       throw new ForbiddenException('Access denied'); // Use generic error for security reasons
     }
 
@@ -36,15 +38,19 @@ export class WorkspaceGuard implements CanActivate {
       );
 
       if (!isMember) {
-        this.logger.log(
+        this.logger.warn(
           `Access denied for user ${user.id} on workspace ${workspaceId}`,
+          { userId: user.id, workspaceId },
         );
         throw new ForbiddenException('Access denied'); // Use generic error for security reasons
       }
 
       return true;
     } catch (error) {
-      this.logger.error(`Workspace access check failed: ${error.message}`);
+      this.logger.warn(`Workspace access check failed: ${error.message}`, {
+        userId: user.id,
+        workspaceId,
+      });
       throw new ForbiddenException('Access denied'); // Use generic error for security reasons
     }
   }

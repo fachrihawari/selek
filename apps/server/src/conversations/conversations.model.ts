@@ -43,37 +43,36 @@ export class ConversationsModel {
     page: number = 1,
     limit: number = 20,
   ) {
-    const offset = (page - 1) * limit;
-
-    // Fetch messages with pagination
-    // Use a subquery to first get the messages in descending order
-    // and then order them in ascending order for the final result
-    // This is to ensure that the latest messages are at the top
-    // and the pagination works correctly
-    // Note: The limit + 1 is used to check if there is a next page
-    const messages = await sql<TMessagesQueryResult[]>`
-      SELECT * FROM (
-        SELECT 
-          m.id,
-          m.content,
-          m."createdAt",
-          JSON_BUILD_OBJECT(
-            'id', u.id,
-            'fullName', u."fullName"
-          ) AS "sender"
-        FROM conversation_messages m
-        JOIN users u ON m."senderId" = u.id
-        WHERE m."conversationId" = ${conversationId}
-        ORDER BY m."createdAt" DESC
-        LIMIT ${limit + 1} OFFSET ${offset}
-      ) sub
-      ORDER BY sub."createdAt" ASC
+    // Get total count of messages
+    const [{ count }] = await sql<{ count: number }[]>`
+      SELECT COUNT(id)::int as count FROM conversation_messages WHERE "conversationId" = ${conversationId}
     `;
-    // Determine if there is a next page
+    // Calculate offset from the end (so page 1 is the latest messages)
+    const total = count || 0;
+    const offset = Math.max(total - page * limit, 0);
+    const realLimit = Math.min(limit + 1, total - offset); // fetch limit+1 to check hasMore, but not more than available
+
+    // Fetch messages in ascending order (oldest to newest)
+    const messages = await sql<TMessagesQueryResult[]>`
+      SELECT 
+        m.id,
+        m.content,
+        m."createdAt",
+        JSON_BUILD_OBJECT(
+          'id', u.id,
+          'fullName', u."fullName"
+        ) AS "sender"
+      FROM conversation_messages m
+      JOIN users u ON m."senderId" = u.id
+      WHERE m."conversationId" = ${conversationId}
+      ORDER BY m."createdAt" ASC
+      LIMIT ${realLimit} OFFSET ${offset}
+    `;
+    // Determine if there is a next page (older messages)
     const hasMore = messages.length > limit;
 
     // Only return up to the requested limit
-    const paginatedMessages = hasMore ? messages.slice(0, limit) : messages;
+    const paginatedMessages = hasMore ? messages.slice(1) : messages;
     return {
       messages: paginatedMessages,
       hasMore,
