@@ -41,18 +41,34 @@ export class ConversationsModel {
   async getMessages(
     conversationId: string,
     page: number = 1,
-    limit: number = 20,
+    limit: number = 20
   ) {
+    // HINT: This is a simple pagination implementation, if in the future there is a problem with performance, we can implement cursor-based pagination
+
     // Get total count of messages
     const [{ count }] = await sql<{ count: number }[]>`
       SELECT COUNT(id)::int as count FROM conversation_messages WHERE "conversationId" = ${conversationId}
     `;
     // Calculate offset from the end (so page 1 is the latest messages)
     const total = count || 0;
+    
+    // Calculate the correct offset for this page
     const offset = Math.max(total - page * limit, 0);
-    const realLimit = Math.min(limit + 1, total - offset); // fetch limit+1 to check hasMore, but not more than available
-
-    // Fetch messages in ascending order (oldest to newest)
+    
+    // For hasMore, check if there are more messages beyond the current page
+    const hasMore = total > (page * limit);
+    
+    // Calculate how many messages should be fetched for this page
+    // If it's the last page, we only want the remaining messages (which might be less than limit)
+    // Otherwise, we fetch the full limit
+    let fetchLimit = limit;
+    if (!hasMore) {
+      // On the last page, calculate remaining messages
+      const remaining = total - ((page - 1) * limit);
+      fetchLimit = remaining > 0 ? remaining : limit; // Safety check to never have a negative or zero limit
+    }
+    
+    // Fetch messages with the calculated limit
     const messages = await sql<TMessagesQueryResult[]>`
       SELECT 
         m.id,
@@ -66,15 +82,11 @@ export class ConversationsModel {
       JOIN users u ON m."senderId" = u.id
       WHERE m."conversationId" = ${conversationId}
       ORDER BY m."createdAt" ASC
-      LIMIT ${realLimit} OFFSET ${offset}
+      OFFSET ${offset} LIMIT ${fetchLimit} 
     `;
-    // Determine if there is a next page (older messages)
-    const hasMore = messages.length > limit;
-
-    // Only return up to the requested limit
-    const paginatedMessages = hasMore ? messages.slice(1) : messages;
+    
     return {
-      messages: paginatedMessages,
+      messages,
       hasMore,
     };
   }

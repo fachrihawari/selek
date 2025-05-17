@@ -58,10 +58,10 @@ export class ConversationsController {
   @UseGuards(ConversationGuard)
   async getMessages(
     @Param('conversationId') conversationId: string,
-    @Query('page') page: number,
-    @Query('limit') limit: number,
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '20',
   ) {
-    return this.conversationsService.getMessages(conversationId, page, limit);
+    return this.conversationsService.getMessages(conversationId, +page, +limit);
   }
 
   @Post('/:conversationId/messages')

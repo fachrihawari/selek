@@ -13,7 +13,7 @@
 - [x] Create workspace
 - [ ] Invite members to workspace
 - [ ] Basic workspace settings
-- [ ] Switch between workspaces
+- [x] Switch between workspaces
 
 ### Channels
 - [ ] Create public channels
@@ -23,9 +23,9 @@
 - [ ] Channel search
 
 ### Messaging
-- [ ] Send/receive text messages
-- [ ] Real-time message updates
-- [ ] Message history
+- [x] Send/receive text messages
+- [x] Real-time message updates
+- [x] Message history
 - [ ] Basic message formatting
 - [ ] Edit/delete messages
 - [ ] Message reactions (basic emojis)

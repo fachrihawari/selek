@@ -46,3 +46,5 @@ EXECUTE FUNCTION validate_media_structure();
 
 -- Create an index on the conversationId column for faster lookups
 CREATE INDEX IF NOT EXISTS idx_conversation_messages_conversationId ON conversation_messages("conversationId");
+-- Create an index on the createdAt column for faster lookups
+CREATE INDEX IF NOT EXISTS idx_conversation_messages_createdAt ON conversation_messages("createdAt");
