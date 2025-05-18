@@ -2,9 +2,7 @@ import { z } from 'zod';
 
 export const ConversationSchema = z.object({
   id: z.string().uuid(),
-  name: z.string({ message: 'Name is required' }).min(3, {
-    message: 'Name must be at least 3 characters',
-  }),
+  name: z.string().nullable(),
   workspaceId: z
     .string({
       message: 'WorkspaceId is required',
@@ -12,7 +10,6 @@ export const ConversationSchema = z.object({
     .uuid({
       message: 'WorkspaceId must be a valid uuid',
     }),
-  members: z.array(z.string().uuid()),
   ownerId: z.string().uuid(),
   type: z.enum(['channel', 'dm', 'group']),
   createdAt: z.date(),
@@ -25,7 +22,6 @@ export type TConversationsQueryResult = {
   conversations: Pick<TConversation, 'id' | 'name'>[];
 };
 
-// DTO
 export const GetConversationsListQuerySchema = ConversationSchema.pick({
   workspaceId: true,
 });
@@ -56,3 +52,17 @@ export const CreateMessageSchema = MessageSchema.pick({
   content: true,
 });
 export type TCreateMessage = z.infer<typeof CreateMessageSchema>;
+
+
+// Create Conversation Schema & DTO
+export const CreateConversationSchema = ConversationSchema.pick({
+  name: true,
+  type: true,
+  workspaceId: true,
+}).extend({
+  members: z.array(z.string().uuid()),
+  ownerId: z.string().uuid().optional(),
+});
+
+export type TCreateConversation = z.infer<typeof CreateConversationSchema>;
+export type TCreateConversationWithOwner = TCreateConversation & { ownerId: string };

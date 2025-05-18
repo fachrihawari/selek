@@ -22,4 +22,9 @@ export class UsersService {
     const user = await this.userModel.create(body);
     return user;
   }
+
+  async getUsersByIds(ids: string[]) {
+    const users = await this.userModel.getUsersByIds(ids);
+    return users;
+  }
 }

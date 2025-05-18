@@ -28,8 +28,29 @@ async function seed() {
       email: 'udin@mail.com',
       password: await hash('qweqwe', 10),
     },
+    {
+      fullName: 'hardim',
+      email: 'hardim@mail.com',
+      password: await hash('qweqwe', 10),
+    },
+    {
+      fullName: 'ajat',
+      email: 'ajat@mail.com',
+      password: await hash('qweqwe', 10),
+    },
+    {
+      fullName: 'samsul',
+      email: 'samsul@mail.com',
+      password: await hash('qweqwe', 10),
+    },
+    {
+      fullName: 'teddy',
+      email: 'teddy@mail.com',
+      password: await hash('qweqwe', 10),
+    }
   ];
-  const [fachri, budi, udin]: Pick<TUser, 'id'>[] = await sql`
+
+  const [fachri, budi, udin, hardim, ajat, samsul, teddy]: Pick<TUser, 'id'>[] = await sql`
     INSERT INTO users ${sql(users)} RETURNING id
   `;
 
@@ -59,6 +80,26 @@ async function seed() {
     {
       workspaceId: hdWorkspace.id,
       userId: udin.id,
+      role: 'member',
+    },
+    {
+      workspaceId: hdWorkspace.id,
+      userId: ajat.id,
+      role: 'member',
+    },
+    {
+      workspaceId: hdWorkspace.id,
+      userId: samsul.id,
+      role: 'member',
+    },
+    {
+      workspaceId: hdWorkspace.id,
+      userId: teddy.id,
+      role: 'member',
+    },
+    {
+      workspaceId: hdWorkspace.id,
+      userId: hardim.id,
       role: 'member',
     },
     {

@@ -2,9 +2,9 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { HiPaperAirplane, HiPlus } from 'react-icons/hi';
 import { HiFaceSmile } from 'react-icons/hi2';
-import { mutate } from 'swr';
 import { http, type IHttpResponse } from '~/shared';
 import type { IMessage } from '../conversations.interface';
+import { useSWRConfig } from 'swr';
 
 interface MessageInputProps {
   conversationId: string;
@@ -14,6 +14,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({
   conversationId,
 }) => {
   const [content, setContent] = useState<string>('');
+  const { mutate } = useSWRConfig()
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

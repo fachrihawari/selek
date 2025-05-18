@@ -70,4 +70,21 @@ export class WorkspacesModel {
     `;
     return workspace;
   }
+
+  async getMembers(workspaceId: string) {
+    const members = await sql`
+      SELECT 
+        u.id,
+        u.email,
+        u."fullName",
+        u."avatarUrl",
+        wm.role,
+        wm."joinedAt"
+      FROM workspace_members wm
+      INNER JOIN users u ON wm."userId" = u.id
+      WHERE wm."workspaceId" = ${workspaceId}
+      ORDER BY u."fullName" ASC
+    `;
+    return members;
+  }
 }

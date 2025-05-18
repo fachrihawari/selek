@@ -6,6 +6,10 @@ const button = cva(
   'rounded-md shadow-sm font-medium transform transition duration-300 ease-in-out hover:scale-105',
   {
     variants: {
+      disabled: {
+        true: 'cursor-not-allowed opacity-50 hover:scale-none',
+        false: 'cursor-pointer',
+      },
       variant: {
         primary:
           'border border-transparent bg-orange-800 hover:bg-orange-900 text-white',
@@ -31,15 +35,15 @@ const button = cva(
 
 interface ButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof button> {
+    Omit<VariantProps<typeof button>, 'disabled'> {
   to?: string;
   children: React.ReactNode;
 }
 
 export default function Button(props: ButtonProps) {
-  const { children, to, variant, fullWidth, size, className, ...rest } = props;
+  const { children, to, variant, fullWidth, size, className, disabled,  ...rest } = props;
 
-  const buttonClassNames = cx(button({ variant, fullWidth, size }), className);
+  const buttonClassNames = cx(button({ variant, fullWidth, size, disabled }), className);
 
   if (to) {
     return (

@@ -1,7 +1,7 @@
 import { HiSwitchHorizontal } from 'react-icons/hi';
 import { HiBuildingOffice2, HiUser } from 'react-icons/hi2';
-import { Link, Navigate, Outlet } from 'react-router';
-import useSWR from 'swr';
+import { Link, Navigate, Outlet, useNavigate } from 'react-router';
+import useSWR, { useSWRConfig } from 'swr';
 
 import type { IHttpResponse } from '~/shared';
 import { getToken, useAppContext, useLogout } from '~/shared';
@@ -10,6 +10,8 @@ import type { IWorkspace } from '~/workspaces';
 import type { Route } from './+types/conversations.layout';
 import { ConversationsList } from './components/conversations-list.component';
 import { useSocketJoin } from './hooks/use-socket-join';
+import { ConversationsAddModal, useAddModal } from './components/conversations-add-modal.component';
+import type { IConversation } from './conversations.interface';
 
 export default function ConversationsLayout({ params }: Route.ComponentProps) {
   if (!getToken()) {
@@ -17,6 +19,9 @@ export default function ConversationsLayout({ params }: Route.ComponentProps) {
   }
 
   const { workspaceId } = params;
+  const navigate = useNavigate()
+
+  const { mutate } = useSWRConfig()
 
   // Connect the user to the socket server and join the workspace conversations
   useSocketJoin(workspaceId);
@@ -29,13 +34,14 @@ export default function ConversationsLayout({ params }: Route.ComponentProps) {
 
   const { sidebarOpen, toggleSidebar } = useAppContext();
 
+  const { open, type, closeModal, openModal } = useAddModal();
+
   return (
     <div className="h-screen flex relative">
       {/* Mobile Sidebar Overlay */}
       <div
-        className={`fixed inset-0 bg-black/50 z-20 sm:hidden ${
-          sidebarOpen ? 'block' : 'hidden'
-        }`}
+        className={`fixed inset-0 bg-black/50 z-20 sm:hidden ${sidebarOpen ? 'block' : 'hidden'
+          }`}
         onClick={toggleSidebar}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
@@ -81,7 +87,10 @@ export default function ConversationsLayout({ params }: Route.ComponentProps) {
         </div>
 
         {/* Navigation Sections */}
-        <ConversationsList workspaceId={workspaceId} />
+        <ConversationsList
+          workspaceId={workspaceId}
+          onAddClick={openModal}
+        />
 
         {/* User Profile */}
         <div className="p-3 border-t border-orange-800/50">
@@ -112,6 +121,18 @@ export default function ConversationsLayout({ params }: Route.ComponentProps) {
       <div className="flex-1 flex flex-col bg-white min-w-0">
         <Outlet />
       </div>
+
+
+      <ConversationsAddModal
+        workspaceId={workspaceId}
+        type={type}
+        open={open}
+        onClose={closeModal}
+        onCreated={(conversation: IConversation) => {
+          mutate(`/conversations?workspaceId=${workspaceId}`);
+          navigate(`/${workspaceId}/${conversation.id}`);
+        }}
+      />
     </div>
   );
 }

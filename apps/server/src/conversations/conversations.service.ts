@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ConversationsModel } from './conversations.model';
+import { TCreateConversationWithOwner } from './conversations.schema';
 
 @Injectable()
 export class ConversationsService {
-  constructor(private readonly conversationsModel: ConversationsModel) {}
+  constructor(private readonly conversationsModel: ConversationsModel) { }
 
   async getGrouppedConversations(workspaceId: string, userId: string) {
     return this.conversationsModel.getGrouppedConversations(
@@ -24,6 +25,10 @@ export class ConversationsService {
 
   async getConversation(conversationId: string) {
     return this.conversationsModel.getConversation(conversationId);
+  }
+
+  async createConversation(body: TCreateConversationWithOwner) {
+    return this.conversationsModel.createConversation(body);
   }
 
   async getMessages(conversationId: string, page: number, limit: number) {

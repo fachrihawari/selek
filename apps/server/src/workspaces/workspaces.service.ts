@@ -13,6 +13,10 @@ export class WorkspacesService {
     return await this.workspacesModel.findById(workspaceId);
   }
 
+  async getWorkspaceMembers(workspaceId: string) {
+    return await this.workspacesModel.getMembers(workspaceId);
+  }
+
   async isWorkspaceMember(userId: string, workspaceId: string) {
     return await this.workspacesModel.isMember(userId, workspaceId);
   }

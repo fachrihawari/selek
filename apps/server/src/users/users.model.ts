@@ -29,4 +29,12 @@ export class UsersModel {
     `;
     return user;
   }
+
+  async getUsersByIds(ids: string[]) {
+    const users = await sql<TUserQueryResult[]>`
+      SELECT id, "fullName", email, password
+      FROM users WHERE id IN ${sql(ids)}
+    `;
+    return users;
+  }
 }

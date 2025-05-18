@@ -10,17 +10,17 @@ import { ConversationsListLoader } from './conversations-list-loader.component';
 
 interface ConversationsListProps {
   workspaceId: string;
+  onAddClick: (type: 'dm' | 'group' | 'channel') => void;
 }
 
 export const ConversationsList: React.FC<ConversationsListProps> = ({
   workspaceId,
+  onAddClick,
 }) => {
   const activeConversationId = useParams().conversationId;
   const { data: conversations, isLoading } = useSWR<TConversationsList>(
     `/conversations?workspaceId=${workspaceId}`,
   );
-
-  const handleAddClick = (type: string) => {};
 
   if (isLoading) {
     return <ConversationsListLoader />;
@@ -53,7 +53,7 @@ export const ConversationsList: React.FC<ConversationsListProps> = ({
               <button
                 type="button"
                 className="w-6 h-6 flex items-center justify-center rounded hover:bg-orange-800/30"
-                onClick={() => handleAddClick(type)}
+                onClick={() => onAddClick(type)}
               >
                 <HiPlus className="text-base" />
               </button>

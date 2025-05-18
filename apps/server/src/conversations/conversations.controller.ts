@@ -12,8 +12,11 @@ import { ConversationsService } from './conversations.service';
 import { WorkspaceGuard } from '~/workspaces/workspaces.guard';
 import { ZodValidationPipe } from '~/shared/zod-validation.pipe';
 import {
+  CreateConversationSchema,
   CreateMessageSchema,
   GetConversationsListQuerySchema,
+  TCreateConversation,
+  TCreateConversationWithOwner,
   TCreateMessage,
   TGetConversationsListQuery,
 } from './conversations.schema';
@@ -24,12 +27,14 @@ import { ConversationGuard } from './conversations.guard';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { MessageCreatedEvent } from './conversations.event';
 import { emitterEvents } from './conversations.constant';
+import { UsersService } from '~/users/users.service';
 
 @Controller('conversations')
 @UseGuards(AuthGuard)
 export class ConversationsController {
   constructor(
     private readonly conversationsService: ConversationsService,
+    private readonly usersService: UsersService,
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
@@ -44,6 +49,32 @@ export class ConversationsController {
       query.workspaceId,
       user.id,
     );
+  }
+
+  @Post()
+  @HttpCode(201)
+  @UseGuards(WorkspaceGuard)
+  async createConversation(
+    @AuthUser() user: TUserSafe,
+    @Body(new ZodValidationPipe(CreateConversationSchema)) body: TCreateConversation,
+  ) {
+    const newConversation: TCreateConversationWithOwner = {
+      name: body.name,
+      type: body.type,
+      workspaceId: body.workspaceId,
+      ownerId: user.id,
+      members: body.members.concat(user.id),
+    };
+
+    // get the members
+    const members = await this.usersService.getUsersByIds(newConversation.members);
+
+    // use members names as conversation name
+    if (newConversation.type !== 'channel') {
+      newConversation.name = members.map((member) => member.fullName).join(', ');
+    }
+
+    return this.conversationsService.createConversation(newConversation);
   }
 
   @Get('/:conversationId')

@@ -19,7 +19,7 @@ import { WorkspaceGuard } from './workspaces.guard';
 @Controller('workspaces')
 @UseGuards(AuthGuard)
 export class WorkspacesController {
-  constructor(private readonly workspacesService: WorkspacesService) {}
+  constructor(private readonly workspacesService: WorkspacesService) { }
 
   @Get('/')
   @HttpCode(HttpStatus.OK)
@@ -32,6 +32,13 @@ export class WorkspacesController {
   @UseGuards(WorkspaceGuard)
   async getWorkspace(@Param('workspaceId') workspaceId: string) {
     return await this.workspacesService.getWorkspace(workspaceId);
+  }
+  
+  @Get('/:workspaceId/members')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(WorkspaceGuard)
+  async getWorkspaceMembers(@Param('workspaceId') workspaceId: string) {
+    return await this.workspacesService.getWorkspaceMembers(workspaceId);
   }
 
   @Post('/')
