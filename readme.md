@@ -6,55 +6,31 @@
 - [x] User registration
 - [x] User login
 - [ ] Password reset functionality
-- [x] User profile (basic info)
+- [ ] User profile (basic info)
 - [ ] User status (online/offline)
 
 ### Workspace Management
 - [x] Create workspace
-- [ ] Invite members to workspace
-- [ ] Basic workspace settings
 - [x] Switch between workspaces
+- [ ] Basic workspace settings
+- [ ] Invite members to workspace
+- [ ] Workspace notifications (new messages, mentions)
 
-### Channels
-- [ ] Create public channels
-- [ ] Join/leave channels
-- [ ] Basic channel settings
-- [ ] Channel member list
-- [ ] Channel search
+### Conversation Management (Channel, Group & DM)
+- [x] Switch between conversations
+- [x] Create Conversation
+- [ ] Basic conversation settings
+- [ ] Conversation member list
+- [ ] Invite members to conversation
+- [ ] Leave conversation
+- [ ] Unread message count
 
 ### Messaging
 - [x] Send/receive text messages
 - [x] Real-time message updates
 - [x] Message history
-- [ ] Basic message formatting
+- [ ] Message formatting using markdown
 - [ ] Edit/delete messages
-- [ ] Message reactions (basic emojis)
-
-### Direct Messages
-- [ ] Start DM with workspace members
-- [ ] Real-time DM updates
-- [ ] DM history
-- [ ] Online status in DM
-
-### UI/UX
-- [ ] Responsive design
-- [ ] Sidebar navigation
-- [ ] Channel/DM list
-- [ ] Message input with basic features
-- [ ] User presence indicators
-
-### Technical Infrastructure
-- [ ] Real-time communication setup
-- [ ] Message persistence
-- [ ] User session management
-- [ ] Basic error handling
-- [ ] Performance optimization
-
-### Nice to Have (Future Features)
-- [ ] File sharing
-- [ ] Thread replies
-- [ ] Message search
-- [ ] Rich text formatting
-- [ ] User groups
-- [ ] Notifications
-- [ ] Mobile app
+- [ ] Message reactions
+- [ ] Mention users in messages
+- [ ] File attachments
