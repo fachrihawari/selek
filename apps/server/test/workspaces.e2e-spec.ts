@@ -147,4 +147,115 @@ describe('WorkspacesController (e2e)', () => {
       expect(response.body).toHaveProperty('message', 'Name is required');
     });
   });
+
+  describe('PATCH /workspaces/:workspaceId', () => {
+    let workspaceId: string;
+
+    beforeEach(async () => {
+      // Create a test workspace for each test
+      const response: CreateWorkspacesResponse = await request(app.getHttpServer())
+        .post('/workspaces')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ name: 'Test Workspace' });
+      
+      workspaceId = response.body.id;
+    });
+
+    it('should update workspace settings', async () => {
+      const updateData = {
+        name: 'Updated Workspace',
+        logoUrl: 'https://example.com/new-logo.png',
+      };
+
+      const response = await request(app.getHttpServer())
+        .patch(`/workspaces/${workspaceId}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send(updateData);
+
+      expect(response.status).toBe(HttpStatus.OK);
+      expect(response.body).toHaveProperty('name', updateData.name);
+      expect(response.body).toHaveProperty('logoUrl', updateData.logoUrl);
+      expect(response.body).toHaveProperty('id', workspaceId);
+    });
+
+    it('should update workspace with partial data', async () => {
+      const updateData = {
+        name: 'Partially Updated Workspace',
+      };
+
+      const response = await request(app.getHttpServer())
+        .patch(`/workspaces/${workspaceId}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send(updateData);
+
+      expect(response.status).toBe(HttpStatus.OK);
+      expect(response.body).toHaveProperty('name', updateData.name);
+      expect(response.body).toHaveProperty('id', workspaceId);
+    });
+
+    it('should reject unauthorized update requests', async () => {
+      const response: ErrorResponse = await request(app.getHttpServer())
+        .patch(`/workspaces/${workspaceId}`)
+        .send({ name: 'Unauthorized Update' });
+
+      expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
+      expect(response.body).toHaveProperty(
+        'message',
+        'Authorization header missing or invalid',
+      );
+    });
+
+    it('should reject non-owner update requests', async () => {
+      // Create another user
+      const anotherUser = {
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+        fullName: faker.person.fullName(),
+      };
+
+      await request(app.getHttpServer()).post('/auth/register').send(anotherUser);
+
+      const loginResponse: LoginResponse = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send({
+          email: anotherUser.email,
+          password: anotherUser.password,
+        });
+
+      const anotherAuthToken = loginResponse.body.access_token;
+
+      const response: ErrorResponse = await request(app.getHttpServer())
+        .patch(`/workspaces/${workspaceId}`)
+        .set('Authorization', `Bearer ${anotherAuthToken}`)
+        .send({ name: 'Unauthorized Update' });
+
+      expect(response.status).toBe(HttpStatus.FORBIDDEN);
+      expect(response.body).toHaveProperty('message', 'Access denied');
+
+      // Clean up
+      await sql`DELETE FROM users WHERE email = ${anotherUser.email}`;
+    });
+
+    it('should reject invalid workspace data', async () => {
+      const response: ErrorResponse = await request(app.getHttpServer())
+        .patch(`/workspaces/${workspaceId}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ name: 'A' }); // Too short
+
+      expect(response.status).toBe(HttpStatus.BAD_REQUEST);
+      expect(response.body).toHaveProperty('message');
+    });
+
+    it('should handle non-existent workspace', async () => {
+      const nonExistentId = 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee';
+      
+      const response: ErrorResponse = await request(app.getHttpServer())
+        .patch(`/workspaces/${nonExistentId}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ name: 'Update Non-existent' });
+
+      expect(response.status).toBe(HttpStatus.FORBIDDEN);
+      expect(response.body).toHaveProperty('message', 'Access denied');
+    });
+  });
 });

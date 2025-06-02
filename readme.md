@@ -12,7 +12,7 @@
 ### Workspace Management
 - [x] Create workspace
 - [x] Switch between workspaces
-- [ ] Basic workspace settings
+- [x] Basic workspace settings
 - [ ] Invite members to workspace
 - [ ] Workspace notifications (new messages, mentions)
 

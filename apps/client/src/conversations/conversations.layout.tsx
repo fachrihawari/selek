@@ -1,5 +1,5 @@
 import { HiSwitchHorizontal } from 'react-icons/hi';
-import { HiBuildingOffice2, HiUser } from 'react-icons/hi2';
+import { HiBuildingOffice2, HiUser, HiCog6Tooth } from 'react-icons/hi2';
 import { Link, Navigate, Outlet, useNavigate } from 'react-router';
 import useSWR, { useSWRConfig } from 'swr';
 
@@ -64,18 +64,35 @@ export default function ConversationsLayout({ params }: Route.ComponentProps) {
           {workspace ? (
             <>
               <div className="flex items-center space-x-2">
-                <div className="w-6 h-6 rounded bg-orange-700/50 flex items-center justify-center">
-                  <HiBuildingOffice2 className="text-lg" />
-                </div>
+                {workspace.logoUrl ? (
+                  <img
+                    src={workspace.logoUrl}
+                    alt={workspace.name}
+                    className="w-6 h-6 rounded bg-orange-700/50 object-cover"
+                  />
+                ) : (
+                  <div className="w-6 h-6 rounded bg-orange-700/50 flex items-center justify-center">
+                    <HiBuildingOffice2 className="text-lg" />
+                  </div>
+                )}
                 <h1 className="font-semibold text-base truncate">
                   {workspace.name}
                 </h1>
               </div>
               <div className="flex items-center space-x-2">
+                {/* Settings Button */}
+                <Link
+                  to={`/${workspaceId}/settings`}
+                  className="w-8 h-8 flex items-center justify-center rounded hover:bg-orange-800/30"
+                  title="Workspace Settings"
+                >
+                  <HiCog6Tooth className="text-xl" />
+                </Link>
                 {/* Switch Workspace Button */}
                 <Link
                   to="/workspaces"
                   className="w-8 h-8 flex items-center justify-center rounded hover:bg-orange-800/30"
+                  title="Switch Workspace"
                 >
                   <HiSwitchHorizontal className="text-xl" />
                 </Link>

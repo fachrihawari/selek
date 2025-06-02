@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { sql } from '~/db/sql';
-import { CreateWorkspaceDto, TWorkspaceQueryResult } from './workspaces.schema';
+import { CreateWorkspaceDto, TWorkspaceQueryResult, UpdateWorkspaceDto } from './workspaces.schema';
 
 @Injectable()
 export class WorkspacesModel {
@@ -86,5 +86,30 @@ export class WorkspacesModel {
       ORDER BY u."fullName" ASC
     `;
     return members;
+  }
+
+  async updateById(workspaceId: string, updateData: UpdateWorkspaceDto) {
+    const updatedFields = {
+      ...updateData,
+      updatedAt: new Date(),
+    };
+
+    const [workspace] = await sql<TWorkspaceQueryResult[]>`
+      UPDATE workspaces 
+      SET ${sql(updatedFields)}
+      WHERE id = ${workspaceId}
+      RETURNING id, name, "logoUrl", "ownerId"
+    `;
+
+    return workspace;
+  }
+
+  async isOwner(userId: string, workspaceId: string) {
+    const [workspace] = await sql<{ ownerId: string }[]>`
+      SELECT "ownerId"
+      FROM workspaces
+      WHERE id = ${workspaceId} AND "ownerId" = ${userId}
+    `;
+    return Boolean(workspace);
   }
 }

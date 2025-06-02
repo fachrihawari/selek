@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateWorkspaceDto } from './workspaces.schema';
+import { CreateWorkspaceDto, UpdateWorkspaceDto } from './workspaces.schema';
 import { WorkspacesModel } from './workspaces.model';
 
 @Injectable()
@@ -23,5 +23,13 @@ export class WorkspacesService {
 
   async createWorkspace(ownerId: string, workspace: CreateWorkspaceDto) {
     return await this.workspacesModel.create(ownerId, workspace);
+  }
+
+  async updateWorkspace(workspaceId: string, updateData: UpdateWorkspaceDto) {
+    return await this.workspacesModel.updateById(workspaceId, updateData);
+  }
+
+  async isWorkspaceOwner(userId: string, workspaceId: string) {
+    return await this.workspacesModel.isOwner(userId, workspaceId);
   }
 }

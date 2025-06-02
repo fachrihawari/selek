@@ -26,3 +26,10 @@ export const CreateWorkspaceSchema = WorkspaceSchema.pick({
   logoUrl: true,
 });
 export type CreateWorkspaceDto = z.infer<typeof CreateWorkspaceSchema>;
+
+// Workspace schema for updating workspace settings
+export const UpdateWorkspaceSchema = WorkspaceSchema.pick({
+  name: true,
+  logoUrl: true,
+}).partial();
+export type UpdateWorkspaceDto = z.infer<typeof UpdateWorkspaceSchema>;
