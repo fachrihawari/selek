@@ -29,8 +29,8 @@ export class WorkspacesService {
     return await this.workspacesModel.deleteMember(workspaceId, userId);
   }
 
-  async isWorkspaceMember(userId: string, workspaceId: string) {
-    return await this.workspacesModel.isMember(userId, workspaceId);
+  async findWorkspaceMember(userId: string, workspaceId: string) {
+    return await this.workspacesModel.findMember(userId, workspaceId);
   }
 
   async createWorkspace(ownerId: string, workspace: CreateWorkspaceDto) {
@@ -41,7 +41,4 @@ export class WorkspacesService {
     return await this.workspacesModel.updateById(workspaceId, updateData);
   }
 
-  async isWorkspaceOwner(userId: string, workspaceId: string) {
-    return await this.workspacesModel.isOwner(userId, workspaceId);
-  }
 }

@@ -5,6 +5,7 @@ import {
   CreateWorkspaceDto,
   TWorkspaceQueryResult,
   UpdateWorkspaceDto,
+  WorkspaceRole,
 } from './workspaces.schema';
 
 @Injectable()
@@ -54,13 +55,13 @@ export class WorkspacesModel {
 
     return workspace;
   }
-  async isMember(userId: string, workspaceId: string) {
-    const [workspace] = await sql<{ joinedAt: string }[]>`
-      SELECT "joinedAt"
+  async findMember(userId: string, workspaceId: string) {
+    const [workspace] = await sql<{ role: WorkspaceRole; joinedAt: string }[]>`
+      SELECT role
       FROM workspace_members
       WHERE "userId" = ${userId} AND "workspaceId" = ${workspaceId}
     `;
-    return Boolean(workspace);
+    return workspace
   }
 
   async findById(workspaceId: string) {
@@ -136,14 +137,5 @@ export class WorkspacesModel {
     `;
 
     return workspace;
-  }
-
-  async isOwner(userId: string, workspaceId: string) {
-    const [workspace] = await sql<{ ownerId: string }[]>`
-      SELECT "ownerId"
-      FROM workspaces
-      WHERE id = ${workspaceId} AND "ownerId" = ${userId}
-    `;
-    return Boolean(workspace);
   }
 }

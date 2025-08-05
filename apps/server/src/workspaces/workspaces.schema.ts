@@ -41,3 +41,6 @@ export const AddWorkspaceMemberSchema = z.object({
   }),
 });
 export type AddWorkspaceMemberDto = z.infer<typeof AddWorkspaceMemberSchema>;
+
+// Workspace member schema
+export type WorkspaceRole = 'admin' | 'owner' | 'member';

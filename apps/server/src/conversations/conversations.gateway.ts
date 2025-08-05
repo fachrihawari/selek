@@ -56,12 +56,12 @@ export class ConversationsGateway implements OnGatewayInit {
     @ConnectedSocket() socket: Socket,
     @MessageBody() workspaceId: string,
   ) {
-    const isMember = await this.workspacesService.isWorkspaceMember(
+    const member = await this.workspacesService.findWorkspaceMember(
       socket.user.id,
       workspaceId,
     );
 
-    if (!isMember) {
+    if (!member) {
       this.logger.warn(
         `User ${socket.user.id} is not a member of workspace ${workspaceId}`,
       );

@@ -7,17 +7,20 @@ import {
 } from '@nestjs/common';
 import { WorkspacesService } from './workspaces.service';
 import { Request } from 'express';
+import { Reflector } from '@nestjs/core';
+import { WorkspaceRoles } from './workspaces.decorator';
 
 @Injectable()
 export class WorkspaceGuard implements CanActivate {
   private readonly logger = new Logger(WorkspaceGuard.name);
 
-  constructor(private workspacesService: WorkspacesService) {}
+  constructor(private readonly workspacesService: WorkspacesService, private readonly reflector: Reflector) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
     const user = request.user;
     const workspaceId = this.getWorkspaceId(request);
+    const roles = this.reflector.get(WorkspaceRoles, context.getHandler());
 
     if (!workspaceId) {
       this.logger.warn('Workspace ID missing in request');
@@ -31,16 +34,35 @@ export class WorkspaceGuard implements CanActivate {
       throw new ForbiddenException('Access denied'); // Use generic error for security reasons
     }
 
+
+    this.logger.log(`Checking workspace access for user ${user?.id} on workspace ${workspaceId}`, {
+      method: request.method,
+      url: request.url,
+      userId: user?.id,
+      workspaceId,
+      roles,
+      handler: context.getHandler().name,
+    })
+
+
     try {
-      const isMember = await this.workspacesService.isWorkspaceMember(
+      const member = await this.workspacesService.findWorkspaceMember(
         user.id,
         workspaceId,
       );
 
-      if (!isMember) {
+      if (!member) {
         this.logger.warn(
           `Access denied for user ${user.id} on workspace ${workspaceId}`,
           { userId: user.id, workspaceId },
+        );
+        throw new ForbiddenException('Access denied'); // Use generic error for security reasons
+      }
+
+      if (roles && !roles.includes(member.role)) {
+        this.logger.warn(
+          `User ${user.id} does not have required roles for workspace ${workspaceId}`,
+          { userId: user.id, workspaceId, roles },
         );
         throw new ForbiddenException('Access denied'); // Use generic error for security reasons
       }

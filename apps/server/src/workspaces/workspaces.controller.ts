@@ -24,7 +24,7 @@ import {
   AddWorkspaceMemberDto,
 } from './workspaces.schema';
 import { WorkspaceGuard } from './workspaces.guard';
-import { WorkspaceOwnerGuard } from './workspaces-owner.guard';
+import { WorkspaceRoles } from './workspaces.decorator';
 
 @Controller('workspaces')
 @UseGuards(AuthGuard)
@@ -54,6 +54,7 @@ export class WorkspacesController {
   @Post('/:workspaceId/members')
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(WorkspaceGuard)
+  @WorkspaceRoles(['admin', 'owner'])
   async addWorkspaceMember(
     @Param('workspaceId') workspaceId: string,
     @Body(new ZodValidationPipe(AddWorkspaceMemberSchema))
@@ -65,6 +66,8 @@ export class WorkspacesController {
   @Delete('/:workspaceId/members/:userId')
   @HttpCode(HttpStatus.OK)
   @UseGuards(WorkspaceGuard)
+  @WorkspaceRoles(['admin', 'owner'])
+  // TODO: cek if the admin try to delete the owner, should throw an error
   async deleteWorkspaceMember(
     @Param('workspaceId') workspaceId: string,
     @Param('userId') userId: string,
@@ -87,7 +90,8 @@ export class WorkspacesController {
 
   @Patch('/:workspaceId')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(WorkspaceGuard, WorkspaceOwnerGuard)
+  @UseGuards(WorkspaceGuard)
+  @WorkspaceRoles(['admin', 'owner'])
   async updateWorkspace(
     @Param('workspaceId') workspaceId: string,
     @Body(new ZodValidationPipe(UpdateWorkspaceSchema))
@@ -95,4 +99,6 @@ export class WorkspacesController {
   ) {
     return await this.workspacesService.updateWorkspace(workspaceId, body);
   }
+
+  // TODO: delete workspace (only can be done by owner)
 }
