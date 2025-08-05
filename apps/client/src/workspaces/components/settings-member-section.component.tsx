@@ -104,7 +104,7 @@ export function SettingsMemberSection({ workspaceId }: SettingsMemberSectionProp
             >
               Add Member by Email
             </label>
-            <div className="flex items-center space-x-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <input
                 type="email"
                 id="member-email"
@@ -113,7 +113,7 @@ export function SettingsMemberSection({ workspaceId }: SettingsMemberSectionProp
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="user@example.com"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                className="w-full sm:w-auto flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
                 disabled={isLoading}
               />
 
@@ -122,7 +122,7 @@ export function SettingsMemberSection({ workspaceId }: SettingsMemberSectionProp
                 name="role"
                 value={role}
                 onChange={(e) => setRole(e.target.value as 'admin' | 'member')}
-                className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
                 disabled={isLoading}
               >
                 <option value="member">Member</option>
@@ -132,7 +132,7 @@ export function SettingsMemberSection({ workspaceId }: SettingsMemberSectionProp
               <Button
                 type="submit"
                 disabled={isLoading || !email.trim()}
-                className="bg-orange-600 hover:bg-orange-700 focus:ring-orange-500"
+                className="w-full sm:w-auto bg-orange-600 hover:bg-orange-700 focus:ring-orange-500"
               >
                 {isLoading ? "Adding..." : "Add Member"}
               </Button>
