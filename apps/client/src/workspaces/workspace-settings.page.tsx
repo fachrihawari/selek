@@ -5,6 +5,7 @@ import { Loading, AlertError } from "~/components";
 import { SettingsBasicInfo } from "./components/settings-basic-info.component";
 import { SettingsMemberSection } from "./components/settings-member-section.component";
 import type { IWorkspace } from "./workspaces.interface";
+import { ConversationHeader } from "~/conversations/components/conversation-header.component";
 
 export function meta() {
   return [
@@ -36,7 +37,9 @@ export default function WorkspaceSettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen overflow-auto bg-gray-50">
+      <ConversationHeader title="" isLoading={false} />
+
       <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
