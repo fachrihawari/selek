@@ -43,12 +43,12 @@ export const ConversationsAddModal: React.FC<ConversationsAddModalProps> = ({
   const [name, setName] = useState('');
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const { data: user } = useSWR<IUser>('/auth/me');
-  const { data: users, isLoading } = useSWR<IUser[]>(`/workspaces/${workspaceId}/members`);
+  const { data: users, isLoading } = useSWR<IUser[]>(open ? `/workspaces/${workspaceId}/members` : null);
 
   useEffect(() => {
     setName('');
     setSelectedUsers([])
-  },[open])
+  }, [open])
 
   // Prepare options for react-select
   const userOptions = (users || []).filter(u => u.id !== user?.id).map((user) => ({

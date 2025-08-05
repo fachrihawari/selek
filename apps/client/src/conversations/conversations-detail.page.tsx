@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import useSWR from 'swr';
 import { AlertError, Loading } from '~/components';
 import {
@@ -8,6 +8,7 @@ import {
 } from '~/shared';
 import type { Route } from './+types/conversations-detail.page';
 import { ConversationHeader } from './components/conversation-header.component';
+import { ConversationMembers } from './components/conversation-members.component';
 import { ConversationTypeIcon } from './components/conversation-type-icon.component';
 import { MessageBubble } from './components/message-bubble.component';
 import { MessageInput } from './components/message-input.component';
@@ -18,6 +19,7 @@ export default function ConversationsDetailPage({
   params,
 }: Route.ComponentProps) {
   const { conversationId } = params;
+  const [showMembers, setShowMembers] = useState(false);
 
   const {
     data: conversation,
@@ -90,27 +92,39 @@ export default function ConversationsDetailPage({
   }
 
   return (
-    <>
-      {/* Conversation Header */}
-      <ConversationHeader
-        isLoading={conversationLoading}
-        title={conversation?.name ?? ''}
-      />
+    <div className="flex h-full relative">
+      {/* Main Chat Area */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Conversation Header */}
+        <ConversationHeader
+          isLoading={conversationLoading}
+          title={conversation?.name ?? ''}
+          onToggleMembers={() => setShowMembers(!showMembers)}
+        />
 
-      {/* Messages Area */}
-      <div
-        ref={ref}
-        className="mt-auto flex flex-col overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
-      >
-        {messagesValidating ? (
-          <Loading />
-        ) : (
-          <div ref={sentinelRef} className="w-full h-4" />
-        )}
-        {content}
+        {/* Messages Area */}
+        <div
+          ref={ref}
+          className="mt-auto flex flex-col overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
+        >
+          {messagesValidating ? (
+            <Loading />
+          ) : (
+            <div ref={sentinelRef} className="w-full h-4" />
+          )}
+          {content}
+        </div>
+
+        <MessageInput conversationId={conversationId} />
       </div>
 
-      <MessageInput conversationId={conversationId} />
-    </>
+      {/* Members Overlay */}
+      <ConversationMembers
+        conversation={conversation!}
+        isLoading={conversationLoading}
+        isVisible={showMembers}
+        onToggle={() => setShowMembers(!showMembers)}
+      />
+    </div>
   );
 }
