@@ -3,7 +3,7 @@ import useSWR from 'swr';
 import { AlertError, Button, Loading } from '~/components';
 import { type IHttpResponse, useLogout } from '~/shared';
 import type { IUser } from '~/users';
-import WorkspaceCard from '~/workspaces/workspace-card.component';
+import WorkspaceCard from '~/workspaces/components/workspace-card.component';
 import type { IWorkspace } from '~/workspaces/workspaces.interface';
 
 export function meta() {

@@ -153,11 +153,13 @@ describe('WorkspacesController (e2e)', () => {
 
     beforeEach(async () => {
       // Create a test workspace for each test
-      const response: CreateWorkspacesResponse = await request(app.getHttpServer())
+      const response: CreateWorkspacesResponse = await request(
+        app.getHttpServer(),
+      )
         .post('/workspaces')
         .set('Authorization', `Bearer ${authToken}`)
         .send({ name: 'Test Workspace' });
-      
+
       workspaceId = response.body.id;
     });
 
@@ -213,7 +215,9 @@ describe('WorkspacesController (e2e)', () => {
         fullName: faker.person.fullName(),
       };
 
-      await request(app.getHttpServer()).post('/auth/register').send(anotherUser);
+      await request(app.getHttpServer())
+        .post('/auth/register')
+        .send(anotherUser);
 
       const loginResponse: LoginResponse = await request(app.getHttpServer())
         .post('/auth/login')
@@ -248,7 +252,7 @@ describe('WorkspacesController (e2e)', () => {
 
     it('should handle non-existent workspace', async () => {
       const nonExistentId = 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee';
-      
+
       const response: ErrorResponse = await request(app.getHttpServer())
         .patch(`/workspaces/${nonExistentId}`)
         .set('Authorization', `Bearer ${authToken}`)

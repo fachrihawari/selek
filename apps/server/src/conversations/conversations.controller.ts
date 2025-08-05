@@ -56,7 +56,8 @@ export class ConversationsController {
   @UseGuards(WorkspaceGuard)
   async createConversation(
     @AuthUser() user: TUserSafe,
-    @Body(new ZodValidationPipe(CreateConversationSchema)) body: TCreateConversation,
+    @Body(new ZodValidationPipe(CreateConversationSchema))
+    body: TCreateConversation,
   ) {
     const newConversation: TCreateConversationWithOwner = {
       name: body.name,
@@ -67,11 +68,15 @@ export class ConversationsController {
     };
 
     // get the members
-    const members = await this.usersService.getUsersByIds(newConversation.members);
+    const members = await this.usersService.getUsersByIds(
+      newConversation.members,
+    );
 
     // use members names as conversation name
     if (newConversation.type !== 'channel') {
-      newConversation.name = members.map((member) => member.fullName).join(', ');
+      newConversation.name = members
+        .map((member) => member.fullName)
+        .join(', ');
     }
 
     return this.conversationsService.createConversation(newConversation);

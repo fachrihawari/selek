@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -14,14 +15,21 @@ import { AuthGuard } from '~/auth/auth.guard';
 import { AuthUser } from '~/auth/auth-user.decorator';
 import { TUserSafe } from '~/users/users.schema';
 import { ZodValidationPipe } from '~/shared/zod-validation.pipe';
-import { CreateWorkspaceSchema, CreateWorkspaceDto, UpdateWorkspaceSchema, UpdateWorkspaceDto } from './workspaces.schema';
+import {
+  CreateWorkspaceSchema,
+  CreateWorkspaceDto,
+  UpdateWorkspaceSchema,
+  UpdateWorkspaceDto,
+  AddWorkspaceMemberSchema,
+  AddWorkspaceMemberDto,
+} from './workspaces.schema';
 import { WorkspaceGuard } from './workspaces.guard';
 import { WorkspaceOwnerGuard } from './workspaces-owner.guard';
 
 @Controller('workspaces')
 @UseGuards(AuthGuard)
 export class WorkspacesController {
-  constructor(private readonly workspacesService: WorkspacesService) { }
+  constructor(private readonly workspacesService: WorkspacesService) {}
 
   @Get('/')
   @HttpCode(HttpStatus.OK)
@@ -35,12 +43,36 @@ export class WorkspacesController {
   async getWorkspace(@Param('workspaceId') workspaceId: string) {
     return await this.workspacesService.getWorkspace(workspaceId);
   }
-  
+
   @Get('/:workspaceId/members')
   @HttpCode(HttpStatus.OK)
   @UseGuards(WorkspaceGuard)
   async getWorkspaceMembers(@Param('workspaceId') workspaceId: string) {
     return await this.workspacesService.getWorkspaceMembers(workspaceId);
+  }
+
+  @Post('/:workspaceId/members')
+  @HttpCode(HttpStatus.CREATED)
+  @UseGuards(WorkspaceGuard)
+  async addWorkspaceMember(
+    @Param('workspaceId') workspaceId: string,
+    @Body(new ZodValidationPipe(AddWorkspaceMemberSchema))
+    body: AddWorkspaceMemberDto,
+  ) {
+    return await this.workspacesService.addWorkspaceMember(workspaceId, body);
+  }
+
+  @Delete('/:workspaceId/members/:userId')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(WorkspaceGuard)
+  async deleteWorkspaceMember(
+    @Param('workspaceId') workspaceId: string,
+    @Param('userId') userId: string,
+  ) {
+    return await this.workspacesService.deleteWorkspaceMember(
+      workspaceId,
+      userId,
+    );
   }
 
   @Post('/')

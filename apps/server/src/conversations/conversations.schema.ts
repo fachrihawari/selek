@@ -53,7 +53,6 @@ export const CreateMessageSchema = MessageSchema.pick({
 });
 export type TCreateMessage = z.infer<typeof CreateMessageSchema>;
 
-
 // Create Conversation Schema & DTO
 export const CreateConversationSchema = ConversationSchema.pick({
   name: true,
@@ -65,4 +64,6 @@ export const CreateConversationSchema = ConversationSchema.pick({
 });
 
 export type TCreateConversation = z.infer<typeof CreateConversationSchema>;
-export type TCreateConversationWithOwner = TCreateConversation & { ownerId: string };
+export type TCreateConversationWithOwner = TCreateConversation & {
+  ownerId: string;
+};

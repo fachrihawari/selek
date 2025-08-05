@@ -42,7 +42,7 @@ export class ConversationsModel {
   async getMessages(
     conversationId: string,
     page: number = 1,
-    limit: number = 20
+    limit: number = 20,
   ) {
     // HINT: This is a simple pagination implementation, if in the future there is a problem with performance, we can implement cursor-based pagination
 
@@ -57,7 +57,7 @@ export class ConversationsModel {
     const offset = Math.max(total - page * limit, 0);
 
     // For hasMore, check if there are more messages beyond the current page
-    const hasMore = total > (page * limit);
+    const hasMore = total > page * limit;
 
     // Calculate how many messages should be fetched for this page
     // If it's the last page, we only want the remaining messages (which might be less than limit)
@@ -65,7 +65,7 @@ export class ConversationsModel {
     let fetchLimit = limit;
     if (!hasMore) {
       // On the last page, calculate remaining messages
-      const remaining = total - ((page - 1) * limit);
+      const remaining = total - (page - 1) * limit;
       fetchLimit = remaining > 0 ? remaining : limit; // Safety check to never have a negative or zero limit
     }
 
@@ -92,7 +92,11 @@ export class ConversationsModel {
     };
   }
 
-  private async isConversationExists(type: string, workspaceId: string, members: string[]) {
+  private async isConversationExists(
+    type: string,
+    workspaceId: string,
+    members: string[],
+  ) {
     // Get all conversation ids for the user
     const candidateConversations = await sql`
       SELECT c.id, c.name, c.type, c."createdAt"
@@ -107,10 +111,13 @@ export class ConversationsModel {
       const memberRows = await sql<{ userId: string }[]>`
           SELECT "userId" FROM conversation_members WHERE "conversationId" = ${conversation.id}
         `;
-      const memberIds = memberRows.map(m => m.userId).sort();
+      const memberIds = memberRows.map((m) => m.userId).sort();
       const inputIds = [...members].sort();
-      if (memberIds.length === inputIds.length && memberIds.every((id, i) => id === inputIds[i])) {
-        return conversation
+      if (
+        memberIds.length === inputIds.length &&
+        memberIds.every((id, i) => id === inputIds[i])
+      ) {
+        return conversation;
       }
     }
   }
@@ -118,9 +125,13 @@ export class ConversationsModel {
   async createConversation({ members, ...body }: TCreateConversationWithOwner) {
     // Check if a group or dm with the same members already exists
     if (body.type === 'group' || body.type === 'dm') {
-      const conversation = await this.isConversationExists(body.type, body.workspaceId, members);
+      const conversation = await this.isConversationExists(
+        body.type,
+        body.workspaceId,
+        members,
+      );
       if (conversation) {
-        return conversation
+        return conversation;
       }
     }
     await sql.begin(async (sql) => {
@@ -134,15 +145,15 @@ export class ConversationsModel {
         userId: memberId,
         conversationId: conversation.id,
         role: memberId === body.ownerId ? 'owner' : 'member',
-      }))
+      }));
 
       // Add the owner as a member
       await sql`
         INSERT INTO conversation_members ${sql(conversationMembers)}
       `;
 
-      return conversation
-    })
+      return conversation;
+    });
   }
 
   async isMember(userId: string, conversationId: string) {

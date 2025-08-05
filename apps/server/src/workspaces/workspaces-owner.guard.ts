@@ -42,7 +42,9 @@ export class WorkspaceOwnerGuard implements CanActivate {
           `Only workspace owner can perform this action: user ${user.id} on workspace ${workspaceId}`,
           { userId: user.id, workspaceId },
         );
-        throw new ForbiddenException('Only workspace owner can perform this action');
+        throw new ForbiddenException(
+          'Only workspace owner can perform this action',
+        );
       }
 
       return true;

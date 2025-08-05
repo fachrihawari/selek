@@ -33,3 +33,11 @@ export const UpdateWorkspaceSchema = WorkspaceSchema.pick({
   logoUrl: true,
 }).partial();
 export type UpdateWorkspaceDto = z.infer<typeof UpdateWorkspaceSchema>;
+
+export const AddWorkspaceMemberSchema = z.object({
+  email: z.string().email({ message: 'Invalid email address' }),
+  role: z.enum(['owner', 'admin', 'member'], {
+    message: 'Role must be one of: owner, admin, member',
+  }),
+});
+export type AddWorkspaceMemberDto = z.infer<typeof AddWorkspaceMemberSchema>;

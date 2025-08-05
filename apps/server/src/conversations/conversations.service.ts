@@ -4,7 +4,7 @@ import { TCreateConversationWithOwner } from './conversations.schema';
 
 @Injectable()
 export class ConversationsService {
-  constructor(private readonly conversationsModel: ConversationsModel) { }
+  constructor(private readonly conversationsModel: ConversationsModel) {}
 
   async getGrouppedConversations(workspaceId: string, userId: string) {
     return this.conversationsModel.getGrouppedConversations(

@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { sql } from '~/db/sql';
-import { CreateWorkspaceDto, TWorkspaceQueryResult, UpdateWorkspaceDto } from './workspaces.schema';
+import {
+  AddWorkspaceMemberDto,
+  CreateWorkspaceDto,
+  TWorkspaceQueryResult,
+  UpdateWorkspaceDto,
+} from './workspaces.schema';
 
 @Injectable()
 export class WorkspacesModel {
@@ -69,6 +74,35 @@ export class WorkspacesModel {
       where id = ${workspaceId}
     `;
     return workspace;
+  }
+
+  async deleteMember(workspaceId: string, userId: string) {
+    const result = await sql`
+      DELETE FROM workspace_members
+      WHERE "workspaceId" = ${workspaceId} AND "userId" = ${userId}
+      RETURNING "userId"
+    `;
+    return result.length > 0;
+  }
+
+  async addMember(workspaceId: string, { email, role }: AddWorkspaceMemberDto) {
+    const [user] = await sql<{ id: string }[]>`
+      SELECT id FROM users WHERE email = ${email}
+    `;
+
+    if (!user) {
+      throw new Error(`User with email ${email} not found`);
+    }
+
+    const workspaceMemberValue = {
+      workspaceId,
+      userId: user.id,
+      role,
+      joinedAt: new Date(),
+    };
+    await sql`INSERT INTO workspace_members ${sql(workspaceMemberValue)}`;
+
+    return { userId: user.id, workspaceId };
   }
 
   async getMembers(workspaceId: string) {

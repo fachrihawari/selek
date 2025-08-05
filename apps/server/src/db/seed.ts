@@ -47,10 +47,11 @@ async function seed() {
       fullName: 'teddy',
       email: 'teddy@mail.com',
       password: await hash('qweqwe', 10),
-    }
+    },
   ];
 
-  const [fachri, budi, udin, hardim, ajat, samsul, teddy]: Pick<TUser, 'id'>[] = await sql`
+  const [fachri, budi, udin, hardim, ajat, samsul, teddy]: Pick<TUser, 'id'>[] =
+    await sql`
     INSERT INTO users ${sql(users)} RETURNING id
   `;
 
