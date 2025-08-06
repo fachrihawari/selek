@@ -4,6 +4,7 @@ export const socketEvents = {
   WORKSPACES_JOIN: 'workspaces:join',
   CONVERSATIONS_LEAVE: 'conversations:leave',
   WORKSPACES_LEAVE: 'workspaces:leave',
+  WORKSPACES_JOINED: 'workspaces:joined',
 };
 
 export const emitterEvents = {

@@ -23,6 +23,7 @@ export class WsAuthGuard implements CanActivate {
       const user = await this.usersService.findById(payload.sub);
       if (!user) throw new WsException('Invalid token');
       client.user = user;
+      delete client.user.password; // Remove sensitive data
     } catch {
       throw new WsException('Invalid token');
     }

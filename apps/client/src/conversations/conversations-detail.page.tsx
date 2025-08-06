@@ -18,7 +18,7 @@ import { useMessages } from './hooks/use-messages';
 export default function ConversationsDetailPage({
   params,
 }: Route.ComponentProps) {
-  const { conversationId } = params;
+  const { conversationId,workspaceId } = params;
   const [showMembers, setShowMembers] = useState(false);
 
   const {
@@ -36,7 +36,7 @@ export default function ConversationsDetailPage({
     messagesError,
     messages,
   } = useMessages(conversationId);
-
+  
   const ref = useRef<HTMLDivElement>(null);
 
   // Automatically scroll to the bottom of the messages when new messages are loaded
@@ -120,10 +120,9 @@ export default function ConversationsDetailPage({
 
       {/* Members Overlay */}
       <ConversationMembers
-        conversation={conversation!}
+        conversation={conversation}
+        workspaceId={workspaceId}
         isLoading={conversationLoading}
-        isVisible={showMembers}
-        onToggle={() => setShowMembers(!showMembers)}
       />
     </div>
   );

@@ -42,7 +42,7 @@ export class ConversationsGateway implements OnGatewayInit {
     private readonly configService: ConfigService,
     private readonly workspacesService: WorkspacesService,
     private readonly conversationsService: ConversationsService,
-  ) {}
+  ) { }
 
   afterInit(server: Server) {
     instrument(server, {
@@ -72,6 +72,20 @@ export class ConversationsGateway implements OnGatewayInit {
     this.logger.verbose(socket.user);
     this.logger.verbose('joining room -> workspaces:' + workspaceId);
     await socket.join(socketRooms.getWorkspace(workspaceId));
+
+    // FIXME: Broadcast entire online members to myself
+    // But Broadcast only new online members to all other users
+    await this.broadcastOnlineWorkspaceMembers(workspaceId);
+  }
+
+  async broadcastOnlineWorkspaceMembers(workspaceId: string) {
+    const sockets = await this.server.in(socketRooms.getWorkspace(workspaceId)).fetchSockets();
+    this.server
+      .to(socketRooms.getWorkspace(workspaceId))
+      .emit(socketEvents.WORKSPACES_JOINED, {
+        users: sockets.map((s) => s['user']),
+        workspaceId,
+      });
   }
 
   @SubscribeMessage(socketEvents.WORKSPACES_LEAVE)
@@ -83,6 +97,10 @@ export class ConversationsGateway implements OnGatewayInit {
     this.logger.verbose(socket.user);
     this.logger.verbose('leaving room -> workspaces:' + workspaceId);
     await socket.leave(socketRooms.getWorkspace(workspaceId));
+
+    // FIXME: Broadcast entire online members to myself
+    // But Broadcast only new online members to all other users
+    await this.broadcastOnlineWorkspaceMembers(workspaceId);
   }
 
   @SubscribeMessage(socketEvents.CONVERSATIONS_JOIN)

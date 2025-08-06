@@ -13,8 +13,7 @@ interface ConversationHeaderProps {
 
 export const ConversationHeader: React.FC<ConversationHeaderProps> = ({
   title,
-  isLoading,
-  onToggleMembers,
+  isLoading
 }) => {
   const { toggleSidebar } = useAppContext();
 
@@ -33,19 +32,6 @@ export const ConversationHeader: React.FC<ConversationHeaderProps> = ({
           <div className="w-32 h-5 bg-gray-200 rounded animate-pulse" />
         ) : (
           <h2 className="font-medium text-gray-900 truncate">{title}</h2>
-        )}
-      </div>
-
-      <div className="flex items-center space-x-2">
-        {onToggleMembers && (
-          <button
-            type="button"
-            className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-gray-100 relative"
-            onClick={onToggleMembers}
-            title={`Members`}
-          >
-            <HiUsers className="text-xl text-gray-600" />
-          </button>
         )}
       </div>
     </div>
