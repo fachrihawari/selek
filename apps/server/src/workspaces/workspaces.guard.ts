@@ -35,7 +35,7 @@ export class WorkspaceGuard implements CanActivate {
     }
 
 
-    this.logger.log(`Checking workspace access for user ${user?.id} on workspace ${workspaceId}`, {
+    this.logger.debug(`Checking workspace access for user ${user?.id} on workspace ${workspaceId}`, {
       method: request.method,
       url: request.url,
       userId: user?.id,

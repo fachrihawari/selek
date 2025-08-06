@@ -68,9 +68,9 @@ export class ConversationsGateway implements OnGatewayInit {
       return;
     }
 
-    this.logger.verbose('Connected user ->', socket.id);
-    this.logger.verbose(socket.user);
-    this.logger.verbose('joining room -> workspaces:' + workspaceId);
+    this.logger.debug('Connected user ->', socket.id);
+    this.logger.debug(socket.user);
+    this.logger.debug('joining room -> workspaces:' + workspaceId);
     await socket.join(socketRooms.getWorkspace(workspaceId));
 
     // FIXME: Broadcast entire online members to myself
@@ -93,9 +93,9 @@ export class ConversationsGateway implements OnGatewayInit {
     @ConnectedSocket() socket: Socket,
     @MessageBody() workspaceId: string,
   ) {
-    this.logger.verbose('Connected user ->', socket.id);
-    this.logger.verbose(socket.user);
-    this.logger.verbose('leaving room -> workspaces:' + workspaceId);
+    this.logger.debug('Connected user ->', socket.id);
+    this.logger.debug(socket.user);
+    this.logger.debug('leaving room -> workspaces:' + workspaceId);
     await socket.leave(socketRooms.getWorkspace(workspaceId));
 
     // FIXME: Broadcast entire online members to myself
@@ -120,9 +120,9 @@ export class ConversationsGateway implements OnGatewayInit {
       return;
     }
 
-    this.logger.verbose('Connected user ->', socket.id);
-    this.logger.verbose(socket.user);
-    this.logger.verbose('joining room -> conversations:' + conversationId);
+    this.logger.debug('Connected user ->', socket.id);
+    this.logger.debug(socket.user);
+    this.logger.debug('joining room -> conversations:' + conversationId);
     await socket.join(socketRooms.getConversation(conversationId));
   }
 
@@ -131,17 +131,17 @@ export class ConversationsGateway implements OnGatewayInit {
     @ConnectedSocket() socket: Socket,
     @MessageBody() conversationId: string,
   ) {
-    this.logger.verbose('Connected user ->', socket.id);
-    this.logger.verbose(socket.user);
-    this.logger.verbose('leaving room -> conversations:' + conversationId);
+    this.logger.debug('Connected user ->', socket.id);
+    this.logger.debug(socket.user);
+    this.logger.debug('leaving room -> conversations:' + conversationId);
     await socket.leave(socketRooms.getConversation(conversationId));
   }
 
   @OnEvent(emitterEvents.MESSAGES_CREATED)
   handleMessageCreated({ message, conversationId }: MessageCreatedEvent) {
-    this.logger.verbose('Message created event received');
-    this.logger.verbose('Message ->', message);
-    this.logger.verbose('Conversation ID ->', conversationId);
+    this.logger.debug('Message created event received');
+    this.logger.debug('Message ->', message);
+    this.logger.debug('Conversation ID ->', conversationId);
     this.server
       .to(socketRooms.getConversation(conversationId))
       .emit(socketEvents.MESSAGES_NEW, message);
