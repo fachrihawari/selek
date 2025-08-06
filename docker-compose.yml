@@ -1,0 +1,38 @@
+services:
+  client:
+    build:
+      context: .
+      dockerfile: ./apps/client/Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+    environment:
+      VITE_API_URL: ${VITE_API_URL}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.selek.rule=Host(`selek.hawari.dev`)"
+      - "traefik.http.routers.selek.entrypoints=web"
+    networks:
+      - traefik-network
+
+  server:
+    build:
+      context: .
+      dockerfile: ./apps/server/Dockerfile
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      PORT: ${PORT}
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
+      CLIENT_URL: ${CLIENT_URL}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.selek-api.rule=Host(`selek-api.hawari.dev`)"
+      - "traefik.http.routers.selek-api.entrypoints=web"
+      - "traefik.http.services.selek-api.loadbalancer.server.port=${PORT}"
+    networks:
+      - traefik-network
+
+networks:
+  traefik-network:
+    external: true
