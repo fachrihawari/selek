@@ -1,21 +1,25 @@
 # build stage
-FROM oven/bun:1.1.36-alpine AS builder
-
+FROM oven/bun:1.2.19-alpine AS builder
 WORKDIR /app
-COPY ./apps/client /app
 
-# Install dependencies
-RUN bun install
-RUN bun run build
+COPY ../../package.json ../../bun.lock /app
+COPY ../../apps/server /app/apps/server
+COPY ../../apps/client /app/apps/client
+
+ARG VITE_API_URL
+
+RUN bun i
+RUN cd apps/client && bun run build
 
 # runner stage
 FROM nginx:1.27.1-alpine3.20
+WORKDIR /app
 
 # Remove the default nginx.conf to add our own
 RUN rm /etc/nginx/conf.d/default.conf
 
 # Copy build & nginx conf
-COPY --from=builder /app/build/client /usr/share/nginx/html
-COPY --from=builder /app/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY --from=builder /app/apps/client/build/client /usr/share/nginx/html
+COPY --from=builder /app/apps/client/nginx/nginx.conf /etc/nginx/nginx.conf
 
 CMD ["nginx", "-g", "daemon off;"]

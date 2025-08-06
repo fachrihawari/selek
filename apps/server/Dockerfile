@@ -1,9 +1,11 @@
-FROM oven/bun:1.1.36-alpine
+FROM oven/bun:1.2.19-alpine
 
 WORKDIR /app
 
-COPY ./apps/server /app
+COPY ../../package.json ../../bun.lock /app
+COPY ../../apps/server /app/apps/server
+COPY ../../apps/client /app/apps/client
 
-RUN bun install
-RUN bun run build
-CMD bun run start:prod
+RUN bun i
+
+CMD bun run --filter "server" start
