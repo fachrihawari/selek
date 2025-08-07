@@ -20,4 +20,4 @@ COPY --from=builder /app/package.json /app/bun.lock /app/.env /app/
 COPY --from=builder /app/apps/server /app/apps/server
 COPY --from=builder /app/node_modules /app/node_modules
 
-CMD bun run --filter "server" start
+CMD bun run --filter "server" migrate && bun run --filter "server" seed && bun run --filter "server" start
