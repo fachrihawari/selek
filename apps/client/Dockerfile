@@ -1,14 +1,14 @@
 # build stage
-FROM oven/bun:1.2.19-alpine AS builder
+FROM oven/bun:1.2.19 AS builder
 WORKDIR /app
 
-COPY ../../package.json ../../bun.lock /app
-COPY ../../apps/server /app/apps/server
-COPY ../../apps/client /app/apps/client
+COPY ./package.json ./bun.lock /app
+COPY ./apps/client /app/apps/client
 
+# Set build-time environment variable
 ARG VITE_API_URL
 
-RUN bun i
+RUN bun install
 RUN cd apps/client && bun run build
 
 # runner stage

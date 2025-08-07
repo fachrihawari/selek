@@ -3,10 +3,11 @@ services:
     build:
       context: .
       dockerfile: ./apps/client/Dockerfile
+
+      # Using args on the build stage, cause we build to static files
+      # and then serve it with nginx
       args:
         VITE_API_URL: ${VITE_API_URL}
-    environment:
-      VITE_API_URL: ${VITE_API_URL}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.selek.rule=Host(`selek.hawari.dev`)"
