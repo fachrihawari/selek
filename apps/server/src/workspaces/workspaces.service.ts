@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import {
+import type {
   AddWorkspaceMemberDto,
   CreateWorkspaceDto,
   UpdateWorkspaceDto,
@@ -40,5 +40,4 @@ export class WorkspacesService {
   async updateWorkspace(workspaceId: string, updateData: UpdateWorkspaceDto) {
     return await this.workspacesModel.updateById(workspaceId, updateData);
   }
-
 }

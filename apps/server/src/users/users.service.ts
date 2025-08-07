@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { hash } from 'bcrypt';
-import { TUserBody } from './users.schema';
+import type { TUserBody } from './users.schema';
 import { UsersModel } from './users.model';
 
 @Injectable()

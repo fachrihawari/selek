@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { sql } from '~/db/sql';
-import {
+import type {
   AddWorkspaceMemberDto,
   CreateWorkspaceDto,
   TWorkspaceQueryResult,
@@ -61,7 +61,7 @@ export class WorkspacesModel {
       FROM workspace_members
       WHERE "userId" = ${userId} AND "workspaceId" = ${workspaceId}
     `;
-    return workspace
+    return workspace;
   }
 
   async findById(workspaceId: string) {

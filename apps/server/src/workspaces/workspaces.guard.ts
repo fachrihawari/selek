@@ -14,7 +14,10 @@ import { WorkspaceRoles } from './workspaces.decorator';
 export class WorkspaceGuard implements CanActivate {
   private readonly logger = new Logger(WorkspaceGuard.name);
 
-  constructor(private readonly workspacesService: WorkspacesService, private readonly reflector: Reflector) { }
+  constructor(
+    private readonly workspacesService: WorkspacesService,
+    private readonly reflector: Reflector,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
@@ -34,16 +37,17 @@ export class WorkspaceGuard implements CanActivate {
       throw new ForbiddenException('Access denied'); // Use generic error for security reasons
     }
 
-
-    this.logger.debug(`Checking workspace access for user ${user?.id} on workspace ${workspaceId}`, {
-      method: request.method,
-      url: request.url,
-      userId: user?.id,
-      workspaceId,
-      roles,
-      handler: context.getHandler().name,
-    })
-
+    this.logger.debug(
+      `Checking workspace access for user ${user?.id} on workspace ${workspaceId}`,
+      {
+        method: request.method,
+        url: request.url,
+        userId: user?.id,
+        workspaceId,
+        roles,
+        handler: context.getHandler().name,
+      },
+    );
 
     try {
       const member = await this.workspacesService.findWorkspaceMember(

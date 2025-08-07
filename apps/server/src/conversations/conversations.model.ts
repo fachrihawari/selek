@@ -1,5 +1,5 @@
 import { sql } from '~/db/sql';
-import {
+import type {
   TConversationsQueryResult,
   TCreateConversationWithOwner,
   TMessagesQueryResult,

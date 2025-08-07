@@ -1,7 +1,9 @@
+/* eslint-disable */
+
 import { hash } from 'bcrypt';
 import { sql } from './sql';
-import { TUser } from '~/users/users.schema';
-import { TWorkspace } from '~/workspaces/workspaces.schema';
+import type { TUser } from '~/users/users.schema';
+import type { TWorkspace } from '~/workspaces/workspaces.schema';
 
 async function seed() {
   await sql`DELETE FROM conversation_messages`;

@@ -1,12 +1,14 @@
+import { expect, it, describe, beforeAll, afterAll } from '@jest/globals';
+
 import { faker } from '@faker-js/faker';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { Express } from 'express';
-import * as request from 'supertest';
+import request from 'supertest';
 import { AppModule } from '~/app.module';
 import { sql } from '~/db/sql';
 import { ZodExceptionFilter } from '~/shared/zod-exception.filter';
-import { TWorkspace } from '~/workspaces/workspaces.schema';
+import type { TWorkspace } from '~/workspaces/workspaces.schema';
 
 type LoginResponse = {
   body: {

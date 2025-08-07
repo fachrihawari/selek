@@ -1,4 +1,4 @@
-import { TMessagesQueryResult } from './conversations.schema';
+import type { TMessagesQueryResult } from './conversations.schema';
 
 export class MessageCreatedEvent {
   constructor(

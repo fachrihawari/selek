@@ -1,4 +1,4 @@
-import { Logger, LoggerService, UseGuards } from '@nestjs/common';
+import { Logger, UseGuards } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -9,7 +9,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket as SocketIO } from 'socket.io';
 import { WsAuthGuard } from '~/auth/ws-auth.guard';
-import { TUserSafe } from '~/users/users.schema';
+import type { TUserSafe } from '~/users/users.schema';
 import { ConversationsService } from './conversations.service';
 import { instrument } from '@socket.io/admin-ui';
 import { ConfigService } from '@nestjs/config';
@@ -42,7 +42,7 @@ export class ConversationsGateway implements OnGatewayInit {
     private readonly configService: ConfigService,
     private readonly workspacesService: WorkspacesService,
     private readonly conversationsService: ConversationsService,
-  ) { }
+  ) {}
 
   afterInit(server: Server) {
     instrument(server, {
@@ -79,11 +79,13 @@ export class ConversationsGateway implements OnGatewayInit {
   }
 
   async broadcastOnlineWorkspaceMembers(workspaceId: string) {
-    const sockets = await this.server.in(socketRooms.getWorkspace(workspaceId)).fetchSockets();
+    const sockets = await this.server
+      .in(socketRooms.getWorkspace(workspaceId))
+      .fetchSockets();
     this.server
       .to(socketRooms.getWorkspace(workspaceId))
       .emit(socketEvents.WORKSPACES_JOINED, {
-        users: sockets.map((s) => s['user']),
+        users: sockets.map((s) => s['user'] as TUserSafe),
         workspaceId,
       });
   }

@@ -15,14 +15,14 @@ import {
   CreateConversationSchema,
   CreateMessageSchema,
   GetConversationsListQuerySchema,
-  TCreateConversation,
-  TCreateConversationWithOwner,
-  TCreateMessage,
-  TGetConversationsListQuery,
+  type TCreateConversation,
+  type TCreateConversationWithOwner,
+  type TCreateMessage,
+  type TGetConversationsListQuery,
 } from './conversations.schema';
 import { AuthGuard } from '~/auth/auth.guard';
 import { AuthUser } from '~/auth/auth-user.decorator';
-import { TUserSafe } from '~/users/users.schema';
+import type { TUserSafe } from '~/users/users.schema';
 import { ConversationGuard } from './conversations.guard';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { MessageCreatedEvent } from './conversations.event';

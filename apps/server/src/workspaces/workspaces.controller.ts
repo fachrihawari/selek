@@ -13,15 +13,15 @@ import {
 import { WorkspacesService } from './workspaces.service';
 import { AuthGuard } from '~/auth/auth.guard';
 import { AuthUser } from '~/auth/auth-user.decorator';
-import { TUserSafe } from '~/users/users.schema';
+import type { TUserSafe } from '~/users/users.schema';
 import { ZodValidationPipe } from '~/shared/zod-validation.pipe';
 import {
   CreateWorkspaceSchema,
-  CreateWorkspaceDto,
   UpdateWorkspaceSchema,
-  UpdateWorkspaceDto,
   AddWorkspaceMemberSchema,
-  AddWorkspaceMemberDto,
+  type CreateWorkspaceDto,
+  type UpdateWorkspaceDto,
+  type AddWorkspaceMemberDto,
 } from './workspaces.schema';
 import { WorkspaceGuard } from './workspaces.guard';
 import { WorkspaceRoles } from './workspaces.decorator';

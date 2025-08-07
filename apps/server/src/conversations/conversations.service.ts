@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConversationsModel } from './conversations.model';
-import { TCreateConversationWithOwner } from './conversations.schema';
+import type { TCreateConversationWithOwner } from './conversations.schema';
 
 @Injectable()
 export class ConversationsService {

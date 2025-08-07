@@ -1,13 +1,14 @@
+import { expect, it, describe, beforeAll, afterAll } from '@jest/globals';
 import { faker } from '@faker-js/faker';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Express } from 'express';
-import * as jwt from 'jsonwebtoken';
-import * as request from 'supertest';
+import jwt from 'jsonwebtoken';
+import request from 'supertest';
 import { z } from 'zod';
 import { AppModule } from '~/app.module';
 import { sql } from '~/db/sql';
-import { TUserBody } from '~/users/users.schema';
+import type { TUserBody } from '~/users/users.schema';
 import { ZodExceptionFilter } from '~/shared/zod-exception.filter';
 
 const RegisterResponseSchema = z.object({
